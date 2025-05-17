@@ -13,7 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WatchListMovies.Infrastruct
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WatchListMovies.Application", "Src\WatchListMovies.Application\WatchListMovies.Application.csproj", "{7D153B3C-7D04-4BF0-B9E3-B65D85E89DD4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchListMovies.Domain", "Src\WatchListMovies.Domain\WatchListMovies.Domain.csproj", "{78925019-FAEB-4A54-9897-3ED9757F02EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WatchListMovies.Domain", "Src\WatchListMovies.Domain\WatchListMovies.Domain.csproj", "{78925019-FAEB-4A54-9897-3ED9757F02EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchListMovies.Common", "Src\WatchListMovies.Common\WatchListMovies.Common.csproj", "{4FE1D6D6-009C-466C-AD53-4475EF7F3705}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WatchListMovies.Query", "Src\WatchListMovies.Query\WatchListMovies.Query.csproj", "{9ACEF6BB-2547-4424-BBAA-3985B3528BAD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +41,14 @@ Global
 		{78925019-FAEB-4A54-9897-3ED9757F02EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78925019-FAEB-4A54-9897-3ED9757F02EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78925019-FAEB-4A54-9897-3ED9757F02EC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FE1D6D6-009C-466C-AD53-4475EF7F3705}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FE1D6D6-009C-466C-AD53-4475EF7F3705}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FE1D6D6-009C-466C-AD53-4475EF7F3705}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FE1D6D6-009C-466C-AD53-4475EF7F3705}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9ACEF6BB-2547-4424-BBAA-3985B3528BAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9ACEF6BB-2547-4424-BBAA-3985B3528BAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9ACEF6BB-2547-4424-BBAA-3985B3528BAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9ACEF6BB-2547-4424-BBAA-3985B3528BAD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +58,8 @@ Global
 		{BDC99F54-29B4-499A-841A-CE0DE2D336A4} = {874D6050-E0B9-4BD4-A137-E568638E3879}
 		{7D153B3C-7D04-4BF0-B9E3-B65D85E89DD4} = {874D6050-E0B9-4BD4-A137-E568638E3879}
 		{78925019-FAEB-4A54-9897-3ED9757F02EC} = {874D6050-E0B9-4BD4-A137-E568638E3879}
+		{4FE1D6D6-009C-466C-AD53-4475EF7F3705} = {874D6050-E0B9-4BD4-A137-E568638E3879}
+		{9ACEF6BB-2547-4424-BBAA-3985B3528BAD} = {874D6050-E0B9-4BD4-A137-E568638E3879}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {16828EEA-C66C-4420-93DC-C96E9E62BD3C}

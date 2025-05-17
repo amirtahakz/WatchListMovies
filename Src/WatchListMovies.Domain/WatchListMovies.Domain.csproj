@@ -6,4 +6,19 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WatchListMovies.Common\WatchListMovies.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="CastAgg\Enums\" />
+    <Folder Include="MovieAgg\Enums\" />
+    <Folder Include="_Shared\Enums\" />
+  </ItemGroup>
+
 </Project>
