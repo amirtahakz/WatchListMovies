@@ -103,7 +103,15 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 // Enable Hangfire dashboard (optional)
-app.UseHangfireDashboard();
+//var allowedUsers = builder.Configuration.GetSection("Hangfire:AllowedUsers").Get<string[]>();
+//var allowedIPs = builder.Configuration.GetSection("Hangfire:AllowedIPs").Get<string[]>();
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    //Authorization = new[] { new CustomHangfireAuthorizationFilter(allowedUsers, allowedIPs) },
+    Authorization = new[] { new CustomHangfireAuthorizationFilter() },
+    IsReadOnlyFunc = _ => false, // Set to true for read-only
+    DarkModeEnabled = true,
+});
 
 app.UseApiCustomExceptionHandler();
 
