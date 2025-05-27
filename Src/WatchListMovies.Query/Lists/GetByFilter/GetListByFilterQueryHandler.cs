@@ -37,8 +37,11 @@ public class GetListByFilterQueryHandler : IQueryHandler<GetListByFilterQuery, L
         var skip = (@params.PageId - 1) * @params.Take;
         var model = new ListFilterResult()
         {
-            Data = await result.Skip(skip).Take(@params.Take)
-                .Select(list => list.MapFilterData()).ToListAsync(cancellationToken),
+            Data = await result
+            .Skip(skip)
+            .Take(@params.Take)
+            .Select(list => list.Map())
+            .ToListAsync(cancellationToken),
             FilterParams = @params
         };
 

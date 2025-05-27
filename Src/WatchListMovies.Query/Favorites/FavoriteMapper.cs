@@ -25,20 +25,5 @@ namespace WatchListMovies.Query.Favorites
                 UserId = favorite.UserId,
             };
         }
-
-
-        public static FavoriteFilterData MapFilterData(this Favorite favorite)
-        {
-            return new FavoriteFilterData()
-            {
-                Id = favorite.Id,
-                CreationDate = favorite.CreationDate,
-                Note = favorite.Note,
-                SubjectId = favorite.SubjectId,
-                ListId = favorite.ListId,
-                FavoriteType = favorite.FavoriteType,
-                UserId = favorite.UserId,
-            };
-        }
     }
 }

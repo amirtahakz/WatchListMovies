@@ -30,7 +30,7 @@ namespace WatchListMovies.Query.Favorites.DTOs
         public string? Note { get; set; }
         public FavoriteType? FavoriteType { get; set; }
     }
-    public class FavoriteFilterResult : BaseFilter<FavoriteFilterData, FavoriteFilterParams>
+    public class FavoriteFilterResult : BaseFilter<FavoriteDto, FavoriteFilterParams>
     {
 
     }

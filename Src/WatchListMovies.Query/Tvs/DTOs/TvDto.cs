@@ -62,7 +62,7 @@ namespace WatchListMovies.Query.Tvs.DTOs
         public long? VoteCount { get; set; }
         public TvDetail? TvDetail { get; set; }
     }
-    public class TvFilterResult : BaseFilter<TvFilterData, TvFilterParams>
+    public class TvFilterResult : BaseFilter<TvDto, TvFilterParams>
     {
 
     }

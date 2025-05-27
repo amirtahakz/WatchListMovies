@@ -41,7 +41,7 @@ namespace WatchListMovies.Query.Tvs.GetByFilter
                 Data = await result
                     .Skip(skip)
                     .Take(@params.Take)
-                    .Select(tv => tv.MapFilterData())
+                    .Select(tv => tv.Map())
                     .ToListAsync(cancellationToken),
 
                 FilterParams = @params

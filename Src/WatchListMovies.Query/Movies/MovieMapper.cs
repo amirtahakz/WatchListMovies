@@ -35,29 +35,5 @@ namespace WatchListMovies.Query.Movies
 
             };
         }
-
-
-        public static MovieFilterData MapFilterData(this Movie movie)
-        {
-            return new MovieFilterData()
-            {
-                Id = movie.Id,
-                CreationDate = movie.CreationDate,
-                OriginalTitle = movie.OriginalTitle,
-                Title = movie.Title,
-                ApiModelId = movie.ApiModelId,
-                Adult = movie.Adult,
-                BackdropPath = movie.BackdropPath,
-                OriginalLanguage = movie.OriginalLanguage,
-                Overview = movie.Overview,
-                Popularity = movie.Popularity,
-                PosterPath = movie.PosterPath,
-                ReleaseDate = movie.ReleaseDate,
-                Video = movie.Video,
-                VoteAverage = movie.VoteAverage,
-                VoteCount = movie.VoteCount,
-                MovieDetails = movie.MovieDetails,
-            };
-        }
     }
 }

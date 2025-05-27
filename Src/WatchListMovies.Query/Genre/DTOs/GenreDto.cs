@@ -11,14 +11,6 @@ namespace WatchListMovies.Query.Genre.DTOs
         public GenreType? GenreType { get; set; }
     }
 
-
-    public class GenreFilterData : BaseDto
-    {
-        public long? ApiModelId { get; set; }
-        public string? Name { get; set; }
-        public GenreType? GenreType { get; set; }
-    }
-
     public class GenreFilterParams : BaseFilterParam
     {
         public Guid? Id { get; set; }
@@ -28,7 +20,7 @@ namespace WatchListMovies.Query.Genre.DTOs
         public GenreType? GenreType { get; set; }
 
     }
-    public class GenreFilterResult : BaseFilter<GenreFilterData, GenreFilterParams>
+    public class GenreFilterResult : BaseFilter<GenreDto, GenreFilterParams>
     {
 
     }

@@ -19,23 +19,6 @@ public static class UserMapper
             Gender = user.Gender,
             Name = user.Name,
             Password = user.Password,
-           
-        };
-    }
-
-    
-    public static UserFilterData MapFilterData(this User user)
-    {
-        return new UserFilterData()
-        {
-            Id = user.Id,
-            CreationDate = user.CreationDate,
-            Family = user.Family,
-            PhoneNumber = user.PhoneNumber,
-            AvatarName = user.AvatarName,
-            Email = user.Email,
-            Gender = user.Gender,
-            Name = user.Name
         };
     }
 }

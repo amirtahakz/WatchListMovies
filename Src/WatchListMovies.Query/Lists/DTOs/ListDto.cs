@@ -14,15 +14,6 @@ namespace WatchListMovies.Query.Lists.DTOs
         public ListType ListType { get; set; }
     }
 
-    public class ListFilterData : BaseDto
-    {
-        public Guid UserId { get; set; }
-        public string Name { get; set; }
-        public bool IsPrivate { get; set; }
-        public string Description { get; set; }
-        public ListType ListType { get; set; }
-    }
-
     public class ListFilterParams : BaseFilterParam
     {
         public Guid? UserId { get; set; }
@@ -31,7 +22,7 @@ namespace WatchListMovies.Query.Lists.DTOs
         public string? Description { get; set; }
         public ListType? ListType { get; set; }
     }
-    public class ListFilterResult : BaseFilter<ListFilterData, ListFilterParams>
+    public class ListFilterResult : BaseFilter<ListDto, ListFilterParams>
     {
 
     }

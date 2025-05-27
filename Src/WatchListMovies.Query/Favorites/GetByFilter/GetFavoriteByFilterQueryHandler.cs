@@ -34,8 +34,11 @@ namespace WatchListMovies.Query.Favorites.GetByFilter
             var skip = (@params.PageId - 1) * @params.Take;
             var model = new FavoriteFilterResult()
             {
-                Data = await result.Skip(skip).Take(@params.Take)
-                    .Select(favorite => favorite.MapFilterData()).ToListAsync(cancellationToken),
+                Data = await result
+                    .Skip(skip)
+                    .Take(@params.Take)
+                    .Select(favorite => favorite.Map())
+                    .ToListAsync(cancellationToken),
                 FilterParams = @params
             };
 

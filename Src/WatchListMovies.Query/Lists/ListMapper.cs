@@ -20,19 +20,5 @@ namespace WatchListMovies.Query.Lists
             };
         }
 
-
-        public static ListFilterData MapFilterData(this List list)
-        {
-            return new ListFilterData()
-            {
-                Id = list.Id,
-                CreationDate = list.CreationDate,
-                Name = list.Name,
-                Description = list.Description,
-                IsPrivate = list.IsPrivate,
-                ListType = list.ListType,
-                UserId = list.UserId,
-            };
-        }
     }
 }
