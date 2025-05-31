@@ -32,7 +32,7 @@ public static class DependencyRegister
 
 
         services.AddAutoMapper(typeof(MapperProfile).Assembly);
-        services.AddAutoMapper(typeof(PopularMoviesItem).Assembly);
+        services.AddAutoMapper(typeof(PopularMoviesItemApiModelDto).Assembly);
         services.AddAutoMapper(typeof(Movie).Assembly);
         services.AddTransient<CustomJwtValidation>();
 

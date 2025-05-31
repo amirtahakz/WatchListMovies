@@ -5,10 +5,11 @@ namespace WatchListMovies.Application.Services.Favorite.Create
 {
     public class CreateFavoriteCommand : IBaseCommand<Guid>
     {
-        public Guid UserId { get; set; }
-        public Guid SubjectId { get; set; }
-        public Guid ListId { get; set; }
-        public string Note { get; set; }
-        public FavoriteType FavoriteType { get; set; }
+        public Guid? UserId { get; set; }
+        public Guid? SubjectGuid { get; set; }
+        public long? SubjectId { get; set; }
+        public Guid? ListId { get; set; }
+        public string? Note { get; set; }
+        public FavoriteType? FavoriteType { get; set; }
     }
 }

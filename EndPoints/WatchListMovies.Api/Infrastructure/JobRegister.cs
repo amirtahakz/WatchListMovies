@@ -29,6 +29,16 @@ namespace WatchListMovies.Api.Infrastructure
                 methodCall: svc => svc.SyncMovieDetails(),
                 cronExpression: jobSchedules.SyncMovieDetails);
 
+            RecurringJob.AddOrUpdate<MovieJobs>(
+                recurringJobId: "SyncMovieKeyYoutubeTrailers",
+                methodCall: svc => svc.SyncMovieKeyYoutubeTrailers(),
+                cronExpression: jobSchedules.SyncMovieKeyYoutubeTrailers);
+
+            RecurringJob.AddOrUpdate<MovieJobs>(
+                recurringJobId: "SyncCastsAndCrewsOfMovie",
+                methodCall: svc => svc.SyncCastsAndCrewsOfMovie(),
+                cronExpression: jobSchedules.SyncCastsAndCrewsOfMovie);
+
             RecurringJob.AddOrUpdate<TvJobs>(
                 recurringJobId: "SyncPopularTvs",
                 methodCall: svc => svc.SyncPopularTvs(),
@@ -38,6 +48,12 @@ namespace WatchListMovies.Api.Infrastructure
                 recurringJobId: "SyncTvDetails",
                 methodCall: svc => svc.SyncTvDetails(),
                 cronExpression: jobSchedules.SyncTvDetails);
+
+
+            RecurringJob.AddOrUpdate<TvJobs>(
+                recurringJobId: "SyncCastsAndCrewsOfTv",
+                methodCall: svc => svc.SyncCastsAndCrewsOfTv(),
+                cronExpression: jobSchedules.SyncCastsAndCrewsOfTv);
 
             RecurringJob.AddOrUpdate<CastJobs>(
                 recurringJobId: "SyncPopularCasts",

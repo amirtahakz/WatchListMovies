@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using WatchListMovies.Common.Query.Filter;
 
 namespace WatchListMovies.Common.Query;
 

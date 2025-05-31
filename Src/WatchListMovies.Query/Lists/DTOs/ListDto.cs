@@ -1,5 +1,4 @@
 ﻿using WatchListMovies.Common.Query;
-using WatchListMovies.Common.Query.Filter;
 using WatchListMovies.Domain.ListAgg.Enums;
 using WatchListMovies.Domain.UserAgg.Enums;
 

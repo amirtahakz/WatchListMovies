@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WatchListMovies.Common.Domain;
+﻿using WatchListMovies.Common.Domain;
 
 namespace WatchListMovies.Domain.MovieAgg
 {
@@ -23,12 +18,14 @@ namespace WatchListMovies.Domain.MovieAgg
             string? overview,
             double? popularity,
             string? posterPath,
-            string? releaseDate,
+            DateTime? releaseDate,
             string? title,
             bool? video,
             double? voteAverage,
             int? voteCount,
-            MovieDetail movieDetails)
+            IEnumerable<string>? genreIds,
+            MovieDetail movieDetails,
+            bool? isRecommendedByAdmin= false)
         {
             Adult = adult;
             BackdropPath = backdropPath;
@@ -43,7 +40,14 @@ namespace WatchListMovies.Domain.MovieAgg
             Video = video;
             VoteAverage = voteAverage;
             VoteCount = voteCount;
+            GenreIds = genreIds.ToList();
             MovieDetails = movieDetails;
+            IsRecommendedByAdmin = isRecommendedByAdmin;
+        }
+
+        public void MakeRecommended()
+        {
+            IsRecommendedByAdmin = true;
         }
         public bool? Adult { get; set; }
         public string? BackdropPath { get; set; }
@@ -53,11 +57,13 @@ namespace WatchListMovies.Domain.MovieAgg
         public string? Overview { get; set; }
         public double? Popularity { get; set; }
         public string? PosterPath { get; set; }
-        public string? ReleaseDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
         public string? Title { get; set; }
         public bool? Video { get; set; }
         public double? VoteAverage { get; set; }
         public int? VoteCount { get; set; }
+        public bool? IsRecommendedByAdmin { get; set; }
+        public IReadOnlyCollection<string>? GenreIds { get; set; }
         public MovieDetail? MovieDetails { get; set; }
     }
 }

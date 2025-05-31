@@ -31,7 +31,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Cast
                 //for (var page = 1; page <= apiMovies.TotalPages; page++)
                 //{
                 //    var data = await _castApiService.GetPopularCasts(page);
-                //    apiMovies.Results.AddRange(data.Results);
+                //    apiMovies.PopularTvsItemApiModelDto.AddRange(data.PopularTvsItemApiModelDto);
                 //}
                 for (var page = 2; page <= 2; page++)
                 {

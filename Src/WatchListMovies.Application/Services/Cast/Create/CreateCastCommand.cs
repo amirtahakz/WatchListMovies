@@ -19,6 +19,6 @@ namespace WatchListMovies.Application.Services.Cast.Create
         public List<CastImage>? CastImages { get; set; }
         public CastExternalId? CastExternalId { get; set; }
         public CastDetail? CastDetails { get; set; }
-        public List<CastKnownFor>? CastKnownFors { get; set; }
+        public List<CastKnownForValueObject>? CastKnownFors { get; set; }
     }
 }

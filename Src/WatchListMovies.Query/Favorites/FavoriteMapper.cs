@@ -19,6 +19,7 @@ namespace WatchListMovies.Query.Favorites
                 Id = favorite.Id,
                 CreationDate = favorite.CreationDate,
                 Note = favorite.Note,
+                SubjectGuid = favorite.SubjectGuid,
                 SubjectId = favorite.SubjectId,
                 ListId = favorite.ListId,
                 FavoriteType = favorite.FavoriteType,

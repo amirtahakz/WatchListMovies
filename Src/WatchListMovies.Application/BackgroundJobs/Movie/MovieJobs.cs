@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using WatchListMovies.Application.IExternalApiServices.Movie;
-using WatchListMovies.Domain.MovieAgg;
 using WatchListMovies.Domain.MovieAgg.Repository;
 
 namespace WatchListMovies.Application.BackgroundJobs.Movie
@@ -26,23 +25,17 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
                 //for (var page = 1; page <= apiMovies.TotalPages; page++)
                 //{
                 //    var data = await _movieApiService.GetPopularMovies(page);
-                //    apiMovies.Results.AddRange(data.Results);
+                //    apiMovies.PopularTvsItemApiModelDto.AddRange(data.PopularTvsItemApiModelDto);
                 //}
-                for (var page = 2; page <= 2; page++)
+                for (var page = 2; page <= 3; page++)
                 {
                     var data = await _movieApiService.GetPopularMovies(page);
-                    apiMovies.Results.AddRange(data.Results);
+
+                    apiMovies.movies.AddRange(data.movies);
                 }
-                var isDeleted = await _movieRepository.DeleteAllAsync();
+
+                await _movieRepository.AddRangeIfNotExistAsync(apiMovies.Map());
                 await _movieRepository.Save();
-                if (isDeleted)
-                {
-                    
-                    //await _movieRepository.AddRange(_mapper.Map<List<Domain.MovieAgg.Movie>>(apiMovies.Results));
-                    await _movieRepository.AddRange(apiMovies.Map());
-                    await _movieRepository.Save();
-                }
-                    
 
             }
             catch (Exception e)
@@ -63,14 +56,6 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
                     {
                         var apiMovieDetails = await _movieApiService.GetMovieDetails(movie.ApiModelId ?? default);
                         movie.MovieDetails = apiMovieDetails.Map(movie.Id);
-                        //movie.MovieDetails = _mapper.Map<MovieDetail>(apiMovieDetails);
-                        //movie.MovieDetails.MovieId = movie.Id;
-                        //movie.MovieDetails.Genres.ForEach(c => c.MediaId = movie.MovieDetails.Id);
-                        //movie.MovieDetails.ProductionCompanies.ForEach(c => c.MediaId = movie.MovieDetails.Id);
-                        //movie.MovieDetails.ProductionCountries.ForEach(c => c.MediaId = movie.MovieDetails.Id);
-                        //movie.MovieDetails.SpokenLanguages.ForEach(c => c.MediaId = movie.MovieDetails.Id);
-                        //if (movie.MovieDetails.BelongsToCollection != null)
-                        //    movie.MovieDetails.BelongsToCollection.MovieDetailId = movie.MovieDetails.Id;
                         await _movieRepository.Save();
                     }
                 }
@@ -81,5 +66,63 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
             }
 
         }
+
+        public async Task SyncMovieKeyYoutubeTrailers()
+        {
+
+            try
+            {
+                var movies = await _movieRepository.GetAllAsync();
+                if (movies.Count() != 0)
+                {
+                    foreach (var movie in movies)
+                    {
+                        var apiMovieYoutubeTrailers = await _movieApiService.GetMovieYoutubeTrailerKeys(movie.ApiModelId ?? default);
+
+                        foreach (var item in apiMovieYoutubeTrailers.Results)
+                            movie.MovieDetails.MovieKeyYoutubeTrailers = item.Map(movie.MovieDetails.Id);
+
+                        await _movieRepository.Save();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
+
+        public async Task SyncCastsAndCrewsOfMovie()
+        {
+
+            try
+            {
+                var movies = await _movieRepository.GetAllAsync();
+                if (movies.Count() != 0)
+                {
+                    foreach (var movie in movies)
+                    {
+                        var apiCastsAndCrewsOfMovie = await _movieApiService.GetCastsAndCrewsOfMovie(movie.ApiModelId ?? default);
+
+                        if (apiCastsAndCrewsOfMovie.Casts != null)
+                            movie.MovieDetails.Casts.AddRange(apiCastsAndCrewsOfMovie.Casts.Map(movie.MovieDetails.Id));
+
+
+                        if (apiCastsAndCrewsOfMovie.Crews != null)
+                            movie.MovieDetails.Crews.AddRange(apiCastsAndCrewsOfMovie.Crews.Map(movie.MovieDetails.Id));
+
+                        await _movieRepository.Save();
+
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+        }
     }
+
 }

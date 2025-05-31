@@ -13,7 +13,7 @@ public class CreateFavoriteCommandHandler : IBaseCommandHandler<CreateFavoriteCo
     }
     public async Task<OperationResult<Guid>> Handle(CreateFavoriteCommand request, CancellationToken cancellationToken)
     {
-        var entityModel = new Domain.FavoriteAgg.Favorite(request.UserId, request.SubjectId, request.ListId, request.Note, request.FavoriteType);
+        var entityModel = new Domain.FavoriteAgg.Favorite(request.UserId, request.SubjectGuid, request.SubjectId, request.ListId, request.Note, request.FavoriteType);
         await _favoriteRepository.AddAsync(entityModel);
         await _favoriteRepository.Save();
 

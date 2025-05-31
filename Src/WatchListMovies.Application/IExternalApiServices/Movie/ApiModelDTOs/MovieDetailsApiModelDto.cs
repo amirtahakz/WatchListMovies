@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using WatchListMovies.Application.IExternalApiServices._Shared.ApiModelDtos;
 
 namespace WatchListMovies.Application.IExternalApiServices.Movie.ApiModelDTOs
 {
@@ -41,7 +42,7 @@ namespace WatchListMovies.Application.IExternalApiServices.Movie.ApiModelDTOs
         public string? PosterPath { get; set; }
 
         [JsonProperty("release_date")]
-        public string? ReleaseDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
 
         [JsonProperty("revenue")]
         public long? Revenue { get; set; }
@@ -69,79 +70,18 @@ namespace WatchListMovies.Application.IExternalApiServices.Movie.ApiModelDTOs
 
 
         [JsonProperty("belongs_to_collection")]
-        public BelongsToCollection? BelongsToCollection { get; set; }
+        public BelongsToCollectionApiModelDto? BelongsToCollection { get; set; }
 
         [JsonProperty("genres")]
-        public List<Genre>? Genres { get; set; }
+        public List<GenreApiModelDto>? Genres { get; set; }
 
         [JsonProperty("production_companies")]
-        public List<ProductionCompany>? ProductionCompanies { get; set; }
+        public List<ProductionCompanyApiModelDto>? ProductionCompanies { get; set; }
 
         [JsonProperty("production_countries")]
-        public List<ProductionCountry>? ProductionCountries { get; set; }
+        public List<ProductionCountryApiModelDto>? ProductionCountries { get; set; }
 
         [JsonProperty("spoken_languages")]
-        public List<SpokenLanguage>? SpokenLanguages { get; set; }
+        public List<SpokenLanguageApiModelDto>? SpokenLanguages { get; set; }
     }
-
-    public class Genre
-    {
-        [JsonProperty("id")]
-        public long? ApiModelId { get; set; }
-
-        [JsonProperty("name")]
-        public string? Name { get; set; }
-    }
-    public class BelongsToCollection
-    {
-        [JsonProperty("id")]
-        public long? ApiModelId { get; set; }
-
-        [JsonProperty("name")]
-        public string? Name { get; set; }
-
-        [JsonProperty("poster_path")]
-        public string? PosterPath { get; set; }
-
-        [JsonProperty("backdrop_path")]
-        public string? BackdropPath { get; set; }
-    }
-
-    public class ProductionCompany
-    {
-        [JsonProperty("id")]
-        public long? ApiModelId { get; set; }
-
-        [JsonProperty("logo_path")]
-        public string? LogoPath { get; set; }
-
-        [JsonProperty("name")]
-        public string? Name { get; set; }
-
-        [JsonProperty("origin_country")]
-        public string? OriginCountry { get; set; }
-    }
-
-    public class ProductionCountry
-    {
-        [JsonProperty("iso_3166_1")]
-        public string? Iso31661 { get; set; }
-
-        [JsonProperty("name")]
-        public string? Name { get; set; }
-    }
-
-    public class SpokenLanguage
-    {
-        [JsonProperty("english_name")]
-        public string? EnglishName { get; set; }
-
-        [JsonProperty("iso_639_1")]
-        public string? Iso6391 { get; set; }
-
-        [JsonProperty("name")]
-        public string? Name { get; set; }
-    }
-
-
 }

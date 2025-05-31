@@ -34,7 +34,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Cast
                 {
                     foreach (var knownForItem in castItem.KnownFor)
                     {
-                        var castKnownForModel = new CastKnownFor()
+                        var castKnownForModel = new CastKnownForValueObject()
                         {
                             Adult = knownForItem.Adult,
                             ApiModelId = knownForItem.Id,
@@ -46,7 +46,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Cast
                             Overview = knownForItem.Overview,
                             Popularity = knownForItem.Popularity,
                             PosterPath = knownForItem.PosterPath,
-                            ReleaseDate = knownForItem.ReleaseDate,
+                            ReleaseDate = DateTime.Parse(knownForItem.ReleaseDate),
                             Title = knownForItem.Title,
                             Video = knownForItem.Video,
                             VoteAverage = knownForItem.VoteAverage,
@@ -56,7 +56,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Cast
                         {
                             foreach (var genreIdsItem in knownForItem.GenreIds)
                             {
-                                castKnownForModel.CastKnownForGenreIds = new List<Domain._Shared.ValueObjects.Genre>()
+                                castKnownForModel.CastKnownForGenreIds = new List<Domain._Shared.ValueObjects.GenreValueObject>()
                                 {
                                     new()
                                     {
@@ -67,7 +67,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Cast
                             }
                         }
 
-                        model.CastKnownFors = new List<CastKnownFor>() { castKnownForModel };
+                        model.CastKnownFors = new List<CastKnownForValueObject>() { castKnownForModel };
 
                     }
                 }

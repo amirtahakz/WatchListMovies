@@ -22,7 +22,7 @@ namespace WatchListMovies.Application.Services.Movie.Create
         {
             var entityModel = new Domain.MovieAgg.Movie(request.Adult, request.BackdropPath, request.ApiModelId, request.OriginalLanguage,
                 request.OriginalTitle, request.Overview, request.Popularity, request.PosterPath, request.ReleaseDate, request.Title, request.Video, request.VoteAverage,
-                request.VoteCount, request.MovieDetails);
+                request.VoteCount , request.GenreIds , request.MovieDetails , request.IsRecommendedByAdmin);
             await _movieRepository.AddAsync(entityModel);
             await _movieRepository.Save();
 

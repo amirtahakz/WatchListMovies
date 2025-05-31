@@ -6,13 +6,15 @@ namespace WatchListMovies.Domain.FavoriteAgg
     public class Favorite : BaseEntity
     {
         public Favorite(
-            Guid userId,
-            Guid subjectId,
-            Guid listId,
-            string note,
-            FavoriteType favoriteType)
+            Guid? userId,
+            Guid? subjectGuid,
+            long? subjectId,
+            Guid? listId,
+            string? note,
+            FavoriteType? favoriteType)
         {
             UserId = userId;
+            SubjectGuid = subjectGuid;
             SubjectId = subjectId;
             ListId = listId;
             Note = note;
@@ -24,10 +26,11 @@ namespace WatchListMovies.Domain.FavoriteAgg
 
         }
 
-        public Guid UserId { get; set; }
-        public Guid SubjectId { get; set; }
-        public Guid ListId { get; set; }
-        public string Note { get; set; }
-        public FavoriteType FavoriteType { get; set; }
+        public Guid? UserId { get; set; }
+        public Guid? SubjectGuid { get; set; }
+        public long? SubjectId { get; set; }
+        public Guid? ListId { get; set; }
+        public string? Note { get; set; }
+        public FavoriteType? FavoriteType { get; set; }
     }
 }

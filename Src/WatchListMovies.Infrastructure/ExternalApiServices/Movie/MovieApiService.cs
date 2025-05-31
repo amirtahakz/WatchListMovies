@@ -40,57 +40,25 @@ namespace WatchListMovies.Infrastructure.ExternalApiServices.Movie
             return deserializedData;
         }
 
-        public async Task<MovieYoutubeTrailerKeysApiModelDto> GetMovieYoutubeTrailerKeys(long movieApiId)
+        public async Task<MovieKeyYoutubeTrailersApiModelDto> GetMovieYoutubeTrailerKeys(long? movieApiId)
         {
             var response = await _httpClient.GetAsync($"movie/{movieApiId}/videos?api_key={_tMDBConfig.ApiKey}&language={_tMDBConfig.language}");
             response.EnsureSuccessStatusCode();
 
             var data = await response.Content.ReadAsStringAsync();
-            var deserializedData = JsonConvert.DeserializeObject<MovieYoutubeTrailerKeysApiModelDto>(data);
+            var deserializedData = JsonConvert.DeserializeObject<MovieKeyYoutubeTrailersApiModelDto>(data);
 
             return deserializedData;
         }
 
-        public async Task<UpcomingMoviesApiModelDto> GetUpcomingMovies()
+
+        public async Task<GetCastsAndCrewsOfMovieAndTvApiModelDto> GetCastsAndCrewsOfMovie(long? movieApiId)
         {
-            var response = await _httpClient.GetAsync($"movie/upcoming?api_key={_tMDBConfig.ApiKey}&language={_tMDBConfig.language}");
+            var response = await _httpClient.GetAsync($"movie/{movieApiId}/casts?api_key={_tMDBConfig.ApiKey}&language={_tMDBConfig.language}&page=1");
             response.EnsureSuccessStatusCode();
 
             var data = await response.Content.ReadAsStringAsync();
-            var deserializedData = JsonConvert.DeserializeObject<UpcomingMoviesApiModelDto>(data);
-
-            return deserializedData;
-        }
-
-        public async Task<SimilarMoviesApiModelDto> GetSimilarMovies(long movieApiId)
-        {
-            var response = await _httpClient.GetAsync($"movie/{movieApiId}/similar?api_key={_tMDBConfig.ApiKey}&language={_tMDBConfig.language}");
-            response.EnsureSuccessStatusCode();
-
-            var data = await response.Content.ReadAsStringAsync();
-            var deserializedData = JsonConvert.DeserializeObject<SimilarMoviesApiModelDto>(data);
-
-            return deserializedData;
-        }
-
-        public async Task<MovieRecommendationsApiModelDto> GetMovieRecommendations(long movieApiId)
-        {
-            var response = await _httpClient.GetAsync($"movie/{movieApiId}/recommendations?api_key={_tMDBConfig.ApiKey}&language={_tMDBConfig.language}&page=1");
-            response.EnsureSuccessStatusCode();
-
-            var data = await response.Content.ReadAsStringAsync();
-            var deserializedData = JsonConvert.DeserializeObject<MovieRecommendationsApiModelDto>(data);
-
-            return deserializedData;
-        }
-
-        public async Task<TopRatedMoviesApiModelDto> GetTopRatedMovies()
-        {
-            var response = await _httpClient.GetAsync($"movie/top_rated?api_key={_tMDBConfig.ApiKey}&language={_tMDBConfig.language}&page=1");
-            response.EnsureSuccessStatusCode();
-
-            var data = await response.Content.ReadAsStringAsync();
-            var deserializedData = JsonConvert.DeserializeObject<TopRatedMoviesApiModelDto>(data);
+            var deserializedData = JsonConvert.DeserializeObject<GetCastsAndCrewsOfMovieAndTvApiModelDto>(data);
 
             return deserializedData;
         }

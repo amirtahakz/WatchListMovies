@@ -31,7 +31,7 @@ namespace WatchListMovies.Api.Controllers
         [HttpGet("GetCastsByFilter")]
         public async Task<ApiResult<CastFilterResult>> GetCastsByFilter([FromQuery] CastFilterParams filterParams)
         {
-            var result = await _mediator.Send(new GetCastByFilterQuery(filterParams));
+            var result = await _mediator.Send(new GetCastsByFilterQuery(filterParams));
             return QueryResult(result);
         }
 

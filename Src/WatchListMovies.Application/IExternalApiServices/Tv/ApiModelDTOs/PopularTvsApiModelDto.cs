@@ -13,7 +13,7 @@ namespace WatchListMovies.Application.IExternalApiServices.Tv.ApiModelDTOs
         public long? Page { get; set; }
 
         [JsonProperty("results")]
-        public List<PopularTvsItem>? Results { get; set; }
+        public List<PopularTvsItemApiModelDto>? Tvs { get; set; }
 
         [JsonProperty("total_pages")]
         public long? TotalPages { get; set; }
@@ -22,7 +22,7 @@ namespace WatchListMovies.Application.IExternalApiServices.Tv.ApiModelDTOs
         public long? TotalResults { get; set; }
     }
 
-    public class PopularTvsItem
+    public class PopularTvsItemApiModelDto
     {
         [JsonProperty("adult")]
         public bool? Adult { get; set; }
@@ -31,7 +31,7 @@ namespace WatchListMovies.Application.IExternalApiServices.Tv.ApiModelDTOs
         public string? BackdropPath { get; set; }
 
         [JsonProperty("genre_ids")]
-        public List<long>? GenreIds { get; set; }
+        public List<string>? GenreIds { get; set; }
 
         [JsonProperty("id")]
         public long? Id { get; set; }
@@ -55,7 +55,7 @@ namespace WatchListMovies.Application.IExternalApiServices.Tv.ApiModelDTOs
         public string? PosterPath { get; set; }
 
         [JsonProperty("first_air_date")]
-        public string? FirstAirDate { get; set; }
+        public DateTime? FirstAirDate { get; set; }
 
         [JsonProperty("name")]
         public string? Name { get; set; }

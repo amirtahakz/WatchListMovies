@@ -12,5 +12,7 @@ namespace WatchListMovies.Application.IExternalApiServices.Movie
         public Task<PopularMoviesApiModelDto> GetPopularMovies(int page = 1);
 
         public Task<MovieDetailsApiModelDto> GetMovieDetails(long? movieApiId);
+        Task<MovieKeyYoutubeTrailersApiModelDto> GetMovieYoutubeTrailerKeys(long? movieApiId);
+        Task<GetCastsAndCrewsOfMovieAndTvApiModelDto> GetCastsAndCrewsOfMovie(long? movieApiId);
     }
 }

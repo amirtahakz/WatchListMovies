@@ -13,10 +13,12 @@ namespace WatchListMovies.Application.Services.Tv.Create
         public string? Overview { get; set; }
         public double? Popularity { get; set; }
         public string? PosterPath { get; set; }
-        public string? FirstAirDate { get; set; }
+        public DateTime? FirstAirDate { get; set; }
         public string? Name { get; set; }
         public double? VoteAverage { get; set; }
         public long? VoteCount { get; set; }
-        public TvDetail TvDetail { get; set; }
+        public bool? IsRecommendedByAdmin { get; set; }
+        public IReadOnlyCollection<string>? GenreIds { get; set; }
+        public TvDetail? TvDetail { get; set; }
     }
 }

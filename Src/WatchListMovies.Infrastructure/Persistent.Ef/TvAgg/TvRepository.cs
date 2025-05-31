@@ -38,5 +38,29 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef.TvAgg
                 return false;
             }
         }
+
+        public async Task AddRangeIfNotExistAsync(List<Tv> tvs)
+        {
+
+            foreach (var item in tvs)
+            {
+                var existingMovie = await Context.Tvs.FirstOrDefaultAsync(m => m.ApiModelId == item.ApiModelId);
+
+                if (existingMovie == null)
+                    await Context.Tvs.AddRangeAsync(item);
+
+
+            }
+
+        }
+
+        public async Task<Tv> GetTrackingByImdbIdAsync(long apiModelId)
+        {
+            var result = await Context.Tvs
+                .AsTracking()
+                .FirstOrDefaultAsync(x => x.ApiModelId == apiModelId);
+
+            return result;
+        }
     }
 }

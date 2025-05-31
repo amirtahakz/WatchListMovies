@@ -12,7 +12,7 @@ namespace WatchListMovies.Api.ViewModels.Movie
         public string? Overview { get; set; }
         public double? Popularity { get; set; }
         public string? PosterPath { get; set; }
-        public string? ReleaseDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
         public string? Title { get; set; }
         public bool? Video { get; set; }
         public double? VoteAverage { get; set; }

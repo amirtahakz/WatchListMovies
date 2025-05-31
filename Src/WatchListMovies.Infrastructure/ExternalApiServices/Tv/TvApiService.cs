@@ -43,5 +43,16 @@ namespace WatchListMovies.Infrastructure.ExternalApiServices.Tv
 
             return deserializedData;
         }
+
+        public async Task<GetCastsAndCrewsOfMovieAndTvApiModelDto> GetCastsAndCrewsOfTv(long? tvApiId)
+        {
+            var response = await _httpClient.GetAsync($"tv/{tvApiId}/credits?api_key={_tMDBConfig.ApiKey}&language={_tMDBConfig.language}&page=1");
+            response.EnsureSuccessStatusCode();
+
+            var data = await response.Content.ReadAsStringAsync();
+            var deserializedData = JsonConvert.DeserializeObject<GetCastsAndCrewsOfMovieAndTvApiModelDto>(data);
+
+            return deserializedData;
+        }
     }
 }

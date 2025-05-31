@@ -15,8 +15,4 @@
     <ProjectReference Include="..\WatchListMovies.Infrastructure\WatchListMovies.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Movies\GertAllAsNoTracking\" />
-  </ItemGroup>
-
 </Project>

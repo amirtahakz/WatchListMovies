@@ -35,7 +35,7 @@ namespace WatchListMovies.Api.Controllers
         [HttpGet("GetListsByFilter")]
         public async Task<ApiResult<ListFilterResult>> GetListByFilter([FromQuery] ListFilterParams filterParams)
         {
-            var result = await _mediator.Send(new GetListByFilterQuery(filterParams));
+            var result = await _mediator.Send(new GetListsByFilterQuery(filterParams));
             return QueryResult(result);
         }
 

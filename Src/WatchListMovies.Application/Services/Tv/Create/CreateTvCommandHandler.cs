@@ -15,7 +15,7 @@ public class CreateTvCommandHandler : IBaseCommandHandler<CreateTvCommand, Guid>
     public async Task<OperationResult<Guid>> Handle(CreateTvCommand request, CancellationToken cancellationToken)
     {
         var entityModel = new Domain.TvAgg.Tv(request.Adult, request.BackdropPath, request.ApiModelId, request.OriginalLanguage, request.OriginalName
-        , request.Overview, request.Popularity, request.PosterPath, request.FirstAirDate, request.Name, request.VoteAverage, request.VoteCount, request.TvDetail);
+        , request.Overview, request.Popularity, request.PosterPath, request.FirstAirDate, request.Name, request.VoteAverage, request.VoteCount,request.GenreIds , request.TvDetail);
         await _tvRepository.AddAsync(entityModel);
         await _tvRepository.Save();
 

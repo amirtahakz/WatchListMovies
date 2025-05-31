@@ -1,6 +1,9 @@
-﻿using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using WatchListMovies.Common.Domain;
 using WatchListMovies.Common.Domain.Repository;
+using WatchListMovies.Domain.MovieAgg;
 using WatchListMovies.Infrastructure.Persistent.Ef;
 
 namespace WatchListMovies.Infrastructure._Utilities
@@ -57,5 +60,7 @@ namespace WatchListMovies.Infrastructure._Utilities
         {
             return Context.Set<TEntity>().FirstOrDefault(t => t.Id.Equals(id)); ;
         }
+
     }
+
 }

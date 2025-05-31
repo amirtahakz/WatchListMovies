@@ -1,12 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WatchListMovies.Domain._Shared.ValueObjects;
 using WatchListMovies.Domain.CastAgg;
-using WatchListMovies.Domain.CastAgg.ValueObjects;
 using WatchListMovies.Domain.FavoriteAgg;
 using WatchListMovies.Domain.ListAgg;
 using WatchListMovies.Domain.MovieAgg;
 using WatchListMovies.Domain.TvAgg;
-using WatchListMovies.Domain.TvAgg.ValueObjects;
 using WatchListMovies.Domain.UserAgg;
 
 namespace WatchListMovies.Infrastructure.Persistent.Ef
@@ -28,10 +25,15 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef
 
         public DbSet<Movie> Movies { get; set; }
         public DbSet<MovieDetail> MovieDetails { get; set; }
+        public DbSet<MovieKeyYoutubeTrailer> MovieKeyYoutubeTrailers { get; set; }
+        public DbSet<MovieCast> MovieCasts { get; set; }
+        public DbSet<MovieCrew> MovieCrews { get; set; }
 
 
         public DbSet<Tv> Tvs { get; set; }
         public DbSet<TvDetail> TvDetails { get; set; }
+        public DbSet<TvCast> TvCasts { get; set; }
+        public DbSet<TvCrew> TvCrews { get; set; }
 
 
         public DbSet<Cast> Casts { get; set; }
@@ -45,6 +47,7 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+            optionsBuilder.EnableSensitiveDataLogging();
             base.OnConfiguring(optionsBuilder);
         }
 

@@ -1,5 +1,4 @@
 ﻿using WatchListMovies.Common.Query;
-using WatchListMovies.Common.Query.Filter;
 using WatchListMovies.Domain.CastAgg;
 using WatchListMovies.Domain.CastAgg.ValueObjects;
 
@@ -18,7 +17,7 @@ namespace WatchListMovies.Query.Cast.DTOs
         public List<CastImage>? CastImages { get; set; }
         public CastExternalId? CastExternalId { get; set; }
         public CastDetail? CastDetails { get; set; }
-        public List<CastKnownFor>? CastKnownFors { get; set; }
+        public List<CastKnownForValueObject>? CastKnownFors { get; set; }
     }
 
     public class CastFilterParams : BaseFilterParam
@@ -36,7 +35,7 @@ namespace WatchListMovies.Query.Cast.DTOs
         public List<CastImage>? CastImages { get; set; }
         public CastExternalId? CastExternalId { get; set; }
         public CastDetail? CastDetails { get; set; }
-        public List<CastKnownFor>? CastKnownFors { get; set; }
+        public List<CastKnownForValueObject>? CastKnownFors { get; set; }
     }
     public class CastFilterResult : BaseFilter<CastDto, CastFilterParams>
     {

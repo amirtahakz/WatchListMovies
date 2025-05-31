@@ -13,7 +13,7 @@ namespace WatchListMovies.Application.IExternalApiServices.Movie.ApiModelDTOs
         public int? Page { get; set; }
 
         [JsonProperty("results")]
-        public List<PopularMoviesItem>? Results { get; set; }
+        public List<PopularMoviesItemApiModelDto>? movies { get; set; }
 
         [JsonProperty("total_pages")]
         public long? TotalPages { get; set; }
@@ -22,7 +22,7 @@ namespace WatchListMovies.Application.IExternalApiServices.Movie.ApiModelDTOs
         public long? TotalResults { get; set; }
     }
 
-    public class PopularMoviesItem
+    public class PopularMoviesItemApiModelDto
     {
         [JsonProperty("adult")]
         public bool? Adult { get; set; }
@@ -31,7 +31,7 @@ namespace WatchListMovies.Application.IExternalApiServices.Movie.ApiModelDTOs
         public string? BackdropPath { get; set; }
 
         [JsonProperty("genre_ids")]
-        public List<long>? GenreIds { get; set; }
+        public List<string>? GenreIds { get; set; }
 
         [JsonProperty("id")]
         public long? ApiModelId { get; set; }
@@ -52,7 +52,7 @@ namespace WatchListMovies.Application.IExternalApiServices.Movie.ApiModelDTOs
         public string? PosterPath { get; set; }
 
         [JsonProperty("release_date")]
-        public string? ReleaseDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
 
         [JsonProperty("title")]
         public string? Title { get; set; }

@@ -10,8 +10,9 @@ namespace WatchListMovies.Application.IExternalApiServices.Tv
 {
     public interface ITvApiService
     {
-        public Task<PopularTvsApiModelDto> GetPopularTvs(int page = 1);
+        Task<PopularTvsApiModelDto> GetPopularTvs(int page = 1);
 
-        public Task<TvDetailsApiModelDto> GetTvDetails(long? tvApiId);
+        Task<TvDetailsApiModelDto> GetTvDetails(long? tvApiId);
+        Task<GetCastsAndCrewsOfMovieAndTvApiModelDto> GetCastsAndCrewsOfTv(long? tvApiId);
     }
 }

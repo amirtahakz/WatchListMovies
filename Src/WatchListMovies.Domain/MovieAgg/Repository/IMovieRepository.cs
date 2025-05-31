@@ -6,6 +6,8 @@ namespace WatchListMovies.Domain.MovieAgg.Repository
     {
         Task<List<Movie>> GetAllAsync();
         Task<List<Movie>> GetAllAsNoTrackingAsync();
+        Task<Movie> GetTrackingByImdbIdAsync(string imdbId);
+        Task AddRangeIfNotExistAsync(List<Movie> movies);
         Task<bool> DeleteAllAsync();
     }
 }

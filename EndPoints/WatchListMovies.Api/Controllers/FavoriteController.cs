@@ -40,7 +40,7 @@ namespace WatchListMovies.Api.Controllers
         [HttpGet("GetFavoriteByFilter")]
         public async Task<ApiResult<FavoriteFilterResult>> GetFavoriteByFilter([FromQuery] FavoriteFilterParams filterParams)
         {
-            var result = await _mediator.Send(new GetFavoriteByFilterQuery(filterParams));
+            var result = await _mediator.Send(new GetFavoritesByFilterQuery(filterParams));
             return QueryResult(result);
         }
 

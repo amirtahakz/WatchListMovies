@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WatchListMovies.Common.Domain;
+﻿using WatchListMovies.Common.Domain;
 
 namespace WatchListMovies.Domain.TvAgg
 {
@@ -22,11 +17,13 @@ namespace WatchListMovies.Domain.TvAgg
             string? overview,
             double? popularity,
             string? posterPath,
-            string? firstAirDate,
+            DateTime? firstAirDate,
             string? name,
             double? voteAverage,
             long? voteCount,
-            TvDetail tvDetail)
+            IEnumerable<string>? genreIds,
+            TvDetail tvDetail,
+            bool? isRecommendedByAdmin = false)
         {
             Adult = adult;
             BackdropPath = backdropPath;
@@ -40,7 +37,14 @@ namespace WatchListMovies.Domain.TvAgg
             Name = name;
             VoteAverage = voteAverage;
             VoteCount = voteCount;
+            GenreIds = genreIds.ToList();
             TvDetail = tvDetail;
+            IsRecommendedByAdmin = isRecommendedByAdmin;
+        }
+
+        public void MakeRecommended()
+        {
+            IsRecommendedByAdmin = true;
         }
 
         public bool? Adult { get; set; }
@@ -51,10 +55,12 @@ namespace WatchListMovies.Domain.TvAgg
         public string? Overview { get; set; }
         public double? Popularity { get; set; }
         public string? PosterPath { get; set; }
-        public string? FirstAirDate { get; set; }
+        public DateTime? FirstAirDate { get; set; }
         public string? Name { get; set; }
         public double? VoteAverage { get; set; }
         public long? VoteCount { get; set; }
+        public bool? IsRecommendedByAdmin { get; set; }
+        public IReadOnlyCollection<string>? GenreIds { get; set; }
         public TvDetail? TvDetail { get; set; }
     }
 }

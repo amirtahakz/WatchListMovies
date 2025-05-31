@@ -22,7 +22,7 @@ namespace WatchListMovies.Api.Controllers
         [HttpGet("GetGenresByFilter")]
         public async Task<ApiResult<GenreFilterResult>> GetGenresByFilter([FromQuery] GenreFilterParams filterParams)
         {
-            var result = await _mediator.Send(new GetGenreByFilterQuery(filterParams));
+            var result = await _mediator.Send(new GetGenresByFilterQuery(filterParams));
             return QueryResult(result);
         }
 

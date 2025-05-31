@@ -1,5 +1,4 @@
 ﻿using WatchListMovies.Common.Query;
-using WatchListMovies.Common.Query.Filter;
 using WatchListMovies.Domain.GenreAgg.Enums;
 
 namespace WatchListMovies.Query.Genre.DTOs

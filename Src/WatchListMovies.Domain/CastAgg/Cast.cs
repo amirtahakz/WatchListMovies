@@ -27,7 +27,7 @@ namespace WatchListMovies.Domain.CastAgg
             List<CastImage> castImages,
             CastExternalId? castExternalId,
             CastDetail? castDetails,
-            List<CastKnownFor>? castKnownFors)
+            List<CastKnownForValueObject>? castKnownFors)
         {
             Adult = adult;
             Gender = gender;
@@ -54,6 +54,6 @@ namespace WatchListMovies.Domain.CastAgg
         public List<CastImage>? CastImages { get; set; }
         public CastExternalId? CastExternalId { get; set; }
         public CastDetail? CastDetails { get; set; }
-        public List<CastKnownFor>? CastKnownFors { get; set; }
+        public List<CastKnownForValueObject>? CastKnownFors { get; set; }
     }
 }

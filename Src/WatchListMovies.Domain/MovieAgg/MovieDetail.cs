@@ -1,7 +1,6 @@
 ﻿using WatchListMovies.Common.Domain;
 using WatchListMovies.Domain._Shared.ValueObjects;
 using WatchListMovies.Domain.MovieAgg.ValueObjects;
-using Genre = WatchListMovies.Domain._Shared.ValueObjects.Genre;
 
 namespace WatchListMovies.Domain.MovieAgg
 {
@@ -25,7 +24,7 @@ namespace WatchListMovies.Domain.MovieAgg
             string? overview,
             double? popularity,
             string? posterPath,
-            string? releaseDate,
+            DateTime? releaseDate,
             long? revenue,
             long? runtime,
             string? status,
@@ -34,11 +33,14 @@ namespace WatchListMovies.Domain.MovieAgg
             bool? video,
             double? voteAverage,
             long? voteCount,
-            BelongsToCollection? belongsToCollection,
-            List<Genre> genres,
-            List<ProductionCompany> productionCompanies,
-            List<ProductionCountry> productionCountries,
-            List<SpokenLanguage> spokenLanguages)
+            BelongsToCollectionValueObject? belongsToCollection,
+            List<GenreValueObject> genres,
+            List<ProductionCompanyValueObject> productionCompanies,
+            List<ProductionCountryValueObject> productionCountries,
+            List<SpokenLanguageValueObject> spokenLanguages,
+            List<MovieKeyYoutubeTrailer> movieKeyYoutubeTrailer,
+            List<MovieCast>? casts,
+            List<MovieCrew>? crews)
         {
             MovieId = movieId;
             Adult = adult;
@@ -66,6 +68,9 @@ namespace WatchListMovies.Domain.MovieAgg
             ProductionCompanies = productionCompanies;
             ProductionCountries = productionCountries;
             SpokenLanguages = spokenLanguages;
+            MovieKeyYoutubeTrailers = movieKeyYoutubeTrailer;
+            Casts = casts;
+            Crews = crews;
         }
 
         public Guid MovieId { get; set; }
@@ -80,7 +85,7 @@ namespace WatchListMovies.Domain.MovieAgg
         public string? Overview { get; set; }
         public double? Popularity { get; set; }
         public string? PosterPath { get; set; }
-        public string? ReleaseDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
         public long? Revenue { get; set; }
         public long? Runtime { get; set; }
         public string? Status { get; set; }
@@ -89,11 +94,14 @@ namespace WatchListMovies.Domain.MovieAgg
         public bool? Video { get; set; }
         public double? VoteAverage { get; set; }
         public long? VoteCount { get; set; }
-        public BelongsToCollection? BelongsToCollection { get; set; }
-        public List<Genre> Genres { get; set; }
-        public List<ProductionCompany> ProductionCompanies { get; set; }
-        public List<ProductionCountry> ProductionCountries { get; set; }
-        public List<SpokenLanguage> SpokenLanguages { get; set; }
+        public BelongsToCollectionValueObject? BelongsToCollection { get; set; }
+        public List<MovieKeyYoutubeTrailer>? MovieKeyYoutubeTrailers { get; set; }
+        public List<GenreValueObject> Genres { get; set; }
+        public List<ProductionCompanyValueObject> ProductionCompanies { get; set; }
+        public List<ProductionCountryValueObject> ProductionCountries { get; set; }
+        public List<SpokenLanguageValueObject> SpokenLanguages { get; set; }
+        public List<MovieCast>? Casts { get; set; }
+        public List<MovieCrew>? Crews { get; set; }
 
     }
 

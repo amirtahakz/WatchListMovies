@@ -1,36 +1,41 @@
-﻿using WatchListMovies.Application.IExternalApiServices.Movie.ApiModelDTOs;
+﻿using WatchListMovies.Application.BackgroundJobs.Tv;
+using WatchListMovies.Application.IExternalApiServices._Shared;
+using WatchListMovies.Application.IExternalApiServices.Movie.ApiModelDTOs;
 using WatchListMovies.Domain.MovieAgg;
-using ProductionCompany = WatchListMovies.Domain._Shared.ValueObjects.ProductionCompany;
-using ProductionCountry = WatchListMovies.Domain._Shared.ValueObjects.ProductionCountry;
-using SpokenLanguage = WatchListMovies.Domain._Shared.ValueObjects.SpokenLanguage;
 
 namespace WatchListMovies.Application.BackgroundJobs.Movie
 {
     public static class MovieMapper
     {
-        public static List<Domain.MovieAgg.Movie> Map(this PopularMoviesApiModelDto movie)
+        public static List<Domain.MovieAgg.Movie> Map(this PopularMoviesApiModelDto popularMoviesApiModelDto)
         {
             var result = new List<Domain.MovieAgg.Movie>();
-            foreach (var item in movie.Results)
+
+            foreach (var item in popularMoviesApiModelDto.movies)
+                result.Add(item.Map());
+
+            return result;
+        }
+
+        public static Domain.MovieAgg.Movie Map(this PopularMoviesItemApiModelDto popularMoviesItemApiModelDto)
+        {
+            var result = new Domain.MovieAgg.Movie()
             {
-                var model = new Domain.MovieAgg.Movie()
-                {
-                    Adult = item.Adult,
-                    ApiModelId = item.ApiModelId,
-                    BackdropPath = item.BackdropPath,
-                    OriginalLanguage = item.OriginalLanguage,
-                    OriginalTitle = item.Title,
-                    Overview = item.Overview,
-                    Popularity = item.Popularity,
-                    PosterPath = item.PosterPath,
-                    ReleaseDate = item.ReleaseDate,
-                    Title = item.Title,
-                    Video = item.Video,
-                    VoteAverage = item.VoteAverage,
-                    VoteCount = item.VoteCount,
-                };
-                result.Add(model);
-            }
+                Adult = popularMoviesItemApiModelDto.Adult,
+                ApiModelId = popularMoviesItemApiModelDto.ApiModelId,
+                BackdropPath = popularMoviesItemApiModelDto.BackdropPath,
+                OriginalLanguage = popularMoviesItemApiModelDto.OriginalLanguage,
+                OriginalTitle = popularMoviesItemApiModelDto.Title,
+                Overview = popularMoviesItemApiModelDto.Overview,
+                Popularity = popularMoviesItemApiModelDto.Popularity,
+                PosterPath = popularMoviesItemApiModelDto.PosterPath,
+                ReleaseDate = popularMoviesItemApiModelDto.ReleaseDate,
+                Title = popularMoviesItemApiModelDto.Title,
+                Video = popularMoviesItemApiModelDto.Video,
+                VoteAverage = popularMoviesItemApiModelDto.VoteAverage,
+                VoteCount = popularMoviesItemApiModelDto.VoteCount,
+                GenreIds = popularMoviesItemApiModelDto.GenreIds
+            };
             return result;
         }
 
@@ -60,84 +65,119 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
                 VoteAverage = movieDetails.VoteAverage,
                 MovieId = movieId,
             };
+
             if (movieDetails.Genres != null)
-            {
-                foreach (var item in movieDetails.Genres)
-                {
-                    result.Genres = new List<Domain._Shared.ValueObjects.Genre>()
-                    {
-                        new ()
-                        {
-                            ApiModelId = item.ApiModelId,
-                            Name = item.Name,
-                            MediaId = result.Id
-                        }
-                    };
-                }
-            }
+                result.Genres = movieDetails.Genres.Map(result.Id);
 
             if (movieDetails.SpokenLanguages != null)
-            {
-                foreach (var item in movieDetails.SpokenLanguages)
-                {
-                    result.SpokenLanguages = new List<SpokenLanguage>()
-                    {
-                        new ()
-                        {
-                            Name = item.Name,
-                            EnglishName = item.EnglishName,
-                            Iso6391 = item.Iso6391,
-                            MediaId = result.Id
-                        }
-                    };
-                }
-            }
+                result.SpokenLanguages = movieDetails.SpokenLanguages.Map(result.Id);
 
             if (movieDetails.ProductionCompanies != null)
-            {
-                foreach (var item in movieDetails.ProductionCompanies)
-                {
-                    result.ProductionCompanies = new List<ProductionCompany>()
-                    {
-                        new ()
-                        {
-                            Name = item.Name,
-                            LogoPath = item.LogoPath,
-                            OriginCountry = item.OriginCountry,
-                            ApiModelId = item.ApiModelId,
-                            MediaId = result.Id
-                        }
-                    };
-                }
-            }
+                result.ProductionCompanies = movieDetails.ProductionCompanies.Map(result.Id);
 
             if (movieDetails.ProductionCountries != null)
-            {
-                foreach (var item in movieDetails.ProductionCountries)
-                {
-                    result.ProductionCountries = new List<ProductionCountry>()
-                    {
-                        new ()
-                        {
-                            Name = item.Name,
-                            Iso31661 = item.Iso31661,
-                            MediaId = result.Id
-                        }
-                    };
-                }
-            }
+                result.ProductionCountries = movieDetails.ProductionCountries.Map(result.Id);
+
+
 
             if (movieDetails.BelongsToCollection != null)
             {
-                result.BelongsToCollection = new Domain.MovieAgg.ValueObjects.BelongsToCollection()
+                result.BelongsToCollection = new Domain.MovieAgg.ValueObjects.BelongsToCollectionValueObject()
                 {
                     BackdropPath = movieDetails.BelongsToCollection.BackdropPath,
                     PosterPath = movieDetails.BelongsToCollection.PosterPath,
                     ApiModelId = movieDetails.BelongsToCollection.ApiModelId,
                     Name = movieDetails.BelongsToCollection.Name,
-                    MovieDetailId = result.Id,
+                    MediaId = result.Id,
                 };
             }
+
+            return result;
+        }
+
+        public static List<MovieKeyYoutubeTrailer> Map(this MovieKeyYoutubeTrailersItem movieKeyYoutubeTrailers, Guid movieDetailId)
+        {
+            var result = new List<MovieKeyYoutubeTrailer>();
+            var model = new MovieKeyYoutubeTrailer()
+            {
+                Name = movieKeyYoutubeTrailers.Name,
+                ApiModelId = movieKeyYoutubeTrailers.Id,
+                Iso31661 = movieKeyYoutubeTrailers.Iso31661,
+                Iso6391 = movieKeyYoutubeTrailers.Iso6391,
+                Key = movieKeyYoutubeTrailers.Key,
+                MediaId = movieDetailId,
+                Official = movieKeyYoutubeTrailers.Official,
+                PublishedAt = movieKeyYoutubeTrailers.PublishedAt,
+                Site = movieKeyYoutubeTrailers.Site,
+                Size = movieKeyYoutubeTrailers.Size,
+                Type = movieKeyYoutubeTrailers.Type,
+            };
+            result.Add(model);
+
+            return result;
+        }
+
+
+        public static MovieCast Map(this MovieAndTvCastsItemApiModelDto cast, Guid movieDetailId)
+        {
+            var result = new MovieCast()
+            {
+                Adult = cast.Adult,
+                ApiModelId = cast.Id,
+                CastId = cast.CastId,
+                Character = cast.Character,
+                CreditId = cast.CreditId,
+                Gender = cast.Gender,
+                KnownForDepartment = cast.KnownForDepartment,
+                MovieDetailsId = movieDetailId,
+                Name = cast.Name,
+                Order = cast.Order,
+                OriginalName = cast.OriginalName,
+                Popularity = cast.Popularity,
+                ProfilePath = cast.ProfilePath,
+
+            };
+
+            return result;
+        }
+
+        public static List<MovieCast> Map(this List<MovieAndTvCastsItemApiModelDto> casts, Guid movieDetailId)
+        {
+            var result = new List<MovieCast>();
+
+            foreach (var cast in casts)
+                result.Add(cast.Map(movieDetailId));
+
+            return result;
+        }
+
+        public static MovieCrew Map(this MovieAndTvCrewsItemApiModelDto crew, Guid movieDetailId)
+        {
+            var result = new MovieCrew()
+            {
+                Adult = crew.Adult,
+                ApiModelId = crew.Id,
+                CreditId = crew.CreditId,
+                Gender = crew.Gender,
+                KnownForDepartment = crew.KnownForDepartment,
+                MovieDetailsId = movieDetailId,
+                Name = crew.Name,
+                OriginalName = crew.OriginalName,
+                Popularity = crew.Popularity,
+                ProfilePath = crew.ProfilePath,
+                Department = crew.Department,
+                Job = crew.Job,
+            };
+
+            return result;
+        }
+
+        public static List<MovieCrew> Map(this List<MovieAndTvCrewsItemApiModelDto> crews, Guid movieDetailId)
+        {
+            var result = new List<MovieCrew>();
+
+            foreach (var crew in crews)
+                result.Add(crew.Map(movieDetailId));
 
             return result;
         }

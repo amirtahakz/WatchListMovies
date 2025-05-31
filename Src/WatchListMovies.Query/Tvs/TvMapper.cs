@@ -28,5 +28,34 @@ namespace WatchListMovies.Query.Tvs
 
             };
         }
+
+        public static List<TvDto> Map(this List<Tv> tvs)
+        {
+            var result = new List<TvDto>();
+            foreach (var tv in tvs)
+            {
+                result.Add(new TvDto()
+                {
+                    Id = tv.Id,
+                    CreationDate = tv.CreationDate,
+                    ApiModelId = tv.ApiModelId,
+                    Adult = tv.Adult,
+                    BackdropPath = tv.BackdropPath,
+                    OriginalLanguage = tv.OriginalLanguage,
+                    Overview = tv.Overview,
+                    Popularity = tv.Popularity,
+                    PosterPath = tv.PosterPath,
+                    VoteAverage = tv.VoteAverage,
+                    VoteCount = tv.VoteCount,
+                    FirstAirDate = tv.FirstAirDate,
+                    Name = tv.Name,
+                    OriginalName = tv.OriginalName,
+                    TvDetail = tv.TvDetail,
+
+
+                });
+            }
+            return result;
+        }
     }
 }

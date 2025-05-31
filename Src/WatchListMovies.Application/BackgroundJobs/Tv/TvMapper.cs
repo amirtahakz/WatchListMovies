@@ -1,42 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using WatchListMovies.Application.IExternalApiServices._Shared;
+using WatchListMovies.Application.IExternalApiServices._Shared.ApiModelDtos;
 using WatchListMovies.Application.IExternalApiServices.Movie.ApiModelDTOs;
 using WatchListMovies.Application.IExternalApiServices.Tv.ApiModelDTOs;
+using WatchListMovies.Domain._Shared.ValueObjects;
 using WatchListMovies.Domain.MovieAgg;
 using WatchListMovies.Domain.TvAgg;
+using WatchListMovies.Domain.TvAgg.Enums;
 using WatchListMovies.Domain.TvAgg.ValueObjects;
 
 namespace WatchListMovies.Application.BackgroundJobs.Tv
 {
     public static class TvMapper
     {
-        public static List<Domain.TvAgg.Tv> Map(this PopularTvsApiModelDto tv)
+        public static List<Domain.TvAgg.Tv> Map(this PopularTvsApiModelDto popularTvsApiModelDto)
         {
             var result = new List<Domain.TvAgg.Tv>();
-            foreach (var item in tv.Results)
-            {
-                var model = new Domain.TvAgg.Tv()
-                {
-                    Adult = item.Adult,
-                    ApiModelId = item.Id,
-                    BackdropPath = item.BackdropPath,
-                    OriginalLanguage = item.OriginalLanguage,
-                    Overview = item.Overview,
-                    Popularity = item.Popularity,
-                    PosterPath = item.PosterPath,
-                    VoteAverage = item.VoteAverage,
-                    VoteCount = item.VoteCount,
-                    Name = item.Name,
-                    FirstAirDate = item.FirstAirDate,
-                    OriginalName = item.OriginalName,
-                };
-                result.Add(model);
-            }
+
+            foreach (var item in popularTvsApiModelDto.Tvs)
+                result.Add(item.Map());
+
             return result;
         }
+
+        public static Domain.TvAgg.Tv Map(this PopularTvsItemApiModelDto popularTvsItemApiModelDto)
+        {
+            var result = new Domain.TvAgg.Tv()
+            {
+                Adult = popularTvsItemApiModelDto.Adult,
+                ApiModelId = popularTvsItemApiModelDto.Id,
+                BackdropPath = popularTvsItemApiModelDto.BackdropPath,
+                OriginalLanguage = popularTvsItemApiModelDto.OriginalLanguage,
+                Overview = popularTvsItemApiModelDto.Overview,
+                Popularity = popularTvsItemApiModelDto.Popularity,
+                PosterPath = popularTvsItemApiModelDto.PosterPath,
+                VoteAverage = popularTvsItemApiModelDto.VoteAverage,
+                VoteCount = popularTvsItemApiModelDto.VoteCount,
+                Name = popularTvsItemApiModelDto.Name,
+                FirstAirDate = popularTvsItemApiModelDto.FirstAirDate,
+                OriginalName = popularTvsItemApiModelDto.OriginalName,
+                GenreIds = popularTvsItemApiModelDto.GenreIds,
+            };
+            return result;
+        }
+
 
         public static TvDetail Map(this TvDetailsApiModelDto tvDetails, Guid tvId)
         {
@@ -63,182 +69,209 @@ namespace WatchListMovies.Application.BackgroundJobs.Tv
                 NumberOfSeasons = tvDetails.NumberOfSeasons,
                 TvId = tvId,
                 Type = tvDetails.Type,
-                TvEpisodeRunTimes = tvDetails.EpisodeRunTime.Select(l => l.ToString()).ToList() ?? default,
+                TvEpisodeRunTimes = tvDetails.EpisodeRunTime,
             };
 
             if (tvDetails.Genres != null)
-            {
-                foreach (var item in tvDetails.Genres)
-                {
-                    result.Genres = new List<Domain._Shared.ValueObjects.Genre>()
-                    {
-                        new ()
-                        {
-                            ApiModelId = item.Id,
-                            Name = item.Name,
-                            MediaId = result.Id
-                        }
-                    };
-                }
-            }
+                result.Genres = tvDetails.Genres.Map(result.Id);
 
             if (tvDetails.SpokenLanguages != null)
-            {
-                foreach (var item in tvDetails.SpokenLanguages)
-                {
-                    result.SpokenLanguages = new List<Domain._Shared.ValueObjects.SpokenLanguage>()
-                    {
-                        new ()
-                        {
-                            Name = item.Name,
-                            EnglishName = item.EnglishName,
-                            Iso6391 = item.Iso6391,
-                            MediaId = result.Id
-                        }
-                    };
-                }
-            }
+                result.SpokenLanguages = tvDetails.SpokenLanguages.Map(result.Id);
 
             if (tvDetails.ProductionCompanies != null)
-            {
-                foreach (var item in tvDetails.ProductionCompanies)
-                {
-                    result.ProductionCompanies = new List<Domain._Shared.ValueObjects.ProductionCompany>()
-                    {
-                        new ()
-                        {
-                            Name = item.Name,
-                            LogoPath = item.LogoPath,
-                            OriginCountry = item.OriginCountry,
-                            ApiModelId = item.Id,
-                            MediaId = result.Id
-                        }
-                    };
-                }
-            }
+                result.ProductionCompanies = tvDetails.ProductionCompanies.Map(result.Id);
 
             if (tvDetails.ProductionCountries != null)
-            {
-                foreach (var item in tvDetails.ProductionCountries)
-                {
-                    result.ProductionCountries = new List<Domain._Shared.ValueObjects.ProductionCountry>()
-                    {
-                        new ()
-                        {
-                            Name = item.Name,
-                            Iso31661 = item.Iso31661,
-                            MediaId = result.Id
-                        }
-                    };
-                }
-            }
+                result.ProductionCountries = tvDetails.ProductionCountries.Map(result.Id);
 
             if (tvDetails.Seasons != null)
-            {
-                foreach (var item in tvDetails.Seasons)
-                {
-                    result.Seasons = new List<Domain.TvAgg.ValueObjects.Season>()
-                    {
-                        new ()
-                        {
-                            PosterPath = item.PosterPath,
-                            ApiModelId = item.Id,
-                            Name = item.Name,
-                            AirDate = item.AirDate,
-                            EpisodeCount = item.EpisodeCount,
-                            MediaId=result.Id,
-                            Overview = item.Overview,
-                            SeasonNumber = item.SeasonNumber,
-                            VoteAverage = item.VoteAverage,
-
-                        }
-                    };
-                }
-            }
+                result.Seasons = tvDetails.Seasons.Map(result.Id);
 
             if (tvDetails.Networks != null)
-            {
-                foreach (var item in tvDetails.Networks)
-                {
-                    result.Networks = new List<Domain.TvAgg.ValueObjects.Network>()
-                    {
-                        new ()
-                        {
-                            ApiModelId = item.Id,
-                            Name = item.Name,
-                            MediaId=result.Id,
-                            LogoPath = item.LogoPath,
-                            OriginCountry = item.OriginCountry,
-                        }
-                    };
-                }
-            }
+                result.Networks = tvDetails.Networks.Map(result.Id);
 
             if (tvDetails.CreatedBy != null)
-            {
-                foreach (var item in tvDetails.CreatedBy)
-                {
-                    result.CreatedBys = new List<Domain.TvAgg.ValueObjects.CreatedBy>()
-                    {
-                        new ()
-                        {
-                            ApiModelId = item.Id,
-                            Name = item.Name,
-                            MediaId=result.Id,
-                            Gender = item.Gender,
-                            OriginalName = item.OriginalName,
-                            ProfilePath = item.ProfilePath
-                        }
-                    };
-                }
-            }
-
-
-            if (tvDetails.NextEpisodeToAir != null)
-            {
-                result.EpisodeToAirs = new List<Domain.TvAgg.ValueObjects.Episode>()
-                {
-                    new()
-                    {
-                        EpisodeAirType = Domain.TvAgg.Enums.EpisodeAirType.NextEpisodeToAir,
-                        AirDate = tvDetails.NextEpisodeToAir.AirDate,
-                        ApiModelId = tvDetails.NextEpisodeToAir.Id,
-                        EpisodeNumber = tvDetails.NextEpisodeToAir.EpisodeNumber ,
-                        EpisodeType = tvDetails.NextEpisodeToAir.EpisodeType ,
-                        MediaId = result.Id,
-                        Name = tvDetails.NextEpisodeToAir.Name,
-                        Overview = tvDetails.NextEpisodeToAir.Overview,
-                        SeasonNumber = tvDetails.NextEpisodeToAir.SeasonNumber,
-                        StillPath = tvDetails.NextEpisodeToAir.StillPath,
-                        VoteAverage  =tvDetails.NextEpisodeToAir.VoteAverage,
-                        VoteCount = tvDetails.NextEpisodeToAir.VoteCount,
-                    }
-                };
-
-            }
+                result.CreatedBys = tvDetails.CreatedBy.Map(result.Id);
 
             if (tvDetails.LastEpisodeToAir != null)
-            {
-                result.EpisodeToAirs = new List<Domain.TvAgg.ValueObjects.Episode>()
-                {
-                    new()
-                    {
-                        EpisodeAirType = Domain.TvAgg.Enums.EpisodeAirType.LastEpisodeToAir,
-                        AirDate = tvDetails.LastEpisodeToAir.AirDate,
-                        ApiModelId = tvDetails.LastEpisodeToAir.Id,
-                        EpisodeNumber = tvDetails.LastEpisodeToAir.EpisodeNumber ,
-                        EpisodeType = tvDetails.LastEpisodeToAir.EpisodeType ,
-                        MediaId = result.Id,
-                        Name = tvDetails.LastEpisodeToAir.Name,
-                        Overview = tvDetails.LastEpisodeToAir.Overview,
-                        SeasonNumber = tvDetails.LastEpisodeToAir.SeasonNumber,
-                        StillPath = tvDetails.LastEpisodeToAir.StillPath,
-                        VoteAverage  =tvDetails.LastEpisodeToAir.VoteAverage,
-                        VoteCount = tvDetails.LastEpisodeToAir.VoteCount,
-                    }
-                };
+                result.EpisodeToAirs = new List<EpisodeValueObject>() { tvDetails.LastEpisodeToAir.Map(result.Id, EpisodeAirType.LastEpisodeToAir) };
 
-            }
+            if (tvDetails.NextEpisodeToAir != null)
+                result.EpisodeToAirs = new List<EpisodeValueObject>() { tvDetails.NextEpisodeToAir.Map(result.Id, EpisodeAirType.NextEpisodeToAir) };
+
+
+            return result;
+        }
+
+
+        public static SeasonValueObject Map(this SeasonApiModelDto seasonApi, Guid tvDetailId)
+        {
+            var result = new SeasonValueObject()
+            {
+                PosterPath = seasonApi.PosterPath,
+                ApiModelId = seasonApi.Id,
+                Name = seasonApi.Name,
+                AirDate = seasonApi.AirDate,
+                EpisodeCount = seasonApi.EpisodeCount,
+                MediaId = tvDetailId,
+                Overview = seasonApi.Overview,
+                SeasonNumber = seasonApi.SeasonNumber,
+                VoteAverage = seasonApi.VoteAverage,
+
+            };
+            return result;
+        }
+
+        public static List<SeasonValueObject> Map(this List<SeasonApiModelDto> seasonApis, Guid tvDetailId)
+        {
+            var result = new List<SeasonValueObject>();
+
+            foreach (var seasonApi in seasonApis)
+                result.Add(seasonApi.Map(tvDetailId));
+
+            return result;
+        }
+
+        public static NetworkValueObject Map(this NetworkApiModelDto networkApi, Guid tvDetailId)
+        {
+            var result = new NetworkValueObject()
+            {
+                ApiModelId = networkApi.Id,
+                Name = networkApi.Name,
+                MediaId = tvDetailId,
+                LogoPath = networkApi.LogoPath,
+                OriginCountry = networkApi.OriginCountry,
+            };
+            return result;
+        }
+
+        public static List<NetworkValueObject> Map(this List<NetworkApiModelDto> networkApis, Guid tvDetailId)
+        {
+            var result = new List<NetworkValueObject>();
+
+            foreach (var networkApi in networkApis)
+                result.Add(networkApi.Map(tvDetailId));
+
+            return result;
+        }
+
+        public static CreatedByValueObject Map(this CreatedByApiModelDto createdBy, Guid tvDetailId)
+        {
+            var result = new CreatedByValueObject()
+            {
+                ApiModelId = createdBy.Id,
+                Name = createdBy.Name,
+                MediaId = tvDetailId,
+                Gender = createdBy.Gender,
+                OriginalName = createdBy.OriginalName,
+                ProfilePath = createdBy.ProfilePath
+            };
+            return result;
+        }
+
+        public static List<CreatedByValueObject> Map(this List<CreatedByApiModelDto> createdBys, Guid tvDetailId)
+        {
+            var result = new List<CreatedByValueObject>();
+
+            foreach (var createdBy in createdBys)
+                result.Add(createdBy.Map(tvDetailId));
+
+            return result;
+        }
+
+
+
+
+        public static EpisodeValueObject Map(this EpisodeApiModelDto episode, Guid tvDetailId, EpisodeAirType episodeAirType)
+        {
+            var result = new EpisodeValueObject()
+            {
+                EpisodeAirType = episodeAirType,
+                AirDate = episode.AirDate,
+                ApiModelId = episode.Id,
+                EpisodeNumber = episode.EpisodeNumber,
+                EpisodeType = episode.EpisodeType,
+                MediaId = tvDetailId,
+                Name = episode.Name,
+                Overview = episode.Overview,
+                SeasonNumber = episode.SeasonNumber,
+                StillPath = episode.StillPath,
+                VoteAverage = episode.VoteAverage,
+                VoteCount = episode.VoteCount,
+            };
+            return result;
+        }
+
+        public static List<EpisodeValueObject> Map(this List<EpisodeApiModelDto> episodes, Guid tvDetailId, EpisodeAirType episodeAirType)
+        {
+            var result = new List<EpisodeValueObject>();
+
+            foreach (var episode in episodes)
+                result.Add(episode.Map(tvDetailId, episodeAirType));
+
+            return result;
+        }
+
+        public static TvCast Map(this MovieAndTvCastsItemApiModelDto cast, Guid tvDetailId)
+        {
+            var result = new TvCast()
+            {
+                Adult = cast.Adult,
+                ApiModelId = cast.Id,
+                CastId = cast.CastId,
+                Character = cast.Character,
+                CreditId = cast.CreditId,
+                Gender = cast.Gender,
+                KnownForDepartment = cast.KnownForDepartment,
+                MovieDetailsId = tvDetailId,
+                Name = cast.Name,
+                Order = cast.Order,
+                OriginalName = cast.OriginalName,
+                Popularity = cast.Popularity,
+                ProfilePath = cast.ProfilePath,
+
+            };
+
+            return result;
+        }
+
+        public static List<TvCast> Map(this List<MovieAndTvCastsItemApiModelDto> casts, Guid tvDetailId)
+        {
+            var result = new List<TvCast>();
+
+            foreach (var cast in casts)
+                result.Add(cast.Map(tvDetailId));
+
+            return result;
+        }
+
+        public static TvCrew Map(this MovieAndTvCrewsItemApiModelDto crew, Guid tvDetailId)
+        {
+            var result = new TvCrew()
+            {
+                Adult = crew.Adult,
+                ApiModelId = crew.Id,
+                CreditId = crew.CreditId,
+                Gender = crew.Gender,
+                KnownForDepartment = crew.KnownForDepartment,
+                MovieDetailsId = tvDetailId,
+                Name = crew.Name,
+                OriginalName = crew.OriginalName,
+                Popularity = crew.Popularity,
+                ProfilePath = crew.ProfilePath,
+                Department = crew.Department,
+                Job = crew.Job,
+            };
+
+            return result;
+        }
+
+        public static List<TvCrew> Map(this List<MovieAndTvCrewsItemApiModelDto> crews, Guid tvDetailId)
+        {
+            var result = new List<TvCrew>();
+
+            foreach (var crew in crews)
+                result.Add(crew.Map(tvDetailId));
 
             return result;
         }

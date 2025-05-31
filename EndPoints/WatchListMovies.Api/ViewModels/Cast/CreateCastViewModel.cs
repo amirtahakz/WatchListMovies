@@ -16,6 +16,6 @@ namespace WatchListMovies.Api.ViewModels.Cast
         public List<CastImage>? CastImages { get; set; }
         public CastExternalId? CastExternalId { get; set; }
         public CastDetail? CastDetails { get; set; }
-        public List<CastKnownFor>? CastKnownFors { get; set; }
+        public List<CastKnownForValueObject>? CastKnownFors { get; set; }
     }
 }

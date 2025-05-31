@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using AngleSharp.Dom;
+using System.Linq.Expressions;
 using WatchListMovies.Common.Domain;
 
 namespace WatchListMovies.Common.Domain.Repository
@@ -24,5 +25,6 @@ namespace WatchListMovies.Common.Domain.Repository
         bool Exists(Expression<Func<T, bool>> expression);
 
         T? Get(Guid id);
+
     }
 }

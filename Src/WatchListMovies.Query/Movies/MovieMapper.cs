@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WatchListMovies.Domain.ListAgg;
-using WatchListMovies.Domain.MovieAgg;
-using WatchListMovies.Query.Lists.DTOs;
+﻿using WatchListMovies.Domain.MovieAgg;
 using WatchListMovies.Query.Movies.DTOs;
 
 namespace WatchListMovies.Query.Movies
@@ -32,8 +25,19 @@ namespace WatchListMovies.Query.Movies
                 VoteAverage = movie.VoteAverage,
                 VoteCount = movie.VoteCount,
                 MovieDetails = movie.MovieDetails,
-
+                GenreIds = movie.GenreIds,
+                IsRecommendedByAdmin = movie.IsRecommendedByAdmin,
             };
+        }
+
+        public static List<MovieDto> Map(this List<Movie> movies)
+        {
+            var result = new List<MovieDto>();
+            foreach (var movie in movies)
+            {
+                result.Add(Map(movie));
+            }
+            return result;
         }
     }
 }

@@ -1,7 +1,12 @@
-﻿using WatchListMovies.Infrastructure._Utilities;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Threading;
 using WatchListMovies.Domain.MovieAgg;
 using WatchListMovies.Domain.MovieAgg.Repository;
-using Microsoft.EntityFrameworkCore;
+using WatchListMovies.Domain.UserAgg;
+using WatchListMovies.Infrastructure._Utilities;
+using EFCore.BulkExtensions;
 
 namespace WatchListMovies.Infrastructure.Persistent.Ef.MovieAgg
 {
@@ -38,5 +43,32 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef.MovieAgg
                 return false;
             }
         }
+
+        public async Task<Movie> GetTrackingByImdbIdAsync(string imdbId)
+        {
+            var result = await Context.Movies
+                .AsTracking()
+                .Include(c=>c.MovieDetails)
+                .FirstOrDefaultAsync(x=>x.MovieDetails.ImdbId == imdbId);
+
+            return result;
+        }
+
+        public async Task AddRangeIfNotExistAsync(List<Movie> movies)
+        {
+
+            foreach (var item in movies)
+            {
+                var existingMovie = await Context.Movies.FirstOrDefaultAsync(m => m.ApiModelId == item.ApiModelId);
+
+                if (existingMovie == null)
+                    await Context.Movies.AddRangeAsync(item);
+
+
+            }
+
+        }
+
     }
+
 }

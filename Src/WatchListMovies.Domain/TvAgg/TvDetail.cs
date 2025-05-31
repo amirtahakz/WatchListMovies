@@ -1,5 +1,6 @@
 ﻿using WatchListMovies.Common.Domain;
 using WatchListMovies.Domain._Shared.ValueObjects;
+using WatchListMovies.Domain.MovieAgg;
 using WatchListMovies.Domain.TvAgg.ValueObjects;
 
 namespace WatchListMovies.Domain.TvAgg
@@ -33,15 +34,17 @@ namespace WatchListMovies.Domain.TvAgg
             string? type,
             double? voteAverage,
             long? voteCount,
-            List<Genre>? genres,
-            List<Season>? seasons,
-            List<Network>? networks,
-            List<CreatedBy>? createdBys,
-            List<ProductionCountry>? productionCountries,
-            List<ProductionCompany>? productionCompanies,
-            List<SpokenLanguage>? spokenLanguages,
-            List<Episode>? episodeToAirs,
-            IEnumerable<string>? tvEpisodeRunTimes)
+            List<GenreValueObject>? genres,
+            List<SeasonValueObject>? seasons,
+            List<NetworkValueObject>? networks,
+            List<CreatedByValueObject>? createdBys,
+            List<ProductionCountryValueObject>? productionCountries,
+            List<ProductionCompanyValueObject>? productionCompanies,
+            List<SpokenLanguageValueObject>? spokenLanguages,
+            List<EpisodeValueObject>? episodeToAirs,
+            IEnumerable<string>? tvEpisodeRunTimes,
+            List<TvCast>? casts,
+            List<TvCrew>? crews)
         {
             TvId = tvId;
             ApiModelId = apiModelId;
@@ -73,6 +76,8 @@ namespace WatchListMovies.Domain.TvAgg
             SpokenLanguages = spokenLanguages;
             EpisodeToAirs = episodeToAirs;
             TvEpisodeRunTimes = tvEpisodeRunTimes.ToList();
+            Casts = casts;
+            Crews = crews;
         }
         public Guid TvId { get; set; }
         public long? ApiModelId { get; set; }
@@ -80,7 +85,7 @@ namespace WatchListMovies.Domain.TvAgg
         public string? BackdropPath { get; set; }
         public string? FirstAirDate { get; set; }
         public string? Homepage { get; set; }
-        public bool? InProduction { get; set; }
+        public bool? InProduction { get; set; } //در حال ساخت 
         public string? LastAirDate { get; set; }
         public string? Name { get; set; }
         public long? NumberOfEpisodes { get; set; }
@@ -93,17 +98,19 @@ namespace WatchListMovies.Domain.TvAgg
         public string? Status { get; set; }
         public string? Tagline { get; set; }
         public string? Type { get; set; }
-        public double? VoteAverage { get; set; }
+        public double? VoteAverage { get; set; } // امتیاز سایت TMDB
         public long? VoteCount { get; set; }
-        public List<Genre>? Genres { get; set; }
-        public List<Season>? Seasons { get; set; }
-        public List<Network>? Networks { get; set; }
-        public List<CreatedBy>? CreatedBys { get; set; }
-        public List<ProductionCountry>? ProductionCountries { get; set; }
-        public List<ProductionCompany>? ProductionCompanies { get; set; }
-        public List<SpokenLanguage>? SpokenLanguages { get; set; }
-        public List<Episode>? EpisodeToAirs { get; set; }
+        public List<GenreValueObject>? Genres { get; set; }
+        public List<SeasonValueObject>? Seasons { get; set; }
+        public List<NetworkValueObject>? Networks { get; set; }
+        public List<CreatedByValueObject>? CreatedBys { get; set; }
+        public List<ProductionCountryValueObject>? ProductionCountries { get; set; }
+        public List<ProductionCompanyValueObject>? ProductionCompanies { get; set; }
+        public List<SpokenLanguageValueObject>? SpokenLanguages { get; set; }
+        public List<EpisodeValueObject>? EpisodeToAirs { get; set; }
         public IReadOnlyCollection<string>? TvEpisodeRunTimes { get; set; }
+        public List<TvCast>? Casts { get; set; }
+        public List<TvCrew>? Crews { get; set; }
 
     }
 }

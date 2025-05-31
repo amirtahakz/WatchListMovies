@@ -8,6 +8,8 @@ namespace WatchListMovies.Domain.TvAgg.Repository
         Task<List<Tv>> GetAllAsync();
         Task<List<Tv>> GetAllAsNoTrackingAsync();
         Task<bool> DeleteAllAsync();
+        Task AddRangeIfNotExistAsync(List<Tv> tvs);
+        Task<Tv> GetTrackingByImdbIdAsync(long apiModelId);
 
     }
 }
