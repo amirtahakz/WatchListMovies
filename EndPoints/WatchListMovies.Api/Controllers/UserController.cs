@@ -18,7 +18,7 @@ using WatchListMovies.Query.Users.GetById;
 namespace WatchListMovies.Api.Controllers
 {
     [Authorize]
-    public class UserController : ApiController
+    public class UserController : BaseApiController
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;

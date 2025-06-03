@@ -36,15 +36,15 @@ namespace WatchListMovies.Application.BackgroundJobs.Cast
                 for (var page = 2; page <= 2; page++)
                 {
                     var data = await _castApiService.GetPopularCasts(page);
-                    apiMovies.Results.AddRange(data.Results);
+                    foreach (var item in data.Casts)
+                    {
+                        if (!apiMovies.Casts.Any(v => v.Id == item.Id))
+                            apiMovies.Casts.Add(item);
+                    }
                 }
-                var isDeleted = await _castRepository.DeleteAllAsync();
+
+                await _castRepository.AddRangeIfNotExistAsync(apiMovies.Map());
                 await _castRepository.Save();
-                if (isDeleted)
-                {
-                    await _castRepository.AddRange(apiMovies.Map());
-                    await _castRepository.Save();
-                }
 
             }
             catch (Exception e)
@@ -121,5 +121,8 @@ namespace WatchListMovies.Application.BackgroundJobs.Cast
             }
 
         }
+
+
+        
     }
 }

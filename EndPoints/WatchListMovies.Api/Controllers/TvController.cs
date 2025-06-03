@@ -1,14 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WatchListMovies.Api.ViewModels.Tv;
-using WatchListMovies.Application.Services.Movie.MakeRecommended;
-using WatchListMovies.Application.Services.Tv.Create;
 using WatchListMovies.Application.Services.Tv.MakeRecommended;
 using WatchListMovies.Common.AspNetCore;
-using WatchListMovies.Query.Movies.DTOs;
-using WatchListMovies.Query.Movies.GetRecommended;
 using WatchListMovies.Query.Tvs.DTOs;
 using WatchListMovies.Query.Tvs.GetByFilter;
 using WatchListMovies.Query.Tvs.GetOnTheAir;
@@ -16,7 +10,7 @@ using WatchListMovies.Query.Tvs.GetRecommended;
 
 namespace WatchListMovies.Api.Controllers
 {
-    public class TvController : ApiController
+    public class TvController : BaseApiController
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;

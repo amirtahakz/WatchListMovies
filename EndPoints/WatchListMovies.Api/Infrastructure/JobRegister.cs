@@ -1,11 +1,13 @@
 ﻿using Hangfire;
 using Microsoft.Extensions.Options;
 using WatchListMovies.Application.BackgroundJobs.Cast;
+using WatchListMovies.Application.BackgroundJobs.ContentCast;
 using WatchListMovies.Application.BackgroundJobs.Genre;
 using WatchListMovies.Application.BackgroundJobs.Movie;
 using WatchListMovies.Application.BackgroundJobs.Tv;
 using WatchListMovies.Application.Configurations;
 using WatchListMovies.Common.AspNetCore.Middlewares;
+using WatchListMovies.Domain.ContentCastAgg;
 
 namespace WatchListMovies.Api.Infrastructure
 {
@@ -34,11 +36,6 @@ namespace WatchListMovies.Api.Infrastructure
                 methodCall: svc => svc.SyncMovieKeyYoutubeTrailers(),
                 cronExpression: jobSchedules.SyncMovieKeyYoutubeTrailers);
 
-            RecurringJob.AddOrUpdate<MovieJobs>(
-                recurringJobId: "SyncCastsAndCrewsOfMovie",
-                methodCall: svc => svc.SyncCastsAndCrewsOfMovie(),
-                cronExpression: jobSchedules.SyncCastsAndCrewsOfMovie);
-
             RecurringJob.AddOrUpdate<TvJobs>(
                 recurringJobId: "SyncPopularTvs",
                 methodCall: svc => svc.SyncPopularTvs(),
@@ -48,12 +45,6 @@ namespace WatchListMovies.Api.Infrastructure
                 recurringJobId: "SyncTvDetails",
                 methodCall: svc => svc.SyncTvDetails(),
                 cronExpression: jobSchedules.SyncTvDetails);
-
-
-            RecurringJob.AddOrUpdate<TvJobs>(
-                recurringJobId: "SyncCastsAndCrewsOfTv",
-                methodCall: svc => svc.SyncCastsAndCrewsOfTv(),
-                cronExpression: jobSchedules.SyncCastsAndCrewsOfTv);
 
             RecurringJob.AddOrUpdate<CastJobs>(
                 recurringJobId: "SyncPopularCasts",
@@ -79,6 +70,12 @@ namespace WatchListMovies.Api.Infrastructure
                 recurringJobId: "SyncCastImages",
                 methodCall: svc => svc.SyncCastImages(),
                 cronExpression: jobSchedules.SyncCastImages);
+
+            RecurringJob.AddOrUpdate<ContentCastJobs>(
+                recurringJobId: "SyncContentCasts",
+                methodCall: svc => svc.SyncContentCasts(),
+                cronExpression: jobSchedules.SyncContentCasts);
+
 
             return builder;
         }

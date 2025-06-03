@@ -1,14 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WatchListMovies.Application.IExternalApiServices.Cast.ApiModelDTOs;
-using WatchListMovies.Application.IExternalApiServices.Movie.ApiModelDTOs;
+﻿using WatchListMovies.Application.IExternalApiServices.Cast.ApiModelDTOs;
 using WatchListMovies.Domain.CastAgg;
-using WatchListMovies.Domain.CastAgg.ValueObjects;
-using WatchListMovies.Domain.MovieAgg;
-using WatchListMovies.Domain.TvAgg;
 
 namespace WatchListMovies.Application.BackgroundJobs.Cast
 {
@@ -17,7 +8,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Cast
         public static List<Domain.CastAgg.Cast> Map(this PopularCastsApiModelDto cast)
         {
             var result = new List<Domain.CastAgg.Cast>();
-            foreach (var castItem in cast.Results)
+            foreach (var castItem in cast.Casts)
             {
                 var model = new Domain.CastAgg.Cast()
                 {
@@ -30,47 +21,10 @@ namespace WatchListMovies.Application.BackgroundJobs.Cast
                     OriginalName = castItem.OriginalName,
                     ProfilePath = castItem.ProfilePath,
                 };
+
                 if (castItem.KnownFor != null)
-                {
-                    foreach (var knownForItem in castItem.KnownFor)
-                    {
-                        var castKnownForModel = new CastKnownForValueObject()
-                        {
-                            Adult = knownForItem.Adult,
-                            ApiModelId = knownForItem.Id,
-                            BackdropPath = knownForItem.BackdropPath,
-                            CastId = model.Id,
-                            MediaType = knownForItem.MediaType,
-                            OriginalLanguage = knownForItem.OriginalLanguage,
-                            OriginalTitle = knownForItem.OriginalTitle,
-                            Overview = knownForItem.Overview,
-                            Popularity = knownForItem.Popularity,
-                            PosterPath = knownForItem.PosterPath,
-                            ReleaseDate = DateTime.Parse(knownForItem.ReleaseDate),
-                            Title = knownForItem.Title,
-                            Video = knownForItem.Video,
-                            VoteAverage = knownForItem.VoteAverage,
-                            VoteCount = knownForItem.VoteCount,
-                        };
-                        if (knownForItem.GenreIds != null)
-                        {
-                            foreach (var genreIdsItem in knownForItem.GenreIds)
-                            {
-                                castKnownForModel.CastKnownForGenreIds = new List<Domain._Shared.ValueObjects.GenreValueObject>()
-                                {
-                                    new()
-                                    {
-                                        ApiModelId = genreIdsItem,
-                                        MediaId = model.Id,
-                                    }
-                                };
-                            }
-                        }
+                    model.MovieKnownForIds = castItem.Id.HasValue? new List<string> { castItem.Id.Value.ToString() } : null;
 
-                        model.CastKnownFors = new List<CastKnownForValueObject>() { castKnownForModel };
-
-                    }
-                }
                 result.Add(model);
             }
             return result;

@@ -16,7 +16,7 @@ namespace WatchListMovies.Domain.TvAgg.ValueObjects
         }
 
         public EpisodeValueObject(
-            Guid? mediaId , 
+            Guid? ParrentId , 
             long? apiModelId,
             string? name,
             string? overview,
@@ -40,9 +40,9 @@ namespace WatchListMovies.Domain.TvAgg.ValueObjects
             SeasonNumber = seasonNumber;
             StillPath = stillPath;
             EpisodeAirType = episodeAirType;
-            MediaId = mediaId;
+            ParrentId = ParrentId;
         }
-        public Guid? MediaId { get; set; }
+        public Guid? ParrentId { get; set; }
         public long? ApiModelId { get; set; }
         public string? Name { get; set; }
         public string? Overview { get; set; }

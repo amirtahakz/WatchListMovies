@@ -8,7 +8,7 @@ namespace WatchListMovies.Query.Movies.DTOs
         public MovieOrderByEnum MovieOrderByEnum { get; set; }
         public Guid? Id { get; set; }
         public bool? Adult { get; set; }
-        public long? ApiModelId { get; set; }
+        public List<long>? ApiModelIds { get; set; }
         public string? OriginalLanguage { get; set; }
         public string? OriginalTitle { get; set; }
         public string? Overview { get; set; }
@@ -18,13 +18,10 @@ namespace WatchListMovies.Query.Movies.DTOs
 
         // MovieDetails
         public string? ImdbId { get; set; }
+        public List<long>? GenreIds { get; set; }
 
         // MovieDetails.BelongsToCollectionValueObject
         public string? CollectionName { get; set; }
-
-        // MovieDetails.Genres
-        public List<long>? GenreIds { get; set; }
-        public List<string>? GenreNames { get; set; }
 
         // MovieDetails.ProductionCompanies
         public List<string>? CompanyNames { get; set; }

@@ -31,29 +31,21 @@ public class TvConfiguration : IEntityTypeConfiguration<Tv>
                          v => string.Join(",", v),
                          v => v.Split(',', StringSplitOptions.RemoveEmptyEntries))
                      .HasColumnName("TvEpisodeRunTimes");
+            td.Property(m => m.GenreIds)
+                    .HasConversion(
+                        v => string.Join(",", v),
+                        v => v.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                    .HasColumnName("GenreIds");
 
-
-            // GenresVo Tbl Config
-            td.OwnsMany(m => m.Genres, g =>
-            {
-                g.ToTable("Genres", "tv");
-                g.WithOwner().HasForeignKey("MediaId");
-                g.HasKey("CreationDate", "MediaId", "Name");
-                g.Property(x => x.ApiModelId);
-                g.Property(x => x.Name);
-                g.Property(x => x.MediaId);
-                g.Property(x => x.CreationDate);
-
-            });
 
             //NetworksVo Tbl Config
             td.OwnsMany(t => t.Networks, n =>
             {
-                n.WithOwner().HasForeignKey("MediaId");
+                n.WithOwner().HasForeignKey("ParrentId");
                 n.ToTable("Networks", "tv");
-                n.HasKey("CreationDate" , "MediaId" , "Name");
+                n.HasKey("CreationDate" , "ParrentId" , "Name");
                 n.Property(x => x.ApiModelId);
-                n.Property(x => x.MediaId);
+                n.Property(x => x.ParrentId);
                 n.Property(x => x.CreationDate);
                 n.Property(x => x.Name);
                 n.Property(x => x.OriginCountry);
@@ -64,13 +56,13 @@ public class TvConfiguration : IEntityTypeConfiguration<Tv>
             td.OwnsMany(m => m.ProductionCompanies, pc =>
             {
                 pc.ToTable("ProductionCompanies", "tv");
-                pc.WithOwner().HasForeignKey("MediaId");
-                pc.HasKey("CreationDate", "MediaId", "Name");
+                pc.WithOwner().HasForeignKey("ParrentId");
+                pc.HasKey("CreationDate", "ParrentId", "Name");
                 pc.Property(x => x.ApiModelId);
                 pc.Property(x => x.Name);
                 pc.Property(x => x.LogoPath);
                 pc.Property(x => x.OriginCountry);
-                pc.Property(x => x.MediaId);
+                pc.Property(x => x.ParrentId);
                 pc.Property(x => x.CreationDate);
 
             });
@@ -79,11 +71,11 @@ public class TvConfiguration : IEntityTypeConfiguration<Tv>
             td.OwnsMany(m => m.ProductionCountries, pc =>
             {
                 pc.ToTable("ProductionCountries", "tv");
-                pc.WithOwner().HasForeignKey("MediaId");
-                pc.HasKey("CreationDate", "MediaId", "Name");
+                pc.WithOwner().HasForeignKey("ParrentId");
+                pc.HasKey("CreationDate", "ParrentId", "Name");
                 pc.Property(x => x.Iso31661);
                 pc.Property(x => x.Name);
-                pc.Property(x => x.MediaId);
+                pc.Property(x => x.ParrentId);
                 pc.Property(x => x.CreationDate);
 
             });
@@ -92,12 +84,12 @@ public class TvConfiguration : IEntityTypeConfiguration<Tv>
             td.OwnsMany(m => m.SpokenLanguages, sl =>
             {
                 sl.ToTable("SpokenLanguages", "tv");
-                sl.WithOwner().HasForeignKey("MediaId");
-                sl.HasKey("CreationDate", "MediaId", "EnglishName");
+                sl.WithOwner().HasForeignKey("ParrentId");
+                sl.HasKey("CreationDate", "ParrentId", "EnglishName");
                 sl.Property(x => x.Iso6391);
                 sl.Property(x => x.Name);
                 sl.Property(x => x.EnglishName);
-                sl.Property(x => x.MediaId);
+                sl.Property(x => x.ParrentId);
                 sl.Property(x => x.CreationDate);
 
             });
@@ -106,9 +98,9 @@ public class TvConfiguration : IEntityTypeConfiguration<Tv>
             td.OwnsMany(t => t.CreatedBys, cb =>
             {
                 cb.ToTable("CreatedBys", "tv");
-                cb.WithOwner().HasForeignKey("MediaId");
-                cb.HasKey("CreationDate", "MediaId", "Name");
-                cb.Property(x => x.MediaId);
+                cb.WithOwner().HasForeignKey("ParrentId");
+                cb.HasKey("CreationDate", "ParrentId", "Name");
+                cb.Property(x => x.ParrentId);
                 cb.Property(x => x.CreationDate);
                 cb.Property(x => x.Name);
                 cb.Property(x => x.Gender);
@@ -121,9 +113,9 @@ public class TvConfiguration : IEntityTypeConfiguration<Tv>
             td.OwnsMany(t => t.EpisodeToAirs, le =>
             {
                 le.ToTable("EpisodeToAirs", "tv");
-                le.WithOwner().HasForeignKey("MediaId");
-                le.HasKey("CreationDate", "MediaId", "Name");
-                le.Property(x => x.MediaId);
+                le.WithOwner().HasForeignKey("ParrentId");
+                le.HasKey("CreationDate", "ParrentId", "Name");
+                le.Property(x => x.ParrentId);
                 le.Property(x => x.CreationDate);
                 le.Property(x => x.Name);
                 le.Property(x => x.ApiModelId);
@@ -143,8 +135,8 @@ public class TvConfiguration : IEntityTypeConfiguration<Tv>
             td.OwnsMany(t => t.Seasons, s =>
             {
                 s.ToTable("Seasons", "tv");
-                s.WithOwner().HasForeignKey("MediaId");
-                s.HasKey("CreationDate", "MediaId", "Name");
+                s.WithOwner().HasForeignKey("ParrentId");
+                s.HasKey("CreationDate", "ParrentId", "Name");
                 s.Property(x => x.Name);
                 s.Property(x => x.AirDate);
                 s.Property(x => x.EpisodeCount);
@@ -152,27 +144,9 @@ public class TvConfiguration : IEntityTypeConfiguration<Tv>
                 s.Property(x => x.PosterPath);
                 s.Property(x => x.VoteAverage);
                 s.Property(x => x.CreationDate);
-                s.Property(x => x.MediaId);
+                s.Property(x => x.ParrentId);
                 s.Property(x => x.Overview);
                 s.Property(x => x.ApiModelId);
-            });
-
-            //TvCasts Tbl Config
-            td.OwnsMany(m => m.Casts, btc =>
-            {
-                btc.ToTable("TvCasts", "tv");
-                btc.HasKey(b => b.Id);
-                btc.HasIndex(b => b.ApiModelId);
-
-            });
-
-            //TvCrews Tbl Config
-            td.OwnsMany(m => m.Crews, btc =>
-            {
-                btc.ToTable("TvCrews", "tv");
-                btc.HasKey(b => b.Id);
-                btc.HasIndex(b => b.ApiModelId);
-
             });
 
 

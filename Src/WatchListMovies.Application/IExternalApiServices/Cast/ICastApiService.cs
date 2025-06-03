@@ -16,5 +16,8 @@ namespace WatchListMovies.Application.IExternalApiServices.Cast
 
         Task<CastExternalIdsApiModelDto> GetCastExternalIds(long? castApiId);
         Task<CastImagesApiModelDto> GetCastImages(long? castApiId);
+
+        Task<GetCreditsOfCastApiModelDto> GetMovieCreditsOfCast(long? castApiId);
+        Task<GetCreditsOfCastApiModelDto> GetTvCreditsOfCast(long? castApiId);
     }
 }

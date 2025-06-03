@@ -34,7 +34,12 @@ namespace WatchListMovies.Application.BackgroundJobs.Tv
                 for (var page = 2; page <= 2; page++)
                 {
                     var data = await _tvApiService.GetPopularTvs(page);
-                    apiTvs.Tvs.AddRange(data.Tvs);
+                    foreach (var item in data.Tvs)
+                    {
+                        if (!apiTvs.Tvs.Any(v => v.Id == item.Id))
+                            apiTvs.Tvs.Add(item);
+                    }
+                    
                 }
 
                 await _tvRepository.AddRangeIfNotExistAsync(apiTvs.Map());
@@ -70,35 +75,6 @@ namespace WatchListMovies.Application.BackgroundJobs.Tv
 
         }
 
-        public async Task SyncCastsAndCrewsOfTv()
-        {
-
-            try
-            {
-                var tvs = await _tvRepository.GetAllAsync();
-                if (tvs.Count() != 0)
-                {
-                    foreach (var tv in tvs)
-                    {
-                        var apiCastsAndCrewsOfTv = await _tvApiService.GetCastsAndCrewsOfTv(tv.ApiModelId ?? default);
-
-                        if (apiCastsAndCrewsOfTv.Casts != null)
-                            tv.TvDetail.Casts.AddRange(apiCastsAndCrewsOfTv.Casts.Map(tv.TvDetail.Id));
-
-
-                        if (apiCastsAndCrewsOfTv.Crews != null)
-                            tv.TvDetail.Crews.AddRange(apiCastsAndCrewsOfTv.Crews.Map(tv.TvDetail.Id));
-
-                        await _tvRepository.Save();
-
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
-        }
+        
     }
 }

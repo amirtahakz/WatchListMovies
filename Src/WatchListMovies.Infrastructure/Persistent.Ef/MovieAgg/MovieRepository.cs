@@ -59,10 +59,10 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef.MovieAgg
 
             foreach (var item in movies)
             {
-                var existingMovie = await Context.Movies.FirstOrDefaultAsync(m => m.ApiModelId == item.ApiModelId);
+                var isExist = await Context.Movies.AnyAsync(m => m.ApiModelId == item.ApiModelId);
 
-                if (existingMovie == null)
-                    await Context.Movies.AddRangeAsync(item);
+                if (!isExist)
+                    await Context.Movies.AddAsync(item);
 
 
             }

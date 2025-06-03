@@ -19,10 +19,10 @@ namespace WatchListMovies.Application.IExternalApiServices.Cast.ApiModelDTOs
         public string? Biography { get; set; }
 
         [JsonProperty("birthday")]
-        public string? Birthday { get; set; }
+        public DateTime? Birthday { get; set; }
 
         [JsonProperty("deathday")]
-        public string? Deathday { get; set; }
+        public DateTime? Deathday { get; set; }
 
         [JsonProperty("gender")]
         public int? Gender { get; set; }

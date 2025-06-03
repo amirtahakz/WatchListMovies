@@ -19,4 +19,9 @@
     <ProjectReference Include="..\WatchListMovies.Domain\WatchListMovies.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\Genre\" />
+    <Folder Include="Services\ContentCast\" />
+  </ItemGroup>
+
 </Project>

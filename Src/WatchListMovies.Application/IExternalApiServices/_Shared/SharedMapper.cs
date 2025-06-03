@@ -17,7 +17,7 @@ namespace WatchListMovies.Application.IExternalApiServices._Shared
                 Name = spokenLanguageApiModelDto.Name,
                 EnglishName = spokenLanguageApiModelDto.EnglishName,
                 Iso6391 = spokenLanguageApiModelDto.Iso6391,
-                MediaId = tvDetailId
+                ParrentId = tvDetailId
 
             };
             return result;
@@ -41,7 +41,7 @@ namespace WatchListMovies.Application.IExternalApiServices._Shared
                 LogoPath = productionCompanyApi.LogoPath,
                 OriginCountry = productionCompanyApi.OriginCountry,
                 ApiModelId = productionCompanyApi.ApiModelId,
-                MediaId = tvDetailId
+                ParrentId = tvDetailId
 
             };
             return result;
@@ -63,7 +63,7 @@ namespace WatchListMovies.Application.IExternalApiServices._Shared
             {
                 Name = seasonApi.Name,
                 Iso31661 = seasonApi.Iso31661,
-                MediaId = tvDetailId
+                ParrentId = tvDetailId
 
             };
             return result;
@@ -75,27 +75,6 @@ namespace WatchListMovies.Application.IExternalApiServices._Shared
 
             foreach (var productionCountryApi in productionCountryApis)
                 result.Add(productionCountryApi.Map(tvDetailId));
-
-            return result;
-        }
-
-        public static GenreValueObject Map(this GenreApiModelDto genre, Guid tvDetailId)
-        {
-            var result = new GenreValueObject()
-            {
-                ApiModelId = genre.ApiModelId,
-                MediaId = tvDetailId,
-                Name = genre.Name,
-            };
-            return result;
-        }
-
-        public static List<GenreValueObject> Map(this List<GenreApiModelDto> genres, Guid tvDetailId)
-        {
-            var result = new List<GenreValueObject>();
-
-            foreach (var genre in genres)
-                result.Add(genre.Map(tvDetailId));
 
             return result;
         }

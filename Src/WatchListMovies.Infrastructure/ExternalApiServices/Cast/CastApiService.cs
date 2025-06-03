@@ -65,5 +65,27 @@ namespace WatchListMovies.Infrastructure.ExternalApiServices.Cast
 
             return deserializedData;
         }
+
+        public async Task<GetCreditsOfCastApiModelDto> GetMovieCreditsOfCast(long? castApiId)
+        {
+            var response = await _httpClient.GetAsync($"person/{castApiId}/movie_credits?api_key={_tMDBConfig.ApiKey}&language={_tMDBConfig.language}");
+            response.EnsureSuccessStatusCode();
+
+            var data = await response.Content.ReadAsStringAsync();
+            var deserializedData = JsonConvert.DeserializeObject<GetCreditsOfCastApiModelDto>(data);
+
+            return deserializedData;
+        }
+
+        public async Task<GetCreditsOfCastApiModelDto> GetTvCreditsOfCast(long? castApiId)
+        {
+            var response = await _httpClient.GetAsync($"person/{castApiId}/tv_credits?api_key={_tMDBConfig.ApiKey}&language={_tMDBConfig.language}");
+            response.EnsureSuccessStatusCode();
+
+            var data = await response.Content.ReadAsStringAsync();
+            var deserializedData = JsonConvert.DeserializeObject<GetCreditsOfCastApiModelDto>(data);
+
+            return deserializedData;
+        }
     }
 }

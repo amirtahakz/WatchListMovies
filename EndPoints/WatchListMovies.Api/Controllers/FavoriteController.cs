@@ -11,12 +11,12 @@ using WatchListMovies.Query.Favorites.GetByFilter;
 using WatchListMovies.Query.Favorites.GetById;
 using WatchListMovies.Query.Lists.DTOs;
 using WatchListMovies.Query.Lists.GetByFilter;
-using ApiController = WatchListMovies.Common.AspNetCore.ApiController;
+using BaseApiController = WatchListMovies.Common.AspNetCore.BaseApiController;
 
 namespace WatchListMovies.Api.Controllers
 {
     [Authorize]
-    public class FavoriteController : ApiController
+    public class FavoriteController : BaseApiController
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;

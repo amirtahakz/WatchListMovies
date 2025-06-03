@@ -34,7 +34,7 @@ namespace WatchListMovies.Domain.TvAgg
             string? type,
             double? voteAverage,
             long? voteCount,
-            List<GenreValueObject>? genres,
+            IEnumerable<string>? genreIds,
             List<SeasonValueObject>? seasons,
             List<NetworkValueObject>? networks,
             List<CreatedByValueObject>? createdBys,
@@ -42,9 +42,7 @@ namespace WatchListMovies.Domain.TvAgg
             List<ProductionCompanyValueObject>? productionCompanies,
             List<SpokenLanguageValueObject>? spokenLanguages,
             List<EpisodeValueObject>? episodeToAirs,
-            IEnumerable<string>? tvEpisodeRunTimes,
-            List<TvCast>? casts,
-            List<TvCrew>? crews)
+            IEnumerable<string>? tvEpisodeRunTimes)
         {
             TvId = tvId;
             ApiModelId = apiModelId;
@@ -67,7 +65,7 @@ namespace WatchListMovies.Domain.TvAgg
             Type = type;
             VoteAverage = voteAverage;
             VoteCount = voteCount;
-            Genres = genres;
+            GenreIds = genreIds.ToList();
             Seasons = seasons;
             Networks = networks;
             CreatedBys = createdBys;
@@ -76,8 +74,6 @@ namespace WatchListMovies.Domain.TvAgg
             SpokenLanguages = spokenLanguages;
             EpisodeToAirs = episodeToAirs;
             TvEpisodeRunTimes = tvEpisodeRunTimes.ToList();
-            Casts = casts;
-            Crews = crews;
         }
         public Guid TvId { get; set; }
         public long? ApiModelId { get; set; }
@@ -100,7 +96,7 @@ namespace WatchListMovies.Domain.TvAgg
         public string? Type { get; set; }
         public double? VoteAverage { get; set; } // امتیاز سایت TMDB
         public long? VoteCount { get; set; }
-        public List<GenreValueObject>? Genres { get; set; }
+        public IReadOnlyCollection<string>? GenreIds { get; set; }
         public List<SeasonValueObject>? Seasons { get; set; }
         public List<NetworkValueObject>? Networks { get; set; }
         public List<CreatedByValueObject>? CreatedBys { get; set; }
@@ -109,8 +105,6 @@ namespace WatchListMovies.Domain.TvAgg
         public List<SpokenLanguageValueObject>? SpokenLanguages { get; set; }
         public List<EpisodeValueObject>? EpisodeToAirs { get; set; }
         public IReadOnlyCollection<string>? TvEpisodeRunTimes { get; set; }
-        public List<TvCast>? Casts { get; set; }
-        public List<TvCrew>? Crews { get; set; }
 
     }
 }

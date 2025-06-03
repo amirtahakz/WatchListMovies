@@ -15,9 +15,9 @@ namespace WatchListMovies.Application.IExternalApiServices.Cast.ApiModelDTOs
         public long? Id { get; set; }
 
         [JsonProperty("profiles")]
-        public List<CastImagesItem>? Profiles { get; set; }
+        public List<CastImagesItemApiModelDto>? Profiles { get; set; }
     }
-    public class CastImagesItem
+    public class CastImagesItemApiModelDto
     {
         [JsonProperty("aspect_ratio")]
         public double? AspectRatio { get; set; }

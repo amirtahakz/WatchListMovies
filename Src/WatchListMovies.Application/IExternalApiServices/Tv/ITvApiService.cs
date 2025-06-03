@@ -13,6 +13,5 @@ namespace WatchListMovies.Application.IExternalApiServices.Tv
         Task<PopularTvsApiModelDto> GetPopularTvs(int page = 1);
 
         Task<TvDetailsApiModelDto> GetTvDetails(long? tvApiId);
-        Task<GetCastsAndCrewsOfMovieAndTvApiModelDto> GetCastsAndCrewsOfTv(long? tvApiId);
     }
 }

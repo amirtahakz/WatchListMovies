@@ -7,6 +7,8 @@ namespace WatchListMovies.Domain.CastAgg.Repository
         Task<List<Cast>> GetAllAsync();
         Task<List<Cast>> GetAllAsNoTrackingAsync();
         Task<bool> DeleteAllAsync();
+        Task AddRangeIfNotExistAsync(List<Cast> casts);
+        Task<Cast> GetTrackingByApiModelIdAsync(long apiModelId);
 
     }
 }

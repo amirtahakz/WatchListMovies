@@ -73,7 +73,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Tv
             };
 
             if (tvDetails.Genres != null)
-                result.Genres = tvDetails.Genres.Map(result.Id);
+                result.GenreIds = tvDetails.Genres.Where(g => g.ApiModelId.HasValue).Select(g => g.ApiModelId.Value.ToString()).ToList().AsReadOnly();
 
             if (tvDetails.SpokenLanguages != null)
                 result.SpokenLanguages = tvDetails.SpokenLanguages.Map(result.Id);
@@ -113,7 +113,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Tv
                 Name = seasonApi.Name,
                 AirDate = seasonApi.AirDate,
                 EpisodeCount = seasonApi.EpisodeCount,
-                MediaId = tvDetailId,
+                ParrentId = tvDetailId,
                 Overview = seasonApi.Overview,
                 SeasonNumber = seasonApi.SeasonNumber,
                 VoteAverage = seasonApi.VoteAverage,
@@ -138,7 +138,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Tv
             {
                 ApiModelId = networkApi.Id,
                 Name = networkApi.Name,
-                MediaId = tvDetailId,
+                ParrentId = tvDetailId,
                 LogoPath = networkApi.LogoPath,
                 OriginCountry = networkApi.OriginCountry,
             };
@@ -161,7 +161,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Tv
             {
                 ApiModelId = createdBy.Id,
                 Name = createdBy.Name,
-                MediaId = tvDetailId,
+                ParrentId = tvDetailId,
                 Gender = createdBy.Gender,
                 OriginalName = createdBy.OriginalName,
                 ProfilePath = createdBy.ProfilePath
@@ -191,7 +191,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Tv
                 ApiModelId = episode.Id,
                 EpisodeNumber = episode.EpisodeNumber,
                 EpisodeType = episode.EpisodeType,
-                MediaId = tvDetailId,
+                ParrentId = tvDetailId,
                 Name = episode.Name,
                 Overview = episode.Overview,
                 SeasonNumber = episode.SeasonNumber,
@@ -211,69 +211,6 @@ namespace WatchListMovies.Application.BackgroundJobs.Tv
 
             return result;
         }
-
-        public static TvCast Map(this MovieAndTvCastsItemApiModelDto cast, Guid tvDetailId)
-        {
-            var result = new TvCast()
-            {
-                Adult = cast.Adult,
-                ApiModelId = cast.Id,
-                CastId = cast.CastId,
-                Character = cast.Character,
-                CreditId = cast.CreditId,
-                Gender = cast.Gender,
-                KnownForDepartment = cast.KnownForDepartment,
-                MovieDetailsId = tvDetailId,
-                Name = cast.Name,
-                Order = cast.Order,
-                OriginalName = cast.OriginalName,
-                Popularity = cast.Popularity,
-                ProfilePath = cast.ProfilePath,
-
-            };
-
-            return result;
-        }
-
-        public static List<TvCast> Map(this List<MovieAndTvCastsItemApiModelDto> casts, Guid tvDetailId)
-        {
-            var result = new List<TvCast>();
-
-            foreach (var cast in casts)
-                result.Add(cast.Map(tvDetailId));
-
-            return result;
-        }
-
-        public static TvCrew Map(this MovieAndTvCrewsItemApiModelDto crew, Guid tvDetailId)
-        {
-            var result = new TvCrew()
-            {
-                Adult = crew.Adult,
-                ApiModelId = crew.Id,
-                CreditId = crew.CreditId,
-                Gender = crew.Gender,
-                KnownForDepartment = crew.KnownForDepartment,
-                MovieDetailsId = tvDetailId,
-                Name = crew.Name,
-                OriginalName = crew.OriginalName,
-                Popularity = crew.Popularity,
-                ProfilePath = crew.ProfilePath,
-                Department = crew.Department,
-                Job = crew.Job,
-            };
-
-            return result;
-        }
-
-        public static List<TvCrew> Map(this List<MovieAndTvCrewsItemApiModelDto> crews, Guid tvDetailId)
-        {
-            var result = new List<TvCrew>();
-
-            foreach (var crew in crews)
-                result.Add(crew.Map(tvDetailId));
-
-            return result;
-        }
+        
     }
 }

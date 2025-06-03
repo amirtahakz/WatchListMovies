@@ -15,7 +15,7 @@ namespace WatchListMovies.Domain.TvAgg.ValueObjects
         }
 
         public NetworkValueObject(
-            Guid? mediaId,
+            Guid? ParrentId,
             long? apiModelId,
             string? name,
             string? logoPath,
@@ -25,9 +25,9 @@ namespace WatchListMovies.Domain.TvAgg.ValueObjects
             Name = name;
             LogoPath = logoPath;
             OriginCountry = originCountry;
-            MediaId = mediaId;
+            ParrentId = ParrentId;
         }
-        public Guid? MediaId { get; set; }
+        public Guid? ParrentId { get; set; }
         public long? ApiModelId { get; set; }
         public string? Name { get; set; }
         public string? LogoPath { get; set; }

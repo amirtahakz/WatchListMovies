@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WatchListMovies.Domain.CastAgg;
 using WatchListMovies.Domain.CastAgg.Repository;
+using WatchListMovies.Domain.MovieAgg;
 using WatchListMovies.Infrastructure._Utilities;
 
 namespace WatchListMovies.Infrastructure.Persistent.Ef.CastAgg
@@ -37,6 +38,30 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef.CastAgg
 
                 return false;
             }
+        }
+
+        public async Task AddRangeIfNotExistAsync(List<Cast> casts)
+        {
+
+            foreach (var item in casts)
+            {
+                var isExist = await Context.Casts.AnyAsync(m => m.ApiModelId == item.ApiModelId);
+
+                if (!isExist)
+                    await Context.Casts.AddAsync(item);
+
+
+            }
+
+        }
+
+        public async Task<Cast> GetTrackingByApiModelIdAsync(long apiModelId)
+        {
+            var result = await Context.Casts
+                .AsTracking()
+                .FirstOrDefaultAsync(x => x.ApiModelId == apiModelId);
+
+            return result;
         }
     }
 }

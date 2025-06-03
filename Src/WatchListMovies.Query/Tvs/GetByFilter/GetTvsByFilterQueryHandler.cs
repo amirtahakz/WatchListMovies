@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using WatchListMovies.Common.Query;
+using WatchListMovies.Domain.GenreAgg;
 using WatchListMovies.Infrastructure.Persistent.Ef;
 using WatchListMovies.Query.Tvs.DTOs;
 
@@ -20,11 +22,7 @@ namespace WatchListMovies.Query.Tvs.GetByFilter
 
             var upcomingDate = DateTime.Now.AddDays(-25);
 
-            var result = _context.Tvs
-                .Include(c => c.TvDetail)
-                .Include(v => v.TvDetail.Casts)
-                .Include(v => v.TvDetail.Crews)
-                .AsQueryable();
+            var result = _context.Tvs.Include(c => c.TvDetail).AsQueryable();
 
             if (@params.Id != null)
                 result = result.Where(r => r.Id == @params.Id);
@@ -32,8 +30,8 @@ namespace WatchListMovies.Query.Tvs.GetByFilter
             if (@params.Adult != null)
                 result = result.Where(r => r.Adult == @params.Adult);
 
-            if (@params.ApiModelId != null)
-                result = result.Where(r => r.ApiModelId == @params.ApiModelId);
+            if (@params.ApiModelIds != null)
+                result = result.Where(r => @params.ApiModelIds.Contains((long)r.ApiModelId));
 
             if (!string.IsNullOrWhiteSpace(@params.OriginalLanguage))
                 result = result.Where(r => r.OriginalLanguage.Contains(@params.OriginalLanguage));
@@ -71,21 +69,12 @@ namespace WatchListMovies.Query.Tvs.GetByFilter
             if (@params.CreatedByGender != null)
                 result = result.Where(r => r.TvDetail.CreatedBys.Any(cr => @params.CreatedByGender.Value == cr.Gender));
 
-            // MovieDetails
-            //if (!string.IsNullOrWhiteSpace(@params.ImdbId))
-            //    result = result.Where(r => r.TvDetail.ImdbId.Contains(@params.ImdbId));
-
-            if (@params.GenreIds != null)
-                result = result.Where(r => r.TvDetail.Genres.Any(genre => @params.GenreIds.Contains((long)genre.ApiModelId)));
-
-            if (@params.GenreNames != null)
-                result = result.Where(r => r.TvDetail.Genres.Any(genre => @params.GenreNames.Contains(genre.Name)));
-
+            // TvDetails
             if (@params.CompanyNames != null)
                 result = result.Where(r => r.TvDetail.ProductionCompanies.Any(pc => @params.CompanyNames.Contains(pc.Name)));
 
             if (@params.CountryNames != null)
-                result = result.Where(r => r.TvDetail.Genres.Any(c => @params.CountryNames.Contains(c.Name)));
+                result = result.Where(r => r.TvDetail.ProductionCountries.Any(c => @params.CountryNames.Contains(c.Name)));
 
             if (@params.SpokenLanguageEnglishNames != null)
                 result = result.Where(r => r.TvDetail.SpokenLanguages.Any(sp => @params.SpokenLanguageEnglishNames.Contains(sp.Name)));
@@ -94,29 +83,42 @@ namespace WatchListMovies.Query.Tvs.GetByFilter
             switch (@params.TvOrderByEnum)
             {
                 case Domain.TvAgg.Enums.TvOrderByEnum.TopRated:
-                    result.OrderBy(d => d.VoteAverage);
+                    result = result.OrderBy(d => d.VoteAverage);
                     break;
                 case Domain.TvAgg.Enums.TvOrderByEnum.FirstAirDate:
-                    result.OrderBy(d => d.FirstAirDate);
+                    result = result.OrderBy(d => d.FirstAirDate);
                     break;
                 default:
-                    result.OrderByDescending(d => d.Id);
+                    result = result.OrderByDescending(d => d.Id);
                     break;
             }
 
+            var preGenreFilteredList = await result.ToListAsync();
+            // فیلتر ژانر روی داده‌های در حافظه:
+            if (@params.GenreIds != null && @params.GenreIds.Any())
+            {
+                var filterGenreIdsAsString = @params.GenreIds.Select(id => id.ToString()).ToList();
+
+                preGenreFilteredList = preGenreFilteredList
+                    .Where(movie => movie.GenreIds != null && movie.GenreIds.Any(genreId => filterGenreIdsAsString.Contains(genreId)))
+                    .ToList();
+            }
+
+
+            // صفحه‌بندی و مپ کردن به DTO
             var skip = (@params.PageId - 1) * @params.Take;
             var model = new TvFilterResult()
             {
-                Data = await result
+                Data = preGenreFilteredList
                     .Skip(skip)
                     .Take(@params.Take)
                     .Select(tv => tv.Map())
-                    .ToListAsync(cancellationToken),
+                    .ToList(),
 
                 FilterParams = @params
             };
 
-            model.GeneratePaging(result, @params.Take, @params.PageId);
+            model.GeneratePaging(preGenreFilteredList.Count(), @params.Take, @params.PageId);
             return model;
         }
     }

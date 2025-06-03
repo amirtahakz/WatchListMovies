@@ -1,5 +1,5 @@
 ﻿using WatchListMovies.Common.Domain;
-using WatchListMovies.Domain.CastAgg.ValueObjects;
+
 
 namespace WatchListMovies.Domain.CastAgg
 {
@@ -14,8 +14,8 @@ namespace WatchListMovies.Domain.CastAgg
             Guid? castId,
             bool? adult,
             string? biography,
-            string? birthday,
-            string? deathday,
+            DateTime? birthday,
+            DateTime? deathday,
             int? gender,
             string? homepage,
             long? apiModelId,
@@ -47,8 +47,8 @@ namespace WatchListMovies.Domain.CastAgg
         public Guid? CastId { get; set; }
         public bool? Adult { get; set; }
         public string? Biography { get; set; }
-        public string? Birthday { get; set; }
-        public string? Deathday { get; set; }
+        public DateTime? Birthday { get; set; }
+        public DateTime? Deathday { get; set; }
         public int? Gender { get; set; }
         public string? Homepage { get; set; }
         public long? ApiModelId { get; set; }

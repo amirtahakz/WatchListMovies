@@ -1,18 +1,8 @@
 ﻿using AutoMapper;
-using AutoMapper.Execution;
-using WatchListMovies.Api.ViewModels.Cast;
 using WatchListMovies.Api.ViewModels.Favorite;
-using WatchListMovies.Api.ViewModels.Genre;
 using WatchListMovies.Api.ViewModels.List;
-using WatchListMovies.Api.ViewModels.Movie;
-using WatchListMovies.Api.ViewModels.Tv;
-using WatchListMovies.Application.IExternalApiServices.Movie.ApiModelDTOs;
-using WatchListMovies.Application.Services.Cast.Create;
 using WatchListMovies.Application.Services.Favorite.Create;
-using WatchListMovies.Application.Services.Genre.Create;
 using WatchListMovies.Application.Services.List.Create;
-using WatchListMovies.Application.Services.Movie.Create;
-using WatchListMovies.Application.Services.Tv.Create;
 using WatchListMovies.Domain.MovieAgg;
 using WatchListMovies.Domain.TvAgg;
 using WatchListMovies.Domain.UserAgg;
@@ -29,17 +19,13 @@ public class MapperProfile : Profile
         CreateMap<UserTokenDto, UserToken>().ReverseMap();
         CreateMap<CreateFavoriteViewModel, CreateFavoriteCommand>().ReverseMap();
         CreateMap<CreateListViewModel, CreateListCommand>().ReverseMap();
-        CreateMap<CreateMovieViewModel, CreateMovieCommand>().ReverseMap();
-        CreateMap<CreateTvViewModel, CreateTvCommand>().ReverseMap();
-        CreateMap<CreateCastViewModel, CreateCastCommand>().ReverseMap();
-        CreateMap<CreateGenreViewModel, CreateGenreCommand>().ReverseMap();
         CreateMap<Tv,TvDto>().ReverseMap();
         CreateMap<Movie,MovieDto>().ReverseMap();
 
 
         //CreateMap<Movie, PopularMoviesItemApiModelDto>().ReverseMap();
         //CreateMap<MovieDetail, MovieDetailsApiModelDto>()
-        //    .ForMember(dest => dest.ApiModelId, opt => opt.MapFrom(src => src.ApiModelId))
+        //    .ForMember(dest => dest.ApiModelIds, opt => opt.MapFrom(src => src.ApiModelIds))
         //    .ForMember(dest => dest.BelongsToCollectionValueObject, opt => opt.MapFrom(src => src.BelongsToCollectionValueObject))
         //    .ForMember(dest => dest.Genres, opt => opt.MapFrom(src => src.Genres))
         //    .ForMember(dest => dest.ProductionCompanies, opt => opt.MapFrom(src => src.ProductionCompanies))

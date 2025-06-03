@@ -8,7 +8,7 @@ namespace WatchListMovies.Query.Tvs.DTOs
         public TvOrderByEnum TvOrderByEnum { get; set; }
         public Guid? Id { get; set; }
         public bool? Adult { get; set; }
-        public long? ApiModelId { get; set; }
+        public List<long>? ApiModelIds { get; set; }
         public string? OriginalLanguage { get; set; }
         public string? OriginalName { get; set; }
         public string? Overview { get; set; }

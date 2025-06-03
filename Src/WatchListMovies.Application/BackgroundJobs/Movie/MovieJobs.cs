@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
 using WatchListMovies.Application.IExternalApiServices.Movie;
+using WatchListMovies.Domain.ContentCastAgg;
+using WatchListMovies.Domain.ContentCastAgg.Enums;
+using WatchListMovies.Domain.ContentCastAgg.Repository;
 using WatchListMovies.Domain.MovieAgg.Repository;
 
 namespace WatchListMovies.Application.BackgroundJobs.Movie
@@ -9,12 +12,18 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
         private readonly IMovieApiService _movieApiService;
         private readonly IMapper _mapper;
         private readonly IMovieRepository _movieRepository;
+        private readonly IContentCastRepository _contentCastRepository;
 
-        public MovieJobs(IMovieApiService movieApiService, IMapper mapper, IMovieRepository movieRepository)
+        public MovieJobs(
+            IMovieApiService movieApiService,
+            IMapper mapper,
+            IMovieRepository movieRepository,
+            IContentCastRepository contentCastRepository)
         {
             _movieApiService = movieApiService;
             _mapper = mapper;
             _movieRepository = movieRepository;
+            _contentCastRepository = contentCastRepository;
         }
 
         public async Task SyncPopularMovies()
@@ -27,11 +36,16 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
                 //    var data = await _movieApiService.GetPopularMovies(page);
                 //    apiMovies.PopularTvsItemApiModelDto.AddRange(data.PopularTvsItemApiModelDto);
                 //}
+
                 for (var page = 2; page <= 3; page++)
                 {
                     var data = await _movieApiService.GetPopularMovies(page);
 
-                    apiMovies.movies.AddRange(data.movies);
+                    foreach (var item in data.movies)
+                    {
+                        if (!apiMovies.movies.Any(v=>v.ApiModelId == item.ApiModelId))
+                            apiMovies.movies.Add(item);
+                    }
                 }
 
                 await _movieRepository.AddRangeIfNotExistAsync(apiMovies.Map());
@@ -83,37 +97,6 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
                             movie.MovieDetails.MovieKeyYoutubeTrailers = item.Map(movie.MovieDetails.Id);
 
                         await _movieRepository.Save();
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
-        }
-
-        public async Task SyncCastsAndCrewsOfMovie()
-        {
-
-            try
-            {
-                var movies = await _movieRepository.GetAllAsync();
-                if (movies.Count() != 0)
-                {
-                    foreach (var movie in movies)
-                    {
-                        var apiCastsAndCrewsOfMovie = await _movieApiService.GetCastsAndCrewsOfMovie(movie.ApiModelId ?? default);
-
-                        if (apiCastsAndCrewsOfMovie.Casts != null)
-                            movie.MovieDetails.Casts.AddRange(apiCastsAndCrewsOfMovie.Casts.Map(movie.MovieDetails.Id));
-
-
-                        if (apiCastsAndCrewsOfMovie.Crews != null)
-                            movie.MovieDetails.Crews.AddRange(apiCastsAndCrewsOfMovie.Crews.Map(movie.MovieDetails.Id));
-
-                        await _movieRepository.Save();
-
                     }
                 }
             }

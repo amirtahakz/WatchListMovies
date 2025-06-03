@@ -22,13 +22,13 @@ namespace WatchListMovies.Domain.MovieAgg.ValueObjects
             string? posterPath,
             string? backdropPath)
         {
-            MediaId = movieDetailId;
+            ParrentId = movieDetailId;
             ApiModelId = apiModelId;
             Name = name;
             PosterPath = posterPath;
             BackdropPath = backdropPath;
         }
-        public Guid? MediaId { get; set; }
+        public Guid? ParrentId { get; set; }
 
         public long? ApiModelId { get; set; }
 

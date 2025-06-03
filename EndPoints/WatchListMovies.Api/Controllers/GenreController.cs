@@ -1,16 +1,13 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using WatchListMovies.Api.ViewModels.Genre;
-using WatchListMovies.Application.Services.Genre.Create;
 using WatchListMovies.Common.AspNetCore;
 using WatchListMovies.Query.Genre.DTOs;
 using WatchListMovies.Query.Genre.GetByFilter;
 
 namespace WatchListMovies.Api.Controllers
 {
-    public class GenreController : ApiController
+    public class GenreController : BaseApiController
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;
@@ -26,13 +23,5 @@ namespace WatchListMovies.Api.Controllers
             return QueryResult(result);
         }
 
-        [Authorize]
-        [HttpPost("CreateGenre")]
-        public async Task<ApiResult<Guid>> CreateGenre([FromQuery] CreateGenreViewModel viewModel)
-        {
-            var command = _mapper.Map<CreateGenreCommand>(viewModel);
-            var result = await _mediator.Send(command);
-            return CommandResult(result);
-        }
     }
 }

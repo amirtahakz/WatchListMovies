@@ -1,31 +1,33 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using WatchListMovies.Domain.UserAgg.Repository;
-using WatchListMovies.Infrastructure.Persistent.Ef.UserAgg;
-using WatchListMovies.Infrastructure.Persistent.Ef;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http.Headers;
+using WatchListMovies.Application.Configurations;
+using WatchListMovies.Application.IExternalApiServices.Cast;
+using WatchListMovies.Application.IExternalApiServices.Genre;
+using WatchListMovies.Application.IExternalApiServices.Movie;
+using WatchListMovies.Application.IExternalApiServices.Tv;
+using WatchListMovies.Domain.CastAgg.Repository;
+using WatchListMovies.Domain.ContentCastAgg.Repository;
 using WatchListMovies.Domain.FavoriteAgg.Repository;
+using WatchListMovies.Domain.GenreAgg.Repository;
 using WatchListMovies.Domain.ListAgg.Repository;
-using WatchListMovies.Infrastructure.Persistent.Ef.FavoriteAgg;
-using WatchListMovies.Infrastructure.Persistent.Ef.ListAgg;
 using WatchListMovies.Domain.MovieAgg.Repository;
 using WatchListMovies.Domain.TvAgg.Repository;
-using WatchListMovies.Infrastructure.Persistent.Ef.MovieAgg;
-using WatchListMovies.Infrastructure.Persistent.Ef.TvAgg;
-using WatchListMovies.Domain.CastAgg.Repository;
-using WatchListMovies.Infrastructure.Persistent.Ef.CastAgg;
-using WatchListMovies.Domain.GenreAgg.Repository;
-using WatchListMovies.Infrastructure.Persistent.Ef.Genre;
-using Microsoft.Extensions.Configuration;
-using WatchListMovies.Application.Configurations;
-using WatchListMovies.Infrastructure.ExternalApiServices.Movie;
-using WatchListMovies.Application.IExternalApiServices.Movie;
-using System.Net.Http.Headers;
-using WatchListMovies.Application.IExternalApiServices.Cast;
-using WatchListMovies.Application.IExternalApiServices.Tv;
-using WatchListMovies.Application.IExternalApiServices.Genre;
+using WatchListMovies.Domain.UserAgg.Repository;
 using WatchListMovies.Infrastructure.ExternalApiServices.Cast;
 using WatchListMovies.Infrastructure.ExternalApiServices.Genre;
+using WatchListMovies.Infrastructure.ExternalApiServices.Movie;
 using WatchListMovies.Infrastructure.ExternalApiServices.Tv;
+using WatchListMovies.Infrastructure.Persistent.Ef;
+using WatchListMovies.Infrastructure.Persistent.Ef.CastAgg;
+using WatchListMovies.Infrastructure.Persistent.Ef.ContentCastAgg;
+using WatchListMovies.Infrastructure.Persistent.Ef.FavoriteAgg;
+using WatchListMovies.Infrastructure.Persistent.Ef.Genre;
+using WatchListMovies.Infrastructure.Persistent.Ef.ListAgg;
+using WatchListMovies.Infrastructure.Persistent.Ef.MovieAgg;
+using WatchListMovies.Infrastructure.Persistent.Ef.TvAgg;
+using WatchListMovies.Infrastructure.Persistent.Ef.UserAgg;
 
 namespace WatchListMovies.Infrastructure
 {
@@ -45,6 +47,7 @@ namespace WatchListMovies.Infrastructure
             services.AddTransient<ITvRepository, TvRepository>();
             services.AddTransient<ICastRepository, CastRepository>();
             services.AddTransient<IGenreRepository, GenreRepository>();
+            services.AddTransient<IContentCastRepository, ContentCastRepository>();
 
             services.AddDbContext<ApplicationDbContext>(option =>
             {

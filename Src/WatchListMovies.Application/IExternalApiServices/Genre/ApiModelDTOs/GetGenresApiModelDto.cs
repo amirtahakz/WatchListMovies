@@ -10,9 +10,9 @@ namespace WatchListMovies.Application.IExternalApiServices.Genre.ApiModelDTOs
     public class GetGenresApiModelDto
     {
         [JsonProperty("genres")]
-        public List<GetGenresApiItem> Genres { get; set; }
+        public List<GetGenresItemApiModelDto> Genres { get; set; }
     }
-    public class GetGenresApiItem
+    public class GetGenresItemApiModelDto
     {
         [JsonProperty("id")]
         public long? Id { get; set; }

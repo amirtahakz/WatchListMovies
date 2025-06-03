@@ -12,7 +12,7 @@ using WatchListMovies.Query.Movies.GetUpcoming;
 
 namespace WatchListMovies.Api.Controllers
 {
-    public class MovieController : ApiController
+    public class MovieController : BaseApiController
     {
         private readonly IMediator _mediator;
         private readonly IMapper _mapper;

@@ -44,10 +44,10 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef.TvAgg
 
             foreach (var item in tvs)
             {
-                var existingMovie = await Context.Tvs.FirstOrDefaultAsync(m => m.ApiModelId == item.ApiModelId);
+                var isExist = await Context.Tvs.AnyAsync(m => m.ApiModelId == item.ApiModelId);
 
-                if (existingMovie == null)
-                    await Context.Tvs.AddRangeAsync(item);
+                if (!isExist)
+                    await Context.Tvs.AddAsync(item);
 
 
             }

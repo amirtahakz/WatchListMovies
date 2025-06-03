@@ -37,5 +37,16 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef.Genre
                 return false;
             }
         }
+
+        public async Task AddRangeIfNotExistAsync(List<Domain.GenreAgg.Genre> genres)
+        {
+            foreach (var genre in genres) 
+            {
+                var isExist = await Context.Genres.AnyAsync(x=>x.ApiModelId == genre.ApiModelId);
+
+                if (!isExist)
+                    await Context.Genres.AddAsync(genre);
+            }
+        }
     }
 }

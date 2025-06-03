@@ -9,7 +9,7 @@ namespace WatchListMovies.Domain.MovieAgg
             
         }
         public MovieKeyYoutubeTrailer(
-            Guid mediaId,
+            Guid ParrentId,
             string? apiModelId,
             string? iso6391,
             string? iso31661,
@@ -21,7 +21,7 @@ namespace WatchListMovies.Domain.MovieAgg
             bool? official,
             DateTime? publishedAt)
         {
-            MediaId = mediaId;
+            ParrentId = ParrentId;
             ApiModelId = apiModelId;
             Iso6391 = iso6391;
             Iso31661 = iso31661;
@@ -34,7 +34,7 @@ namespace WatchListMovies.Domain.MovieAgg
             PublishedAt = publishedAt;
         }
 
-        public Guid MediaId { get; set; }
+        public Guid ParrentId { get; set; }
         public string? ApiModelId { get; set; }
         public string? Iso6391 { get; set; }
         public string? Iso31661 { get; set; }

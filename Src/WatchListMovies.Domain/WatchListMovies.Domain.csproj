@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <Folder Include="CastAgg\Enums\" />
+    <Folder Include="CastAgg\ValueObjects\" />
     <Folder Include="_Shared\Enums\" />
   </ItemGroup>
 

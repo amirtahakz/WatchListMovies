@@ -27,31 +27,23 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef.MovieAgg
                 md.ToTable("MovieDetails", "movie");
                 md.HasKey(b => b.Id);
                 md.HasIndex(b => b.ApiModelId).IsUnique();
+                md.Property(m => m.GenreIds)
+                    .HasConversion(
+                        v => string.Join(",", v),
+                        v => v.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                    .HasColumnName("GenreIds");
 
-
-                // GenresVo Tbl Config
-                md.OwnsMany(m => m.Genres, g =>
-                {
-                    g.ToTable("Genres", "movie");
-                    g.WithOwner().HasForeignKey("MediaId");
-                    g.HasKey("CreationDate", "MediaId", "Name");
-                    g.Property(x => x.ApiModelId);
-                    g.Property(x => x.Name);
-                    g.Property(x => x.MediaId);
-                    g.Property(x => x.CreationDate);
-
-                });
 
                 // SpokenLanguagesVo Tbl Config
                 md.OwnsMany(m => m.SpokenLanguages, sl =>
                 {
                     sl.ToTable("SpokenLanguages", "movie");
-                    sl.WithOwner().HasForeignKey("MediaId");
-                    sl.HasKey("CreationDate", "MediaId", "EnglishName");
+                    sl.WithOwner().HasForeignKey("ParrentId");
+                    sl.HasKey("CreationDate", "ParrentId", "EnglishName");
                     sl.Property(x => x.Iso6391);
                     sl.Property(x => x.Name);
                     sl.Property(x => x.EnglishName);
-                    sl.Property(x => x.MediaId);
+                    sl.Property(x => x.ParrentId);
                     sl.Property(x => x.CreationDate);
 
                 });
@@ -61,13 +53,13 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef.MovieAgg
                 md.OwnsMany(m => m.ProductionCompanies, pc =>
                 {
                     pc.ToTable("ProductionCompanies", "movie");
-                    pc.WithOwner().HasForeignKey("MediaId");
-                    pc.HasKey("CreationDate", "MediaId", "Name");
+                    pc.WithOwner().HasForeignKey("ParrentId");
+                    pc.HasKey("CreationDate", "ParrentId", "Name");
                     pc.Property(x => x.ApiModelId);
                     pc.Property(x => x.Name);
                     pc.Property(x => x.LogoPath);
                     pc.Property(x => x.OriginCountry);
-                    pc.Property(x => x.MediaId);
+                    pc.Property(x => x.ParrentId);
                     pc.Property(x => x.CreationDate);
 
                 });
@@ -77,11 +69,11 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef.MovieAgg
                 md.OwnsMany(m => m.ProductionCountries, pc =>
                 {
                     pc.ToTable("ProductionCountries", "movie");
-                    pc.WithOwner().HasForeignKey("MediaId");
-                    pc.HasKey("CreationDate", "MediaId", "Name");
+                    pc.WithOwner().HasForeignKey("ParrentId");
+                    pc.HasKey("CreationDate", "ParrentId", "Name");
                     pc.Property(x => x.Iso31661);
                     pc.Property(x => x.Name);
-                    pc.Property(x => x.MediaId);
+                    pc.Property(x => x.ParrentId);
                     pc.Property(x => x.CreationDate);
 
                 });
@@ -90,8 +82,8 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef.MovieAgg
                 md.OwnsOne(m => m.BelongsToCollection, btc =>
                 {
                     btc.ToTable("BelongsToCollections", "movie");
-                    btc.WithOwner().HasForeignKey("MediaId");
-                    btc.HasKey("CreationDate" , "MediaId" , "Name");
+                    btc.WithOwner().HasForeignKey("ParrentId");
+                    btc.HasKey("CreationDate" , "ParrentId" , "Name");
                     btc.Property(x => x.BackdropPath);
                     btc.Property(x => x.Name);
                     btc.Property(x => x.BackdropPath);
@@ -108,25 +100,6 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef.MovieAgg
                     btc.HasIndex(b => b.ApiModelId).IsUnique();
 
                 });
-
-                //MovieCasts Tbl Config
-                md.OwnsMany(m => m.Casts, btc =>
-                {
-                    btc.ToTable("MovieCasts", "movie");
-                    btc.HasKey(b => b.Id);
-                    btc.HasIndex(b => b.ApiModelId);
-
-                });
-
-                //MovieCrews Tbl Config
-                md.OwnsMany(m => m.Crews, btc =>
-                {
-                    btc.ToTable("MovieCrews", "movie");
-                    btc.HasKey(b => b.Id);
-                    btc.HasIndex(b => b.ApiModelId);
-
-                });
-
 
             });
         }

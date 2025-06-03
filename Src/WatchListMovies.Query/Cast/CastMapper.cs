@@ -16,7 +16,7 @@ namespace WatchListMovies.Query.Cast
                 ApiModelId = movie.ApiModelId,
                 Adult = movie.Adult,
                 Popularity = movie.Popularity,
-                CastKnownFors = movie.CastKnownFors,
+                MovieKnownForIds = movie.MovieKnownForIds,
                 CastDetails = movie.CastDetails,
                 CastExternalId = movie.CastExternalId,
                 ProfilePath = movie.ProfilePath,

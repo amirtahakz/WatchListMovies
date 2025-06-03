@@ -11,8 +11,10 @@ namespace WatchListMovies.Domain.GenreAgg.Repository
 {
     public interface IGenreRepository : IBaseRepository<Genre>
     {
-        Task<List<Domain.GenreAgg.Genre>> GetAllAsync();
-        Task<List<Domain.GenreAgg.Genre>> GetAllAsNoTrackingAsync();
+        Task<List<Genre>> GetAllAsync();
+        Task<List<Genre>> GetAllAsNoTrackingAsync();
         Task<bool> DeleteAllAsync();
+
+        Task AddRangeIfNotExistAsync(List<Genre> genres);
     }
 }

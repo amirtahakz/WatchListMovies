@@ -22,7 +22,7 @@ using WatchListMovies.Application.Services.Users.AddToken;
 
 namespace Api.Controllers;
 
-public class AuthController : ApiController
+public class AuthController : BaseApiController
 {
     private readonly IMediator _mediator;
     private readonly IConfiguration _configuration;

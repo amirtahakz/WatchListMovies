@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WatchListMovies.Common.Domain;
-using WatchListMovies.Domain.CastAgg.ValueObjects;
+﻿using WatchListMovies.Common.Domain;
 
 namespace WatchListMovies.Domain.CastAgg
 {
@@ -15,8 +9,7 @@ namespace WatchListMovies.Domain.CastAgg
             
         }
 
-        public Cast(
-            bool? adult,
+        public Cast(bool? adult,
             long? gender,
             long? apiModelId,
             string? knownForDepartment,
@@ -24,10 +17,11 @@ namespace WatchListMovies.Domain.CastAgg
             string? originalName,
             double? popularity,
             string? profilePath,
-            List<CastImage> castImages,
+            bool? isRecommendedByAdmin,
+            List<CastImage>? castImages,
             CastExternalId? castExternalId,
             CastDetail? castDetails,
-            List<CastKnownForValueObject>? castKnownFors)
+            IReadOnlyCollection<string>? castKnownForIds)
         {
             Adult = adult;
             Gender = gender;
@@ -37,10 +31,16 @@ namespace WatchListMovies.Domain.CastAgg
             OriginalName = originalName;
             Popularity = popularity;
             ProfilePath = profilePath;
+            IsRecommendedByAdmin = isRecommendedByAdmin;
             CastImages = castImages;
             CastExternalId = castExternalId;
             CastDetails = castDetails;
-            CastKnownFors = castKnownFors;
+            MovieKnownForIds = castKnownForIds;
+        }
+
+        public void MakeRecommended()
+        {
+            IsRecommendedByAdmin = true;
         }
 
         public bool? Adult { get; set; }
@@ -51,9 +51,10 @@ namespace WatchListMovies.Domain.CastAgg
         public string? OriginalName { get; set; }
         public double? Popularity { get; set; }
         public string? ProfilePath { get; set; }
+        public bool? IsRecommendedByAdmin { get; set; }
         public List<CastImage>? CastImages { get; set; }
         public CastExternalId? CastExternalId { get; set; }
         public CastDetail? CastDetails { get; set; }
-        public List<CastKnownForValueObject>? CastKnownFors { get; set; }
+        public IReadOnlyCollection<string>? MovieKnownForIds { get; set; }
     }
 }

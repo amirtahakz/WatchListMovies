@@ -34,13 +34,11 @@ namespace WatchListMovies.Domain.MovieAgg
             double? voteAverage,
             long? voteCount,
             BelongsToCollectionValueObject? belongsToCollection,
-            List<GenreValueObject> genres,
+            List<MovieKeyYoutubeTrailer>? movieKeyYoutubeTrailers,
+            IEnumerable<string>? genreIds,
             List<ProductionCompanyValueObject> productionCompanies,
             List<ProductionCountryValueObject> productionCountries,
-            List<SpokenLanguageValueObject> spokenLanguages,
-            List<MovieKeyYoutubeTrailer> movieKeyYoutubeTrailer,
-            List<MovieCast>? casts,
-            List<MovieCrew>? crews)
+            List<SpokenLanguageValueObject> spokenLanguages)
         {
             MovieId = movieId;
             Adult = adult;
@@ -64,13 +62,11 @@ namespace WatchListMovies.Domain.MovieAgg
             VoteAverage = voteAverage;
             VoteCount = voteCount;
             BelongsToCollection = belongsToCollection;
-            Genres = genres;
+            MovieKeyYoutubeTrailers = movieKeyYoutubeTrailers;
+            GenreIds = genreIds.ToList();
             ProductionCompanies = productionCompanies;
             ProductionCountries = productionCountries;
             SpokenLanguages = spokenLanguages;
-            MovieKeyYoutubeTrailers = movieKeyYoutubeTrailer;
-            Casts = casts;
-            Crews = crews;
         }
 
         public Guid MovieId { get; set; }
@@ -96,12 +92,10 @@ namespace WatchListMovies.Domain.MovieAgg
         public long? VoteCount { get; set; }
         public BelongsToCollectionValueObject? BelongsToCollection { get; set; }
         public List<MovieKeyYoutubeTrailer>? MovieKeyYoutubeTrailers { get; set; }
-        public List<GenreValueObject> Genres { get; set; }
+        public IReadOnlyCollection<string>? GenreIds { get; set; }
         public List<ProductionCompanyValueObject> ProductionCompanies { get; set; }
         public List<ProductionCountryValueObject> ProductionCountries { get; set; }
         public List<SpokenLanguageValueObject> SpokenLanguages { get; set; }
-        public List<MovieCast>? Casts { get; set; }
-        public List<MovieCrew>? Crews { get; set; }
 
     }
 

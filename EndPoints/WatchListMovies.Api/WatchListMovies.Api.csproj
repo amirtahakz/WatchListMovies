@@ -41,4 +41,11 @@
     <ProjectReference Include="..\..\Src\WatchListMovies.Query\WatchListMovies.Query.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="ViewModels\Cast\" />
+	  <Folder Include="ViewModels\Genre\" />
+	  <Folder Include="ViewModels\Movie\" />
+	  <Folder Include="ViewModels\Tv\" />
+	</ItemGroup>
+
 </Project>

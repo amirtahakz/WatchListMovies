@@ -34,7 +34,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
                 Video = popularMoviesItemApiModelDto.Video,
                 VoteAverage = popularMoviesItemApiModelDto.VoteAverage,
                 VoteCount = popularMoviesItemApiModelDto.VoteCount,
-                GenreIds = popularMoviesItemApiModelDto.GenreIds
+                GenreIds = popularMoviesItemApiModelDto.GenreIds,
             };
             return result;
         }
@@ -67,7 +67,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
             };
 
             if (movieDetails.Genres != null)
-                result.Genres = movieDetails.Genres.Map(result.Id);
+                result.GenreIds = movieDetails.Genres.Where(g => g.ApiModelId.HasValue).Select(g => g.ApiModelId.Value.ToString()).ToList().AsReadOnly();
 
             if (movieDetails.SpokenLanguages != null)
                 result.SpokenLanguages = movieDetails.SpokenLanguages.Map(result.Id);
@@ -88,7 +88,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
                     PosterPath = movieDetails.BelongsToCollection.PosterPath,
                     ApiModelId = movieDetails.BelongsToCollection.ApiModelId,
                     Name = movieDetails.BelongsToCollection.Name,
-                    MediaId = result.Id,
+                    ParrentId = result.Id,
                 };
             }
 
@@ -105,7 +105,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
                 Iso31661 = movieKeyYoutubeTrailers.Iso31661,
                 Iso6391 = movieKeyYoutubeTrailers.Iso6391,
                 Key = movieKeyYoutubeTrailers.Key,
-                MediaId = movieDetailId,
+                ParrentId = movieDetailId,
                 Official = movieKeyYoutubeTrailers.Official,
                 PublishedAt = movieKeyYoutubeTrailers.PublishedAt,
                 Site = movieKeyYoutubeTrailers.Site,
@@ -117,69 +117,5 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
             return result;
         }
 
-
-        public static MovieCast Map(this MovieAndTvCastsItemApiModelDto cast, Guid movieDetailId)
-        {
-            var result = new MovieCast()
-            {
-                Adult = cast.Adult,
-                ApiModelId = cast.Id,
-                CastId = cast.CastId,
-                Character = cast.Character,
-                CreditId = cast.CreditId,
-                Gender = cast.Gender,
-                KnownForDepartment = cast.KnownForDepartment,
-                MovieDetailsId = movieDetailId,
-                Name = cast.Name,
-                Order = cast.Order,
-                OriginalName = cast.OriginalName,
-                Popularity = cast.Popularity,
-                ProfilePath = cast.ProfilePath,
-
-            };
-
-            return result;
-        }
-
-        public static List<MovieCast> Map(this List<MovieAndTvCastsItemApiModelDto> casts, Guid movieDetailId)
-        {
-            var result = new List<MovieCast>();
-
-            foreach (var cast in casts)
-                result.Add(cast.Map(movieDetailId));
-
-            return result;
-        }
-
-        public static MovieCrew Map(this MovieAndTvCrewsItemApiModelDto crew, Guid movieDetailId)
-        {
-            var result = new MovieCrew()
-            {
-                Adult = crew.Adult,
-                ApiModelId = crew.Id,
-                CreditId = crew.CreditId,
-                Gender = crew.Gender,
-                KnownForDepartment = crew.KnownForDepartment,
-                MovieDetailsId = movieDetailId,
-                Name = crew.Name,
-                OriginalName = crew.OriginalName,
-                Popularity = crew.Popularity,
-                ProfilePath = crew.ProfilePath,
-                Department = crew.Department,
-                Job = crew.Job,
-            };
-
-            return result;
-        }
-
-        public static List<MovieCrew> Map(this List<MovieAndTvCrewsItemApiModelDto> crews, Guid movieDetailId)
-        {
-            var result = new List<MovieCrew>();
-
-            foreach (var crew in crews)
-                result.Add(crew.Map(movieDetailId));
-
-            return result;
-        }
     }
 }

@@ -13,6 +13,12 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef.CastAgg
             builder.HasIndex(b => b.Gender);
             builder.HasIndex(b => b.Name);
             builder.HasIndex(b => b.OriginalName);
+            builder.Property(b => b.IsRecommendedByAdmin).HasDefaultValue(false);
+            builder.Property(m => m.MovieKnownForIds)
+                    .HasConversion(
+                        v => string.Join(",", v),
+                        v => v.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                    .HasColumnName("GenreIds");
 
 
             // CastDetails Tbl Config
@@ -35,22 +41,6 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef.CastAgg
                 castExternalIdOption.HasKey(b => b.Id);
                 castExternalIdOption.HasIndex(b => b.ApiModelId);
                 castExternalIdOption.HasIndex(b => b.CastId);
-            });
-
-            // CastKnownFors Tbl Config
-            builder.OwnsMany(c => c.CastKnownFors, ckf =>
-            {
-                ckf.ToTable("CastKnownFors", "cast");
-                ckf.HasIndex(b => b.ApiModelId);
-                ckf.HasIndex(b => b.CastId);
-                ckf.HasIndex(b => b.Title);
-                ckf.HasIndex(b => b.OriginalTitle);
-
-                // CastKnownForGenreId Tbl Config
-                ckf.OwnsMany(c => c.CastKnownForGenreIds, gi =>
-                {
-                    gi.ToTable("CastKnownForGenreIds", "cast");
-                });
             });
 
             // CastImages Tbl Config
