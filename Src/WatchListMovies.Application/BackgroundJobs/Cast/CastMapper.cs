@@ -77,30 +77,6 @@ namespace WatchListMovies.Application.BackgroundJobs.Cast
             return result;
         }
 
-        public static List<CastImage> Map(this CastImagesApiModelDto castImages, Guid castId)
-        {
-            var result = new List<CastImage>();
-
-            if (castImages.Profiles != null)
-            {
-                foreach (var item in castImages.Profiles)
-                {
-                    var model = new CastImage()
-                    {
-                        CastId = castId,
-                        AspectRatio = item.AspectRatio,
-                        FilePath = item.FilePath,
-                        Height = item.Height,
-                        Iso6391 = item.Iso6391,
-                        VoteAverage = item.VoteAverage,
-                        VoteCount = item.VoteCount,
-                        Width = item.Width,
-                    };
-                    result.Add(model);
-                }
-            }
-
-            return result;
-        }
+        
     }
 }

@@ -42,13 +42,6 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef.CastAgg
                 castExternalIdOption.HasIndex(b => b.ApiModelId);
                 castExternalIdOption.HasIndex(b => b.CastId);
             });
-
-            // CastImages Tbl Config
-            builder.OwnsMany(c => c.CastImages, ci =>
-            {
-                ci.ToTable("CastImages", "cast");
-                ci.HasKey(b => b.Id);
-            });
         }
     }
 }

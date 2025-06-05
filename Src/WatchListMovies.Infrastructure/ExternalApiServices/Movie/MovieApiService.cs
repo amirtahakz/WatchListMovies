@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using WatchListMovies.Application.Configurations;
+using WatchListMovies.Application.IExternalApiServices._Shared.ApiModelDtos;
 using WatchListMovies.Application.IExternalApiServices.Movie;
 using WatchListMovies.Application.IExternalApiServices.Movie.ApiModelDTOs;
 
@@ -50,6 +51,16 @@ namespace WatchListMovies.Infrastructure.ExternalApiServices.Movie
 
             return deserializedData;
         }
-        
+
+        public async Task<ImagesApiModelDto> GetMovieImages(long? movieApiId)
+        {
+            var response = await _httpClient.GetAsync($"movie/{movieApiId}/images?api_key={_tMDBConfig.ApiKey}&language={_tMDBConfig.language}");
+            response.EnsureSuccessStatusCode();
+
+            var data = await response.Content.ReadAsStringAsync();
+            var deserializedData = JsonConvert.DeserializeObject<ImagesApiModelDto>(data);
+
+            return deserializedData;
+        }
     }
 }

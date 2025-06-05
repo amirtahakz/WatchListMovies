@@ -67,6 +67,27 @@ namespace WatchListMovies.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ContentImage",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ContentApiModelId = table.Column<long>(type: "bigint", nullable: true),
+                    AspectRatio = table.Column<double>(type: "float", nullable: true),
+                    Height = table.Column<long>(type: "bigint", nullable: true),
+                    Iso6391 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    VoteAverage = table.Column<double>(type: "float", nullable: true),
+                    VoteCount = table.Column<long>(type: "bigint", nullable: true),
+                    Width = table.Column<long>(type: "bigint", nullable: true),
+                    ContentImageType = table.Column<int>(type: "int", nullable: true),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ContentImage", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Favorites",
                 columns: table => new
                 {
@@ -251,34 +272,6 @@ namespace WatchListMovies.Infrastructure.Migrations
                     table.PrimaryKey("PK_CastExternalId", x => x.Id);
                     table.ForeignKey(
                         name: "FK_CastExternalId_Casts_CastId",
-                        column: x => x.CastId,
-                        principalSchema: "cast",
-                        principalTable: "Casts",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CastImages",
-                schema: "cast",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CastId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AspectRatio = table.Column<double>(type: "float", nullable: true),
-                    Height = table.Column<long>(type: "bigint", nullable: true),
-                    Iso6391 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    VoteAverage = table.Column<double>(type: "float", nullable: true),
-                    VoteCount = table.Column<long>(type: "bigint", nullable: true),
-                    Width = table.Column<long>(type: "bigint", nullable: true),
-                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CastImages", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_CastImages_Casts_CastId",
                         column: x => x.CastId,
                         principalSchema: "cast",
                         principalTable: "Casts",
@@ -735,12 +728,6 @@ namespace WatchListMovies.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_CastImages_CastId",
-                schema: "cast",
-                table: "CastImages",
-                column: "CastId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Casts_ApiModelId",
                 schema: "cast",
                 table: "Casts",
@@ -785,6 +772,16 @@ namespace WatchListMovies.Infrastructure.Migrations
                 name: "IX_ContentCasts_CreditType",
                 table: "ContentCasts",
                 column: "CreditType");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContentImage_ContentApiModelId",
+                table: "ContentImage",
+                column: "ContentApiModelId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ContentImage_ContentImageType",
+                table: "ContentImage",
+                column: "ContentImageType");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CreatedBys_ParrentId",
@@ -989,11 +986,10 @@ namespace WatchListMovies.Infrastructure.Migrations
                 schema: "cast");
 
             migrationBuilder.DropTable(
-                name: "CastImages",
-                schema: "cast");
+                name: "ContentCasts");
 
             migrationBuilder.DropTable(
-                name: "ContentCasts");
+                name: "ContentImage");
 
             migrationBuilder.DropTable(
                 name: "CreatedBys",

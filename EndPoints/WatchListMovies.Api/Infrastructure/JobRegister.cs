@@ -2,12 +2,14 @@
 using Microsoft.Extensions.Options;
 using WatchListMovies.Application.BackgroundJobs.Cast;
 using WatchListMovies.Application.BackgroundJobs.ContentCast;
+using WatchListMovies.Application.BackgroundJobs.ContentImage;
 using WatchListMovies.Application.BackgroundJobs.Genre;
 using WatchListMovies.Application.BackgroundJobs.Movie;
 using WatchListMovies.Application.BackgroundJobs.Tv;
 using WatchListMovies.Application.Configurations;
 using WatchListMovies.Common.AspNetCore.Middlewares;
 using WatchListMovies.Domain.ContentCastAgg;
+using WatchListMovies.Domain.ContentImageAgg;
 
 namespace WatchListMovies.Api.Infrastructure
 {
@@ -66,10 +68,10 @@ namespace WatchListMovies.Api.Infrastructure
                 methodCall: svc => svc.SyncGenres(),
                 cronExpression: jobSchedules.SyncGenres);
 
-            RecurringJob.AddOrUpdate<CastJobs>(
-                recurringJobId: "SyncCastImages",
-                methodCall: svc => svc.SyncCastImages(),
-                cronExpression: jobSchedules.SyncCastImages);
+            RecurringJob.AddOrUpdate<ContentImageJobs>(
+                recurringJobId: "SyncContentImages",
+                methodCall: svc => svc.SyncContentImages(),
+                cronExpression: jobSchedules.SyncContentImages);
 
             RecurringJob.AddOrUpdate<ContentCastJobs>(
                 recurringJobId: "SyncContentCasts",

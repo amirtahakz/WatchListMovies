@@ -18,7 +18,6 @@ namespace WatchListMovies.Domain.CastAgg
             double? popularity,
             string? profilePath,
             bool? isRecommendedByAdmin,
-            List<CastImage>? castImages,
             CastExternalId? castExternalId,
             CastDetail? castDetails,
             IReadOnlyCollection<string>? castKnownForIds)
@@ -32,7 +31,6 @@ namespace WatchListMovies.Domain.CastAgg
             Popularity = popularity;
             ProfilePath = profilePath;
             IsRecommendedByAdmin = isRecommendedByAdmin;
-            CastImages = castImages;
             CastExternalId = castExternalId;
             CastDetails = castDetails;
             MovieKnownForIds = castKnownForIds;
@@ -52,7 +50,6 @@ namespace WatchListMovies.Domain.CastAgg
         public double? Popularity { get; set; }
         public string? ProfilePath { get; set; }
         public bool? IsRecommendedByAdmin { get; set; }
-        public List<CastImage>? CastImages { get; set; }
         public CastExternalId? CastExternalId { get; set; }
         public CastDetail? CastDetails { get; set; }
         public IReadOnlyCollection<string>? MovieKnownForIds { get; set; }

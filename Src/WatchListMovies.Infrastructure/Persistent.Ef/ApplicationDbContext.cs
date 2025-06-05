@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WatchListMovies.Domain.CastAgg;
 using WatchListMovies.Domain.ContentCastAgg;
+using WatchListMovies.Domain.ContentImageAgg;
 using WatchListMovies.Domain.FavoriteAgg;
 using WatchListMovies.Domain.ListAgg;
 using WatchListMovies.Domain.MovieAgg;
@@ -23,6 +24,7 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef
         public DbSet<Favorite> Favorites { get; set; }
         public DbSet<List> Lists { get; set; }
         public DbSet<ContentCast> ContentCasts { get; set; }
+        public DbSet<ContentImage> ContentImages { get; set; }
 
 
         public DbSet<Movie> Movies { get; set; }
@@ -37,7 +39,6 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef
         public DbSet<Cast> Casts { get; set; }
         public DbSet<CastExternalId> CastExternalIds { get; set; }
         public DbSet<CastDetail> CastDetails { get; set; }
-        public DbSet<CastImage> CastImages { get; set; }
 
 
         public DbSet<Domain.GenreAgg.Genre> Genres { get; set; }

@@ -123,6 +123,50 @@ namespace WatchListMovies.Infrastructure.Migrations
                     b.ToTable("ContentCasts");
                 });
 
+            modelBuilder.Entity("WatchListMovies.Domain.ContentImageAgg.ContentImage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<double?>("AspectRatio")
+                        .HasColumnType("float");
+
+                    b.Property<long?>("ContentApiModelId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("ContentImageType")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FilePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long?>("Height")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Iso6391")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double?>("VoteAverage")
+                        .HasColumnType("float");
+
+                    b.Property<long?>("VoteCount")
+                        .HasColumnType("bigint");
+
+                    b.Property<long?>("Width")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ContentApiModelId");
+
+                    b.HasIndex("ContentImageType");
+
+                    b.ToTable("ContentImage");
+                });
+
             modelBuilder.Entity("WatchListMovies.Domain.FavoriteAgg.Favorite", b =>
                 {
                     b.Property<Guid>("Id")
@@ -527,53 +571,9 @@ namespace WatchListMovies.Infrastructure.Migrations
                                 .HasForeignKey("CastId");
                         });
 
-                    b.OwnsMany("WatchListMovies.Domain.CastAgg.CastImage", "CastImages", b1 =>
-                        {
-                            b1.Property<Guid>("Id")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<double?>("AspectRatio")
-                                .HasColumnType("float");
-
-                            b1.Property<Guid>("CastId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<DateTime>("CreationDate")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<string>("FilePath")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<long?>("Height")
-                                .HasColumnType("bigint");
-
-                            b1.Property<string>("Iso6391")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<double?>("VoteAverage")
-                                .HasColumnType("float");
-
-                            b1.Property<long?>("VoteCount")
-                                .HasColumnType("bigint");
-
-                            b1.Property<long?>("Width")
-                                .HasColumnType("bigint");
-
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("CastId");
-
-                            b1.ToTable("CastImages", "cast");
-
-                            b1.WithOwner()
-                                .HasForeignKey("CastId");
-                        });
-
                     b.Navigation("CastDetails");
 
                     b.Navigation("CastExternalId");
-
-                    b.Navigation("CastImages");
                 });
 
             modelBuilder.Entity("WatchListMovies.Domain.MovieAgg.Movie", b =>

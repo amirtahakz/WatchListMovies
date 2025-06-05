@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WatchListMovies.Application.Configurations;
+using WatchListMovies.Application.IExternalApiServices._Shared.ApiModelDtos;
 using WatchListMovies.Application.IExternalApiServices.Cast;
 using WatchListMovies.Application.IExternalApiServices.Cast.ApiModelDTOs;
 using WatchListMovies.Application.IExternalApiServices.Movie.ApiModelDTOs;
@@ -55,13 +56,13 @@ namespace WatchListMovies.Infrastructure.ExternalApiServices.Cast
             return deserializedData;
         }
 
-        public async Task<CastImagesApiModelDto> GetCastImages(long? castApiId)
+        public async Task<ImagesApiModelDto> GetCastImages(long? castApiId)
         {
             var response = await _httpClient.GetAsync($"person/{castApiId}/images?api_key={_tMDBConfig.ApiKey}&language={_tMDBConfig.language}");
             response.EnsureSuccessStatusCode();
 
             var data = await response.Content.ReadAsStringAsync();
-            var deserializedData = JsonConvert.DeserializeObject<CastImagesApiModelDto>(data);
+            var deserializedData = JsonConvert.DeserializeObject<ImagesApiModelDto>(data);
 
             return deserializedData;
         }

@@ -17,7 +17,7 @@ namespace WatchListMovies.Application.Configurations
         public string SyncCastDetails { get; set; }
         public string SyncCastExternalIds { get; set; }
         public string SyncGenres { get; set; }
-        public string SyncCastImages { get; set; }
+        public string SyncContentImages { get; set; }
         public string SyncContentCasts { get; set; }
     }
 }

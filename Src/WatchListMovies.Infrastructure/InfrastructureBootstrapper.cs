@@ -9,6 +9,7 @@ using WatchListMovies.Application.IExternalApiServices.Movie;
 using WatchListMovies.Application.IExternalApiServices.Tv;
 using WatchListMovies.Domain.CastAgg.Repository;
 using WatchListMovies.Domain.ContentCastAgg.Repository;
+using WatchListMovies.Domain.ContentImageAgg.Repository;
 using WatchListMovies.Domain.FavoriteAgg.Repository;
 using WatchListMovies.Domain.GenreAgg.Repository;
 using WatchListMovies.Domain.ListAgg.Repository;
@@ -22,6 +23,7 @@ using WatchListMovies.Infrastructure.ExternalApiServices.Tv;
 using WatchListMovies.Infrastructure.Persistent.Ef;
 using WatchListMovies.Infrastructure.Persistent.Ef.CastAgg;
 using WatchListMovies.Infrastructure.Persistent.Ef.ContentCastAgg;
+using WatchListMovies.Infrastructure.Persistent.Ef.ContentImageAgg;
 using WatchListMovies.Infrastructure.Persistent.Ef.FavoriteAgg;
 using WatchListMovies.Infrastructure.Persistent.Ef.Genre;
 using WatchListMovies.Infrastructure.Persistent.Ef.ListAgg;
@@ -48,6 +50,7 @@ namespace WatchListMovies.Infrastructure
             services.AddTransient<ICastRepository, CastRepository>();
             services.AddTransient<IGenreRepository, GenreRepository>();
             services.AddTransient<IContentCastRepository, ContentCastRepository>();
+            services.AddTransient<IContentImageRepository, ContentImageRepository>();
 
             services.AddDbContext<ApplicationDbContext>(option =>
             {

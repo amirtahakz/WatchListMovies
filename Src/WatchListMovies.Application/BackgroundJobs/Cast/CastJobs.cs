@@ -99,28 +99,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Cast
 
         }
 
-        public async Task SyncCastImages()
-        {
-
-            try
-            {
-                var casts = await _castRepository.GetAllAsync();
-                if (casts.Count() != 0)
-                {
-                    foreach (var cast in casts)
-                    {
-                        var apiCastImages = await _castApiService.GetCastImages(cast.ApiModelId ?? default);
-                        cast.CastImages = apiCastImages.Map(cast.Id);
-                        await _castRepository.Save();
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
-        }
+        
 
 
         
