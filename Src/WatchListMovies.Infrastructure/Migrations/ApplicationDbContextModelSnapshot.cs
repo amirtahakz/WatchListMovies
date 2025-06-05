@@ -78,6 +78,37 @@ namespace WatchListMovies.Infrastructure.Migrations
                     b.ToTable("Casts", "cast");
                 });
 
+            modelBuilder.Entity("WatchListMovies.Domain.CompanyAgg.Company", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<long?>("ApiModelId")
+                        .HasColumnType("bigint");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("LogoPath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("OriginCountry")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApiModelId")
+                        .IsUnique()
+                        .HasFilter("[ApiModelId] IS NOT NULL");
+
+                    b.HasIndex("Name");
+
+                    b.ToTable("Companies", "company");
+                });
+
             modelBuilder.Entity("WatchListMovies.Domain.ContentCastAgg.ContentCast", b =>
                 {
                     b.Property<Guid>("Id")
@@ -164,7 +195,29 @@ namespace WatchListMovies.Infrastructure.Migrations
 
                     b.HasIndex("ContentImageType");
 
-                    b.ToTable("ContentImage");
+                    b.ToTable("ContentImages");
+                });
+
+            modelBuilder.Entity("WatchListMovies.Domain.CountryAgg.Country", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EnglishName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Iso31661")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NativeName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Countries");
                 });
 
             modelBuilder.Entity("WatchListMovies.Domain.FavoriteAgg.Favorite", b =>
@@ -224,6 +277,28 @@ namespace WatchListMovies.Infrastructure.Migrations
                     b.HasIndex("Name");
 
                     b.ToTable("Genres");
+                });
+
+            modelBuilder.Entity("WatchListMovies.Domain.LanguageAgg.Language", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EnglishName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Iso6391")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Languages");
                 });
 
             modelBuilder.Entity("WatchListMovies.Domain.ListAgg.List", b =>
@@ -576,6 +651,58 @@ namespace WatchListMovies.Infrastructure.Migrations
                     b.Navigation("CastExternalId");
                 });
 
+            modelBuilder.Entity("WatchListMovies.Domain.CompanyAgg.Company", b =>
+                {
+                    b.OwnsOne("WatchListMovies.Domain.CompanyAgg.CompanyDetail", "CompanyDetail", b1 =>
+                        {
+                            b1.Property<Guid>("Id")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<long?>("ApiModelId")
+                                .HasColumnType("bigint");
+
+                            b1.Property<DateTime>("CreationDate")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("Description")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Headquarters")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Homepage")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("LogoPath")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Name")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("OriginCountry")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("ParentCompany")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<Guid?>("ParrentId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("ApiModelId")
+                                .IsUnique()
+                                .HasFilter("[ApiModelId] IS NOT NULL");
+
+                            b1.ToTable("CompanyDetails", "company");
+
+                            b1.WithOwner()
+                                .HasForeignKey("Id");
+                        });
+
+                    b.Navigation("CompanyDetail");
+                });
+
             modelBuilder.Entity("WatchListMovies.Domain.MovieAgg.Movie", b =>
                 {
                     b.OwnsOne("WatchListMovies.Domain.MovieAgg.MovieDetail", "MovieDetails", b1 =>
@@ -595,6 +722,14 @@ namespace WatchListMovies.Infrastructure.Migrations
                             b1.Property<long?>("Budget")
                                 .HasColumnType("bigint");
 
+                            b1.Property<string>("CompanyIds")
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("CompanyIds");
+
+                            b1.Property<string>("CountryIds")
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("CountryIds");
+
                             b1.Property<DateTime>("CreationDate")
                                 .HasColumnType("datetime2");
 
@@ -607,6 +742,10 @@ namespace WatchListMovies.Infrastructure.Migrations
 
                             b1.Property<string>("ImdbId")
                                 .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("LanguageIds")
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("LanguageIds");
 
                             b1.Property<Guid>("MovieId")
                                 .HasColumnType("uniqueidentifier");
@@ -725,87 +864,6 @@ namespace WatchListMovies.Infrastructure.Migrations
                                         .HasForeignKey("MovieDetailId");
                                 });
 
-                            b1.OwnsMany("WatchListMovies.Domain._Shared.ValueObjects.ProductionCompanyValueObject", "ProductionCompanies", b2 =>
-                                {
-                                    b2.Property<DateTime>("CreationDate")
-                                        .HasColumnType("datetime2");
-
-                                    b2.Property<Guid?>("ParrentId")
-                                        .HasColumnType("uniqueidentifier");
-
-                                    b2.Property<string>("Name")
-                                        .HasColumnType("nvarchar(450)");
-
-                                    b2.Property<long?>("ApiModelId")
-                                        .HasColumnType("bigint");
-
-                                    b2.Property<string>("LogoPath")
-                                        .HasColumnType("nvarchar(max)");
-
-                                    b2.Property<string>("OriginCountry")
-                                        .HasColumnType("nvarchar(max)");
-
-                                    b2.HasKey("CreationDate", "ParrentId", "Name");
-
-                                    b2.HasIndex("ParrentId");
-
-                                    b2.ToTable("ProductionCompanies", "movie");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("ParrentId");
-                                });
-
-                            b1.OwnsMany("WatchListMovies.Domain._Shared.ValueObjects.ProductionCountryValueObject", "ProductionCountries", b2 =>
-                                {
-                                    b2.Property<DateTime>("CreationDate")
-                                        .HasColumnType("datetime2");
-
-                                    b2.Property<Guid?>("ParrentId")
-                                        .HasColumnType("uniqueidentifier");
-
-                                    b2.Property<string>("Name")
-                                        .HasColumnType("nvarchar(450)");
-
-                                    b2.Property<string>("Iso31661")
-                                        .HasColumnType("nvarchar(max)");
-
-                                    b2.HasKey("CreationDate", "ParrentId", "Name");
-
-                                    b2.HasIndex("ParrentId");
-
-                                    b2.ToTable("ProductionCountries", "movie");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("ParrentId");
-                                });
-
-                            b1.OwnsMany("WatchListMovies.Domain._Shared.ValueObjects.SpokenLanguageValueObject", "SpokenLanguages", b2 =>
-                                {
-                                    b2.Property<DateTime>("CreationDate")
-                                        .HasColumnType("datetime2");
-
-                                    b2.Property<Guid?>("ParrentId")
-                                        .HasColumnType("uniqueidentifier");
-
-                                    b2.Property<string>("EnglishName")
-                                        .HasColumnType("nvarchar(450)");
-
-                                    b2.Property<string>("Iso6391")
-                                        .HasColumnType("nvarchar(max)");
-
-                                    b2.Property<string>("Name")
-                                        .HasColumnType("nvarchar(max)");
-
-                                    b2.HasKey("CreationDate", "ParrentId", "EnglishName");
-
-                                    b2.HasIndex("ParrentId");
-
-                                    b2.ToTable("SpokenLanguages", "movie");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("ParrentId");
-                                });
-
                             b1.OwnsOne("WatchListMovies.Domain.MovieAgg.ValueObjects.BelongsToCollectionValueObject", "BelongsToCollection", b2 =>
                                 {
                                     b2.Property<DateTime>("CreationDate")
@@ -840,12 +898,6 @@ namespace WatchListMovies.Infrastructure.Migrations
                             b1.Navigation("BelongsToCollection");
 
                             b1.Navigation("MovieKeyYoutubeTrailers");
-
-                            b1.Navigation("ProductionCompanies");
-
-                            b1.Navigation("ProductionCountries");
-
-                            b1.Navigation("SpokenLanguages");
                         });
 
                     b.Navigation("MovieDetails");
@@ -867,6 +919,14 @@ namespace WatchListMovies.Infrastructure.Migrations
                             b1.Property<string>("BackdropPath")
                                 .HasColumnType("nvarchar(max)");
 
+                            b1.Property<string>("CompanyIds")
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("CompanyIds");
+
+                            b1.Property<string>("CountryIds")
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("CountryIds");
+
                             b1.Property<DateTime>("CreationDate")
                                 .HasColumnType("datetime2");
 
@@ -882,6 +942,10 @@ namespace WatchListMovies.Infrastructure.Migrations
 
                             b1.Property<bool?>("InProduction")
                                 .HasColumnType("bit");
+
+                            b1.Property<string>("LanguageIds")
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("LanguageIds");
 
                             b1.Property<string>("LastAirDate")
                                 .HasColumnType("nvarchar(max)");
@@ -945,87 +1009,6 @@ namespace WatchListMovies.Infrastructure.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("TvId");
-
-                            b1.OwnsMany("WatchListMovies.Domain._Shared.ValueObjects.ProductionCompanyValueObject", "ProductionCompanies", b2 =>
-                                {
-                                    b2.Property<DateTime>("CreationDate")
-                                        .HasColumnType("datetime2");
-
-                                    b2.Property<Guid?>("ParrentId")
-                                        .HasColumnType("uniqueidentifier");
-
-                                    b2.Property<string>("Name")
-                                        .HasColumnType("nvarchar(450)");
-
-                                    b2.Property<long?>("ApiModelId")
-                                        .HasColumnType("bigint");
-
-                                    b2.Property<string>("LogoPath")
-                                        .HasColumnType("nvarchar(max)");
-
-                                    b2.Property<string>("OriginCountry")
-                                        .HasColumnType("nvarchar(max)");
-
-                                    b2.HasKey("CreationDate", "ParrentId", "Name");
-
-                                    b2.HasIndex("ParrentId");
-
-                                    b2.ToTable("ProductionCompanies", "tv");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("ParrentId");
-                                });
-
-                            b1.OwnsMany("WatchListMovies.Domain._Shared.ValueObjects.ProductionCountryValueObject", "ProductionCountries", b2 =>
-                                {
-                                    b2.Property<DateTime>("CreationDate")
-                                        .HasColumnType("datetime2");
-
-                                    b2.Property<Guid?>("ParrentId")
-                                        .HasColumnType("uniqueidentifier");
-
-                                    b2.Property<string>("Name")
-                                        .HasColumnType("nvarchar(450)");
-
-                                    b2.Property<string>("Iso31661")
-                                        .HasColumnType("nvarchar(max)");
-
-                                    b2.HasKey("CreationDate", "ParrentId", "Name");
-
-                                    b2.HasIndex("ParrentId");
-
-                                    b2.ToTable("ProductionCountries", "tv");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("ParrentId");
-                                });
-
-                            b1.OwnsMany("WatchListMovies.Domain._Shared.ValueObjects.SpokenLanguageValueObject", "SpokenLanguages", b2 =>
-                                {
-                                    b2.Property<DateTime>("CreationDate")
-                                        .HasColumnType("datetime2");
-
-                                    b2.Property<Guid?>("ParrentId")
-                                        .HasColumnType("uniqueidentifier");
-
-                                    b2.Property<string>("EnglishName")
-                                        .HasColumnType("nvarchar(450)");
-
-                                    b2.Property<string>("Iso6391")
-                                        .HasColumnType("nvarchar(max)");
-
-                                    b2.Property<string>("Name")
-                                        .HasColumnType("nvarchar(max)");
-
-                                    b2.HasKey("CreationDate", "ParrentId", "EnglishName");
-
-                                    b2.HasIndex("ParrentId");
-
-                                    b2.ToTable("SpokenLanguages", "tv");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("ParrentId");
-                                });
 
                             b1.OwnsMany("WatchListMovies.Domain.TvAgg.ValueObjects.CreatedByValueObject", "CreatedBys", b2 =>
                                 {
@@ -1189,13 +1172,7 @@ namespace WatchListMovies.Infrastructure.Migrations
 
                             b1.Navigation("Networks");
 
-                            b1.Navigation("ProductionCompanies");
-
-                            b1.Navigation("ProductionCountries");
-
                             b1.Navigation("Seasons");
-
-                            b1.Navigation("SpokenLanguages");
                         });
 
                     b.Navigation("TvDetail");

@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WatchListMovies.Common.Query;
 using WatchListMovies.Infrastructure.Persistent.Ef;
-using WatchListMovies.Query.Users;
 using WatchListMovies.Query.Users.DTOs;
 
 namespace WatchListMovies.Query.Users.GetByPhoneNumber;

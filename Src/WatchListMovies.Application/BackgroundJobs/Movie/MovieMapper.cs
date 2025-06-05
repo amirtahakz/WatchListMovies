@@ -1,6 +1,8 @@
 ﻿using WatchListMovies.Application.BackgroundJobs.Tv;
 using WatchListMovies.Application.IExternalApiServices._Shared;
+using WatchListMovies.Application.IExternalApiServices._Shared.ApiModelDtos;
 using WatchListMovies.Application.IExternalApiServices.Movie.ApiModelDTOs;
+using WatchListMovies.Domain.CompanyAgg;
 using WatchListMovies.Domain.MovieAgg;
 
 namespace WatchListMovies.Application.BackgroundJobs.Movie
@@ -70,13 +72,13 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
                 result.GenreIds = movieDetails.Genres.Where(g => g.ApiModelId.HasValue).Select(g => g.ApiModelId.Value.ToString()).ToList().AsReadOnly();
 
             if (movieDetails.SpokenLanguages != null)
-                result.SpokenLanguages = movieDetails.SpokenLanguages.Map(result.Id);
+                result.LanguageIds = movieDetails.SpokenLanguages.Select(g => g.Iso6391).ToList();
 
             if (movieDetails.ProductionCompanies != null)
-                result.ProductionCompanies = movieDetails.ProductionCompanies.Map(result.Id);
+                result.CompanyIds = movieDetails.ProductionCompanies.Where(g => g.ApiModelId.HasValue).Select(g => g.ApiModelId.Value.ToString()).ToList().AsReadOnly();
 
             if (movieDetails.ProductionCountries != null)
-                result.ProductionCountries = movieDetails.ProductionCountries.Map(result.Id);
+                result.CountryIds = movieDetails.ProductionCountries.Select(g => g.Iso31661).ToList().AsReadOnly();
 
 
 

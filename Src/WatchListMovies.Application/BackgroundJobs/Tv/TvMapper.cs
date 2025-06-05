@@ -2,7 +2,7 @@
 using WatchListMovies.Application.IExternalApiServices._Shared.ApiModelDtos;
 using WatchListMovies.Application.IExternalApiServices.Movie.ApiModelDTOs;
 using WatchListMovies.Application.IExternalApiServices.Tv.ApiModelDTOs;
-using WatchListMovies.Domain._Shared.ValueObjects;
+
 using WatchListMovies.Domain.MovieAgg;
 using WatchListMovies.Domain.TvAgg;
 using WatchListMovies.Domain.TvAgg.Enums;
@@ -76,13 +76,13 @@ namespace WatchListMovies.Application.BackgroundJobs.Tv
                 result.GenreIds = tvDetails.Genres.Where(g => g.ApiModelId.HasValue).Select(g => g.ApiModelId.Value.ToString()).ToList().AsReadOnly();
 
             if (tvDetails.SpokenLanguages != null)
-                result.SpokenLanguages = tvDetails.SpokenLanguages.Map(result.Id);
+                result.LanguageIds = tvDetails.SpokenLanguages.Select(g => g.Iso6391).ToList();
 
             if (tvDetails.ProductionCompanies != null)
-                result.ProductionCompanies = tvDetails.ProductionCompanies.Map(result.Id);
+                result.CompanyIds = tvDetails.ProductionCompanies.Where(g => g.ApiModelId.HasValue).Select(g => g.ApiModelId.Value.ToString()).ToList().AsReadOnly();
 
             if (tvDetails.ProductionCountries != null)
-                result.ProductionCountries = tvDetails.ProductionCountries.Map(result.Id);
+                result.CountryIds = tvDetails.ProductionCountries.Select(g => g.Iso31661).ToList().AsReadOnly();
 
             if (tvDetails.Seasons != null)
                 result.Seasons = tvDetails.Seasons.Map(result.Id);

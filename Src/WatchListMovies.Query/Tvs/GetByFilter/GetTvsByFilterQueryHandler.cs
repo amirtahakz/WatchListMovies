@@ -69,16 +69,6 @@ namespace WatchListMovies.Query.Tvs.GetByFilter
             if (@params.CreatedByGender != null)
                 result = result.Where(r => r.TvDetail.CreatedBys.Any(cr => @params.CreatedByGender.Value == cr.Gender));
 
-            // TvDetails
-            if (@params.CompanyNames != null)
-                result = result.Where(r => r.TvDetail.ProductionCompanies.Any(pc => @params.CompanyNames.Contains(pc.Name)));
-
-            if (@params.CountryNames != null)
-                result = result.Where(r => r.TvDetail.ProductionCountries.Any(c => @params.CountryNames.Contains(c.Name)));
-
-            if (@params.SpokenLanguageEnglishNames != null)
-                result = result.Where(r => r.TvDetail.SpokenLanguages.Any(sp => @params.SpokenLanguageEnglishNames.Contains(sp.Name)));
-
 
             switch (@params.TvOrderByEnum)
             {

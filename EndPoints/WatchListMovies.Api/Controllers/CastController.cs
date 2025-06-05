@@ -3,8 +3,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WatchListMovies.Application.Services.Cast.MakeRecommended;
 using WatchListMovies.Common.AspNetCore;
-using WatchListMovies.Query.Cast.DTOs;
-using WatchListMovies.Query.Cast.GetByFilter;
+using WatchListMovies.Query.Casts.GetByFilter;
+using WatchListMovies.Query.Casts.DTOs;
 
 namespace WatchListMovies.Api.Controllers
 {

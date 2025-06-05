@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using MediatR;
 using System.Collections.Generic;
+using WatchListMovies.Application.IExternalApiServices._Shared;
 using WatchListMovies.Application.IExternalApiServices.Movie;
 using WatchListMovies.Application.IExternalApiServices.Tv;
+using WatchListMovies.Domain.CompanyAgg.Repository;
 using WatchListMovies.Domain.MovieAgg.Repository;
 using WatchListMovies.Domain.TvAgg.Repository;
 
@@ -10,16 +12,17 @@ namespace WatchListMovies.Application.BackgroundJobs.Tv
 {
     public class TvJobs
     {
-        private readonly IMapper _mapper;
         private readonly ITvRepository _tvRepository;
         private readonly ITvApiService _tvApiService;
+        private readonly ICompanyRepository _companyRepository;
 
-        public TvJobs(IMapper mapper, ITvRepository tvRepository, ITvApiService tvApiService)
+        public TvJobs(ITvRepository tvRepository, ITvApiService tvApiService, ICompanyRepository companyRepository)
         {
-            _mapper = mapper;
             _tvRepository = tvRepository;
             _tvApiService = tvApiService;
+            _companyRepository = companyRepository;
         }
+
         public async Task SyncPopularTvs()
         {
             try
@@ -52,7 +55,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Tv
             }
         }
 
-        public async Task SyncTvDetails()
+        public async Task SyncTvDetailsAndCompanies()
         {
 
             try
@@ -64,6 +67,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Tv
                     {
                         var apiTvDetails = await _tvApiService.GetTvDetails(tv.ApiModelId ?? default);
                         tv.TvDetail = apiTvDetails.Map(tv.Id);
+                        await _companyRepository.AddRangeIfNotExistAsync(apiTvDetails.ProductionCompanies.Map());
                         await _tvRepository.Save();
                     }
                 }

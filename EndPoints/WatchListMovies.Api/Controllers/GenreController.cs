@@ -2,8 +2,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WatchListMovies.Common.AspNetCore;
-using WatchListMovies.Query.Genre.DTOs;
-using WatchListMovies.Query.Genre.GetByFilter;
+using WatchListMovies.Query.Genres.GetByFilter;
+using WatchListMovies.Query.Genres.DTOs;
 
 namespace WatchListMovies.Api.Controllers
 {

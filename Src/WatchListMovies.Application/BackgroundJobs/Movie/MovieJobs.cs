@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using WatchListMovies.Application.IExternalApiServices._Shared;
 using WatchListMovies.Application.IExternalApiServices.Movie;
+using WatchListMovies.Domain.CompanyAgg.Repository;
 using WatchListMovies.Domain.ContentCastAgg;
 using WatchListMovies.Domain.ContentCastAgg.Enums;
 using WatchListMovies.Domain.ContentCastAgg.Repository;
@@ -10,20 +12,17 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
     public class MovieJobs
     {
         private readonly IMovieApiService _movieApiService;
-        private readonly IMapper _mapper;
         private readonly IMovieRepository _movieRepository;
-        private readonly IContentCastRepository _contentCastRepository;
+        private readonly ICompanyRepository _companyRepository;
 
         public MovieJobs(
             IMovieApiService movieApiService,
-            IMapper mapper,
             IMovieRepository movieRepository,
-            IContentCastRepository contentCastRepository)
+            ICompanyRepository companyRepository)
         {
             _movieApiService = movieApiService;
-            _mapper = mapper;
             _movieRepository = movieRepository;
-            _contentCastRepository = contentCastRepository;
+            _companyRepository = companyRepository;
         }
 
         public async Task SyncPopularMovies()
@@ -58,7 +57,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
             }
         }
 
-        public async Task SyncMovieDetails()
+        public async Task SyncMovieDetailsAndCompanies()
         {
 
             try
@@ -70,6 +69,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
                     {
                         var apiMovieDetails = await _movieApiService.GetMovieDetails(movie.ApiModelId ?? default);
                         movie.MovieDetails = apiMovieDetails.Map(movie.Id);
+                        await _companyRepository.AddRangeIfNotExistAsync(apiMovieDetails.ProductionCompanies.Map());
                         await _movieRepository.Save();
                     }
                 }

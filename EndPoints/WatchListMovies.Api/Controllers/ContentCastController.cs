@@ -1,13 +1,9 @@
 ﻿using AutoMapper;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WatchListMovies.Common.AspNetCore;
-using WatchListMovies.Domain.ContentCastAgg.Enums;
-using WatchListMovies.Query.ContentCast.DTOs;
-using WatchListMovies.Query.ContentCast.GetByFilter;
-using WatchListMovies.Query.Movies.DTOs;
-using WatchListMovies.Query.Movies.GetByFilter;
+using WatchListMovies.Query.ContentCasts.GetByFilter;
+using WatchListMovies.Query.ContentCasts.DTOs;
 
 namespace WatchListMovies.Api.Controllers
 {

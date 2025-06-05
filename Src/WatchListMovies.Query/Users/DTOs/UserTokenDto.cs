@@ -1,6 +1,4 @@
-﻿
-
-using WatchListMovies.Common.Query;
+﻿using WatchListMovies.Common.Query;
 
 namespace WatchListMovies.Query.Users.DTOs;
 

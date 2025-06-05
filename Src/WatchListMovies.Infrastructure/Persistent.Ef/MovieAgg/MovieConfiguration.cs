@@ -27,56 +27,33 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef.MovieAgg
                 md.ToTable("MovieDetails", "movie");
                 md.HasKey(b => b.Id);
                 md.HasIndex(b => b.ApiModelId).IsUnique();
+
                 md.Property(m => m.GenreIds)
                     .HasConversion(
                         v => string.Join(",", v),
                         v => v.Split(',', StringSplitOptions.RemoveEmptyEntries))
                     .HasColumnName("GenreIds");
 
+                md.Property(m => m.CompanyIds)
+                   .HasConversion(
+                       v => string.Join(",", v),
+                       v => v.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                   .HasColumnName("CompanyIds");
 
-                // SpokenLanguagesVo Tbl Config
-                md.OwnsMany(m => m.SpokenLanguages, sl =>
-                {
-                    sl.ToTable("SpokenLanguages", "movie");
-                    sl.WithOwner().HasForeignKey("ParrentId");
-                    sl.HasKey("CreationDate", "ParrentId", "EnglishName");
-                    sl.Property(x => x.Iso6391);
-                    sl.Property(x => x.Name);
-                    sl.Property(x => x.EnglishName);
-                    sl.Property(x => x.ParrentId);
-                    sl.Property(x => x.CreationDate);
+                md.Property(m => m.LanguageIds)
+                   .HasConversion(
+                       v => string.Join(",", v),
+                       v => v.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                   .HasColumnName("LanguageIds");
 
-                });
-
-
-                // ProductionCompaniesVo Tbl Config
-                md.OwnsMany(m => m.ProductionCompanies, pc =>
-                {
-                    pc.ToTable("ProductionCompanies", "movie");
-                    pc.WithOwner().HasForeignKey("ParrentId");
-                    pc.HasKey("CreationDate", "ParrentId", "Name");
-                    pc.Property(x => x.ApiModelId);
-                    pc.Property(x => x.Name);
-                    pc.Property(x => x.LogoPath);
-                    pc.Property(x => x.OriginCountry);
-                    pc.Property(x => x.ParrentId);
-                    pc.Property(x => x.CreationDate);
-
-                });
+                md.Property(m => m.CountryIds)
+                   .HasConversion(
+                       v => string.Join(",", v),
+                       v => v.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                   .HasColumnName("CountryIds");
 
 
-                // ProductionCountriesVo Tbl Config
-                md.OwnsMany(m => m.ProductionCountries, pc =>
-                {
-                    pc.ToTable("ProductionCountries", "movie");
-                    pc.WithOwner().HasForeignKey("ParrentId");
-                    pc.HasKey("CreationDate", "ParrentId", "Name");
-                    pc.Property(x => x.Iso31661);
-                    pc.Property(x => x.Name);
-                    pc.Property(x => x.ParrentId);
-                    pc.Property(x => x.CreationDate);
 
-                });
 
                 //BelongsToCollectionsVo Tbl Config
                 md.OwnsOne(m => m.BelongsToCollection, btc =>

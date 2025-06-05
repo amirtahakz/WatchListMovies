@@ -1,6 +1,7 @@
 ﻿using Hangfire;
 using Microsoft.Extensions.Options;
 using WatchListMovies.Application.BackgroundJobs.Cast;
+using WatchListMovies.Application.BackgroundJobs.Configuration;
 using WatchListMovies.Application.BackgroundJobs.ContentCast;
 using WatchListMovies.Application.BackgroundJobs.ContentImage;
 using WatchListMovies.Application.BackgroundJobs.Genre;
@@ -29,9 +30,9 @@ namespace WatchListMovies.Api.Infrastructure
                 cronExpression: jobSchedules.SyncPopularMovies);
 
             RecurringJob.AddOrUpdate<MovieJobs>(
-                recurringJobId: "SyncMovieDetails",
-                methodCall: svc => svc.SyncMovieDetails(),
-                cronExpression: jobSchedules.SyncMovieDetails);
+                recurringJobId: "SyncMovieDetailsAndCompanies",
+                methodCall: svc => svc.SyncMovieDetailsAndCompanies(),
+                cronExpression: jobSchedules.SyncMovieDetailsAndCompanies);
 
             RecurringJob.AddOrUpdate<MovieJobs>(
                 recurringJobId: "SyncMovieKeyYoutubeTrailers",
@@ -44,9 +45,9 @@ namespace WatchListMovies.Api.Infrastructure
                 cronExpression: jobSchedules.SyncPopularTvs);
 
             RecurringJob.AddOrUpdate<TvJobs>(
-                recurringJobId: "SyncTvDetails",
-                methodCall: svc => svc.SyncTvDetails(),
-                cronExpression: jobSchedules.SyncTvDetails);
+                recurringJobId: "SyncTvDetailsAndCompanies",
+                methodCall: svc => svc.SyncTvDetailsAndCompanies(),
+                cronExpression: jobSchedules.SyncTvDetailsAndCompanies);
 
             RecurringJob.AddOrUpdate<CastJobs>(
                 recurringJobId: "SyncPopularCasts",
@@ -77,6 +78,16 @@ namespace WatchListMovies.Api.Infrastructure
                 recurringJobId: "SyncContentCasts",
                 methodCall: svc => svc.SyncContentCasts(),
                 cronExpression: jobSchedules.SyncContentCasts);
+
+            RecurringJob.AddOrUpdate<ConfigurationJobs>(
+                recurringJobId: "SyncCountries",
+                methodCall: svc => svc.SyncCountries(),
+                cronExpression: jobSchedules.SyncCountries);
+
+            RecurringJob.AddOrUpdate<ConfigurationJobs>(
+                recurringJobId: "SyncLanguages",
+                methodCall: svc => svc.SyncLanguages(),
+                cronExpression: jobSchedules.SyncLanguages);
 
 
             return builder;

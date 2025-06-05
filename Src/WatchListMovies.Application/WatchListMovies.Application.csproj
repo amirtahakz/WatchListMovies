@@ -22,6 +22,8 @@
   <ItemGroup>
     <Folder Include="Services\Genre\" />
     <Folder Include="Services\ContentCast\" />
+    <Folder Include="Services\Language\" />
+    <Folder Include="Services\Country\" />
   </ItemGroup>
 
 </Project>

@@ -26,16 +26,36 @@ public class TvConfiguration : IEntityTypeConfiguration<Tv>
             td.ToTable("TvDetails", "tv");
             td.HasKey(b => b.Id);
             td.HasIndex(b => b.ApiModelId).IsUnique();
+
             td.Property(m => m.TvEpisodeRunTimes)
                      .HasConversion(
                          v => string.Join(",", v),
                          v => v.Split(',', StringSplitOptions.RemoveEmptyEntries))
                      .HasColumnName("TvEpisodeRunTimes");
+
             td.Property(m => m.GenreIds)
                     .HasConversion(
                         v => string.Join(",", v),
                         v => v.Split(',', StringSplitOptions.RemoveEmptyEntries))
                     .HasColumnName("GenreIds");
+
+            td.Property(m => m.CompanyIds)
+                   .HasConversion(
+                       v => string.Join(",", v),
+                       v => v.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                   .HasColumnName("CompanyIds");
+
+            td.Property(m => m.LanguageIds)
+               .HasConversion(
+                   v => string.Join(",", v),
+                   v => v.Split(',', StringSplitOptions.RemoveEmptyEntries))
+               .HasColumnName("LanguageIds");
+
+            td.Property(m => m.CountryIds)
+               .HasConversion(
+                   v => string.Join(",", v),
+                   v => v.Split(',', StringSplitOptions.RemoveEmptyEntries))
+               .HasColumnName("CountryIds");
 
 
             //NetworksVo Tbl Config
@@ -52,47 +72,6 @@ public class TvConfiguration : IEntityTypeConfiguration<Tv>
                 n.Property(x => x.LogoPath);
             });
 
-            // ProductionCompaniesVo Tbl Config
-            td.OwnsMany(m => m.ProductionCompanies, pc =>
-            {
-                pc.ToTable("ProductionCompanies", "tv");
-                pc.WithOwner().HasForeignKey("ParrentId");
-                pc.HasKey("CreationDate", "ParrentId", "Name");
-                pc.Property(x => x.ApiModelId);
-                pc.Property(x => x.Name);
-                pc.Property(x => x.LogoPath);
-                pc.Property(x => x.OriginCountry);
-                pc.Property(x => x.ParrentId);
-                pc.Property(x => x.CreationDate);
-
-            });
-
-            // ProductionCountriesVo Tbl Config
-            td.OwnsMany(m => m.ProductionCountries, pc =>
-            {
-                pc.ToTable("ProductionCountries", "tv");
-                pc.WithOwner().HasForeignKey("ParrentId");
-                pc.HasKey("CreationDate", "ParrentId", "Name");
-                pc.Property(x => x.Iso31661);
-                pc.Property(x => x.Name);
-                pc.Property(x => x.ParrentId);
-                pc.Property(x => x.CreationDate);
-
-            });
-
-            // SpokenLanguagesVo Tbl Config
-            td.OwnsMany(m => m.SpokenLanguages, sl =>
-            {
-                sl.ToTable("SpokenLanguages", "tv");
-                sl.WithOwner().HasForeignKey("ParrentId");
-                sl.HasKey("CreationDate", "ParrentId", "EnglishName");
-                sl.Property(x => x.Iso6391);
-                sl.Property(x => x.Name);
-                sl.Property(x => x.EnglishName);
-                sl.Property(x => x.ParrentId);
-                sl.Property(x => x.CreationDate);
-
-            });
 
             //CreatedBysVo Tbl Config
             td.OwnsMany(t => t.CreatedBys, cb =>

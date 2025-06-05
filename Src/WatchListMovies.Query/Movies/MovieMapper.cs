@@ -35,7 +35,7 @@ namespace WatchListMovies.Query.Movies
             var result = new List<MovieDto>();
             foreach (var movie in movies)
             {
-                result.Add(Map(movie));
+                result.Add(movie.Map());
             }
             return result;
         }

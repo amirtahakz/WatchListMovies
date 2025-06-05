@@ -1,5 +1,5 @@
 ﻿using WatchListMovies.Common.Domain;
-using WatchListMovies.Domain._Shared.ValueObjects;
+
 using WatchListMovies.Domain.MovieAgg.ValueObjects;
 
 namespace WatchListMovies.Domain.MovieAgg
@@ -36,9 +36,9 @@ namespace WatchListMovies.Domain.MovieAgg
             BelongsToCollectionValueObject? belongsToCollection,
             List<MovieKeyYoutubeTrailer>? movieKeyYoutubeTrailers,
             IEnumerable<string>? genreIds,
-            List<ProductionCompanyValueObject> productionCompanies,
-            List<ProductionCountryValueObject> productionCountries,
-            List<SpokenLanguageValueObject> spokenLanguages)
+            IReadOnlyCollection<string>? companyIds,
+            IReadOnlyCollection<string>? countryIds,
+            IReadOnlyCollection<string>? languageIds)
         {
             MovieId = movieId;
             Adult = adult;
@@ -64,9 +64,9 @@ namespace WatchListMovies.Domain.MovieAgg
             BelongsToCollection = belongsToCollection;
             MovieKeyYoutubeTrailers = movieKeyYoutubeTrailers;
             GenreIds = genreIds.ToList();
-            ProductionCompanies = productionCompanies;
-            ProductionCountries = productionCountries;
-            SpokenLanguages = spokenLanguages;
+            CompanyIds = companyIds;
+            CountryIds = countryIds;
+            LanguageIds = languageIds;
         }
 
         public Guid MovieId { get; set; }
@@ -93,9 +93,9 @@ namespace WatchListMovies.Domain.MovieAgg
         public BelongsToCollectionValueObject? BelongsToCollection { get; set; }
         public List<MovieKeyYoutubeTrailer>? MovieKeyYoutubeTrailers { get; set; }
         public IReadOnlyCollection<string>? GenreIds { get; set; }
-        public List<ProductionCompanyValueObject> ProductionCompanies { get; set; }
-        public List<ProductionCountryValueObject> ProductionCountries { get; set; }
-        public List<SpokenLanguageValueObject> SpokenLanguages { get; set; }
+        public IReadOnlyCollection<string>? CompanyIds { get; set; }
+        public IReadOnlyCollection<string>? CountryIds { get; set; }
+        public IReadOnlyCollection<string>? LanguageIds { get; set; }
 
     }
 

@@ -7,7 +7,6 @@ using WatchListMovies.Api.ViewModels.Auth;
 using WatchListMovies.Common.Application.SecurityUtil;
 using WatchListMovies.Common.Application;
 using WatchListMovies.Common.AspNetCore;
-using WatchListMovies.Query.Users.DTOs;
 using MediatR;
 using WatchListMovies.Query.Users.GetByPhoneNumber;
 using WatchListMovies.Query.Users.UserTokens.GetByRefreshToken;
@@ -19,6 +18,7 @@ using WatchListMovies.Query.Users.UserTokens.GetByJwtToken;
 using WatchListMovies.Application.Services.Users.RegisterUser;
 using WatchListMovies.Application.Services.Users.RemoveToken;
 using WatchListMovies.Application.Services.Users.AddToken;
+using WatchListMovies.Query.Users.DTOs;
 
 namespace Api.Controllers;
 

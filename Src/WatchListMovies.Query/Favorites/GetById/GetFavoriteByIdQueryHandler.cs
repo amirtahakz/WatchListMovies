@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WatchListMovies.Common.Query;
 using WatchListMovies.Infrastructure.Persistent.Ef;
+using WatchListMovies.Query.Favorites;
 using WatchListMovies.Query.Favorites.DTOs;
 
 namespace WatchListMovies.Query.Favorites.GetById

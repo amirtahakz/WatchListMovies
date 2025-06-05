@@ -30,13 +30,5 @@ namespace WatchListMovies.Query.Tvs.DTOs
         public string? CreatedByOriginalName { get; set; }
         public int? CreatedByGender { get; set; }
 
-        // TvDetails.ProductionCompanies
-        public List<string>? CompanyNames { get; set; }
-
-        // TvDetails.ProductionCountries
-        public List<string>? CountryNames { get; set; }
-
-        // TvDetails.SpokenLanguages
-        public List<string>? SpokenLanguageEnglishNames { get; set; }
     }
 }

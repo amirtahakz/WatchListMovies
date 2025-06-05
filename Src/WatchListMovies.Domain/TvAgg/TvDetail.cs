@@ -1,5 +1,5 @@
 ﻿using WatchListMovies.Common.Domain;
-using WatchListMovies.Domain._Shared.ValueObjects;
+
 using WatchListMovies.Domain.MovieAgg;
 using WatchListMovies.Domain.TvAgg.ValueObjects;
 
@@ -38,11 +38,11 @@ namespace WatchListMovies.Domain.TvAgg
             List<SeasonValueObject>? seasons,
             List<NetworkValueObject>? networks,
             List<CreatedByValueObject>? createdBys,
-            List<ProductionCountryValueObject>? productionCountries,
-            List<ProductionCompanyValueObject>? productionCompanies,
-            List<SpokenLanguageValueObject>? spokenLanguages,
             List<EpisodeValueObject>? episodeToAirs,
-            IEnumerable<string>? tvEpisodeRunTimes)
+            IEnumerable<string>? tvEpisodeRunTimes,
+            IReadOnlyCollection<string>? companyIds,
+            IReadOnlyCollection<string>? countryIds,
+            IReadOnlyCollection<string>? languageIds)
         {
             TvId = tvId;
             ApiModelId = apiModelId;
@@ -69,11 +69,11 @@ namespace WatchListMovies.Domain.TvAgg
             Seasons = seasons;
             Networks = networks;
             CreatedBys = createdBys;
-            ProductionCountries = productionCountries;
-            ProductionCompanies = productionCompanies;
-            SpokenLanguages = spokenLanguages;
             EpisodeToAirs = episodeToAirs;
             TvEpisodeRunTimes = tvEpisodeRunTimes.ToList();
+            CompanyIds = companyIds;
+            CountryIds = countryIds;
+            LanguageIds = languageIds;
         }
         public Guid TvId { get; set; }
         public long? ApiModelId { get; set; }
@@ -100,9 +100,9 @@ namespace WatchListMovies.Domain.TvAgg
         public List<SeasonValueObject>? Seasons { get; set; }
         public List<NetworkValueObject>? Networks { get; set; }
         public List<CreatedByValueObject>? CreatedBys { get; set; }
-        public List<ProductionCountryValueObject>? ProductionCountries { get; set; }
-        public List<ProductionCompanyValueObject>? ProductionCompanies { get; set; }
-        public List<SpokenLanguageValueObject>? SpokenLanguages { get; set; }
+        public IReadOnlyCollection<string>? CompanyIds { get; set; }
+        public IReadOnlyCollection<string>? CountryIds { get; set; }
+        public IReadOnlyCollection<string>? LanguageIds { get; set; }
         public List<EpisodeValueObject>? EpisodeToAirs { get; set; }
         public IReadOnlyCollection<string>? TvEpisodeRunTimes { get; set; }
 

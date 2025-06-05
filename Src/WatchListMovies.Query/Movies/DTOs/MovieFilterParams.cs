@@ -23,14 +23,6 @@ namespace WatchListMovies.Query.Movies.DTOs
         // MovieDetails.BelongsToCollectionValueObject
         public string? CollectionName { get; set; }
 
-        // MovieDetails.ProductionCompanies
-        public List<string>? CompanyNames { get; set; }
-
-        // MovieDetails.ProductionCountries
-        public List<string>? CountryNames { get; set; }
-
-        // MovieDetails.SpokenLanguages
-        public List<string>? SpokenLanguageEnglishNames { get; set; }
 
 
     }

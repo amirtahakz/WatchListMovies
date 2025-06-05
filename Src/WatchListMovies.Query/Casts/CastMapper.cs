@@ -1,0 +1,31 @@
+﻿using WatchListMovies.Domain.CastAgg;
+using WatchListMovies.Domain.MovieAgg;
+using WatchListMovies.Query.Casts.DTOs;
+using WatchListMovies.Query.Movies.DTOs;
+
+namespace WatchListMovies.Query.Casts
+{
+    public static class CastMapper
+    {
+        public static CastDto Map(this Domain.CastAgg.Cast movie)
+        {
+            return new CastDto()
+            {
+                Id = movie.Id,
+                CreationDate = movie.CreationDate,
+                ApiModelId = movie.ApiModelId,
+                Adult = movie.Adult,
+                Popularity = movie.Popularity,
+                MovieKnownForIds = movie.MovieKnownForIds,
+                CastDetails = movie.CastDetails,
+                CastExternalId = movie.CastExternalId,
+                ProfilePath = movie.ProfilePath,
+                Gender = movie.Gender,
+                KnownForDepartment = movie.KnownForDepartment,
+                Name = movie.Name,
+                OriginalName = movie.OriginalName
+
+            };
+        }
+    }
+}

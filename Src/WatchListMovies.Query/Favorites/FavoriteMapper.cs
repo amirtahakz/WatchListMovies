@@ -12,7 +12,7 @@ namespace WatchListMovies.Query.Favorites
 {
     public static class FavoriteMapper
     {
-        public static FavoriteDto Map(this Favorite favorite)
+        public static FavoriteDto Map(this Domain.FavoriteAgg.Favorite favorite)
         {
             return new FavoriteDto()
             {

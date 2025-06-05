@@ -1,8 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WatchListMovies.Domain.CastAgg;
+using WatchListMovies.Domain.CompanyAgg;
 using WatchListMovies.Domain.ContentCastAgg;
 using WatchListMovies.Domain.ContentImageAgg;
+using WatchListMovies.Domain.CountryAgg;
 using WatchListMovies.Domain.FavoriteAgg;
+using WatchListMovies.Domain.LanguageAgg;
 using WatchListMovies.Domain.ListAgg;
 using WatchListMovies.Domain.MovieAgg;
 using WatchListMovies.Domain.TvAgg;
@@ -25,6 +28,9 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef
         public DbSet<List> Lists { get; set; }
         public DbSet<ContentCast> ContentCasts { get; set; }
         public DbSet<ContentImage> ContentImages { get; set; }
+        public DbSet<Country> Countries { get; set; }
+        public DbSet<Language> Languages { get; set; }
+        public DbSet<Company> Companies { get; set; }
 
 
         public DbSet<Movie> Movies { get; set; }

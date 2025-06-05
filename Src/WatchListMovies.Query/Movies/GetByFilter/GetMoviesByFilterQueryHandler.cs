@@ -60,15 +60,6 @@ namespace WatchListMovies.Query.Movies.GetByFilter
             if (!string.IsNullOrWhiteSpace(@params.CollectionName))
                 result = result.Where(r => r.MovieDetails.BelongsToCollection.Name.Contains(@params.CollectionName));
 
-            if (@params.CompanyNames != null)
-                result = result.Where(r => r.MovieDetails.ProductionCompanies.Any(pc => @params.CompanyNames.Contains(pc.Name)));
-
-            if (@params.CountryNames != null)
-                result = result.Where(r => r.MovieDetails.ProductionCountries.Any(c => @params.CountryNames.Contains(c.Name)));
-
-            if (@params.SpokenLanguageEnglishNames != null)
-                result = result.Where(r => r.MovieDetails.SpokenLanguages.Any(sp => @params.SpokenLanguageEnglishNames.Contains(sp.Name)));
-
 
             switch (@params.MovieOrderByEnum)
             {
@@ -109,15 +100,6 @@ namespace WatchListMovies.Query.Movies.GetByFilter
 
             model.GeneratePaging(preGenreFilteredList.Count(), @params.Take, @params.PageId);
             return model;
-        }
-
-        public IReadOnlyCollection<string> GetFilteredGenreIdsAsStrings(List<long>? genreIds, Func<long, bool> predicate)
-        {
-            return genreIds
-                .Where(predicate)
-                .Select(id => id.ToString())
-                .ToList()
-                .AsReadOnly();
         }
     }
 }
