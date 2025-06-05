@@ -57,19 +57,19 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
             }
         }
 
-        public async Task SyncMovieDetailsAndCompanies()
+        public async Task SyncMovieDetails()
         {
 
             try
             {
                 var movies = await _movieRepository.GetAllAsync();
-                if (movies.Count() != 0)
+                if (movies.Any())
                 {
                     foreach (var movie in movies)
                     {
                         var apiMovieDetails = await _movieApiService.GetMovieDetails(movie.ApiModelId ?? default);
                         movie.MovieDetails = apiMovieDetails.Map(movie.Id);
-                        await _companyRepository.AddRangeIfNotExistAsync(apiMovieDetails.ProductionCompanies.Map());
+                        //await _companyRepository.AddRangeIfNotExistAsync(apiMovieDetails.ProductionCompanies.Map());
                         await _movieRepository.Save();
                     }
                 }
@@ -87,7 +87,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
             try
             {
                 var movies = await _movieRepository.GetAllAsync();
-                if (movies.Count() != 0)
+                if (movies.Any())
                 {
                     foreach (var movie in movies)
                     {

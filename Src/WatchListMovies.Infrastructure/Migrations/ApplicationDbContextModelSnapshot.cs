@@ -78,6 +78,37 @@ namespace WatchListMovies.Infrastructure.Migrations
                     b.ToTable("Casts", "cast");
                 });
 
+            modelBuilder.Entity("WatchListMovies.Domain.CollectionAgg.Collection", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<long?>("ApiModelId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("BackdropPath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PosterPath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApiModelId")
+                        .IsUnique()
+                        .HasFilter("[ApiModelId] IS NOT NULL");
+
+                    b.HasIndex("Name");
+
+                    b.ToTable("Collections", "collection");
+                });
+
             modelBuilder.Entity("WatchListMovies.Domain.CompanyAgg.Company", b =>
                 {
                     b.Property<Guid>("Id")
@@ -651,6 +682,49 @@ namespace WatchListMovies.Infrastructure.Migrations
                     b.Navigation("CastExternalId");
                 });
 
+            modelBuilder.Entity("WatchListMovies.Domain.CollectionAgg.Collection", b =>
+                {
+                    b.OwnsOne("WatchListMovies.Domain.CollectionAgg.CollectionDetail", "CollectionDetail", b1 =>
+                        {
+                            b1.Property<Guid>("Id")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<long?>("ApiModelId")
+                                .HasColumnType("bigint");
+
+                            b1.Property<string>("BackdropPath")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<DateTime>("CreationDate")
+                                .HasColumnType("datetime2");
+
+                            b1.Property<string>("Name")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<string>("Overview")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.Property<Guid>("ParrentId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("PosterPath")
+                                .HasColumnType("nvarchar(max)");
+
+                            b1.HasKey("Id");
+
+                            b1.HasIndex("ApiModelId")
+                                .IsUnique()
+                                .HasFilter("[ApiModelId] IS NOT NULL");
+
+                            b1.ToTable("CollectionDetails", "collection");
+
+                            b1.WithOwner()
+                                .HasForeignKey("Id");
+                        });
+
+                    b.Navigation("CollectionDetail");
+                });
+
             modelBuilder.Entity("WatchListMovies.Domain.CompanyAgg.Company", b =>
                 {
                     b.OwnsOne("WatchListMovies.Domain.CompanyAgg.CompanyDetail", "CompanyDetail", b1 =>
@@ -682,8 +756,8 @@ namespace WatchListMovies.Infrastructure.Migrations
                             b1.Property<string>("OriginCountry")
                                 .HasColumnType("nvarchar(max)");
 
-                            b1.Property<string>("ParentCompany")
-                                .HasColumnType("nvarchar(max)");
+                            b1.Property<long?>("ParentCompany")
+                                .HasColumnType("bigint");
 
                             b1.Property<Guid?>("ParrentId")
                                 .HasColumnType("uniqueidentifier");
@@ -720,6 +794,9 @@ namespace WatchListMovies.Infrastructure.Migrations
                                 .HasColumnType("nvarchar(max)");
 
                             b1.Property<long?>("Budget")
+                                .HasColumnType("bigint");
+
+                            b1.Property<long?>("CollectionApiId")
                                 .HasColumnType("bigint");
 
                             b1.Property<string>("CompanyIds")
@@ -863,39 +940,6 @@ namespace WatchListMovies.Infrastructure.Migrations
                                     b2.WithOwner()
                                         .HasForeignKey("MovieDetailId");
                                 });
-
-                            b1.OwnsOne("WatchListMovies.Domain.MovieAgg.ValueObjects.BelongsToCollectionValueObject", "BelongsToCollection", b2 =>
-                                {
-                                    b2.Property<DateTime>("CreationDate")
-                                        .HasColumnType("datetime2");
-
-                                    b2.Property<Guid?>("ParrentId")
-                                        .HasColumnType("uniqueidentifier");
-
-                                    b2.Property<string>("Name")
-                                        .HasColumnType("nvarchar(450)");
-
-                                    b2.Property<long?>("ApiModelId")
-                                        .HasColumnType("bigint");
-
-                                    b2.Property<string>("BackdropPath")
-                                        .HasColumnType("nvarchar(max)");
-
-                                    b2.Property<string>("PosterPath")
-                                        .HasColumnType("nvarchar(max)");
-
-                                    b2.HasKey("CreationDate", "ParrentId", "Name");
-
-                                    b2.HasIndex("ParrentId")
-                                        .IsUnique();
-
-                                    b2.ToTable("BelongsToCollections", "movie");
-
-                                    b2.WithOwner()
-                                        .HasForeignKey("ParrentId");
-                                });
-
-                            b1.Navigation("BelongsToCollection");
 
                             b1.Navigation("MovieKeyYoutubeTrailers");
                         });

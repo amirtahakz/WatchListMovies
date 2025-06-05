@@ -23,7 +23,7 @@ namespace WatchListMovies.Domain.CompanyAgg
             string? logoPath,
             string? name,
             string? originCountry,
-            string? parentCompany)
+            long? parentCompany)
         {
             ParrentId = parrentId;
             Description = description;
@@ -44,6 +44,6 @@ namespace WatchListMovies.Domain.CompanyAgg
         public string? LogoPath { get; set; }
         public string? Name { get; set; }
         public string? OriginCountry { get; set; }
-        public string? ParentCompany { get; set; }
+        public long? ParentCompany { get; set; }
     }
 }

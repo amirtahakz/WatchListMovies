@@ -18,6 +18,9 @@ namespace WatchListMovies.Infrastructure.Migrations
                 name: "cast");
 
             migrationBuilder.EnsureSchema(
+                name: "company");
+
+            migrationBuilder.EnsureSchema(
                 name: "tv");
 
             migrationBuilder.EnsureSchema(
@@ -47,6 +50,23 @@ namespace WatchListMovies.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Companies",
+                schema: "company",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ApiModelId = table.Column<long>(type: "bigint", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    LogoPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OriginCountry = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Companies", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ContentCasts",
                 columns: table => new
                 {
@@ -67,7 +87,7 @@ namespace WatchListMovies.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ContentImage",
+                name: "ContentImages",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -84,7 +104,22 @@ namespace WatchListMovies.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ContentImage", x => x.Id);
+                    table.PrimaryKey("PK_ContentImages", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Countries",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Iso31661 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EnglishName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NativeName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Countries", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -118,6 +153,21 @@ namespace WatchListMovies.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Genres", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Languages",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Iso6391 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EnglishName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Languages", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -280,6 +330,35 @@ namespace WatchListMovies.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CompanyDetails",
+                schema: "company",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ParrentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Headquarters = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Homepage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ApiModelId = table.Column<long>(type: "bigint", nullable: true),
+                    LogoPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    OriginCountry = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ParentCompany = table.Column<long>(type: "bigint", nullable: true),
+                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CompanyDetails", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CompanyDetails_Companies_Id",
+                        column: x => x.Id,
+                        principalSchema: "company",
+                        principalTable: "Companies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MovieDetails",
                 schema: "movie",
                 columns: table => new
@@ -307,6 +386,9 @@ namespace WatchListMovies.Infrastructure.Migrations
                     VoteAverage = table.Column<double>(type: "float", nullable: true),
                     VoteCount = table.Column<long>(type: "bigint", nullable: true),
                     GenreIds = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CompanyIds = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CountryIds = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LanguageIds = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
@@ -349,6 +431,9 @@ namespace WatchListMovies.Infrastructure.Migrations
                     VoteAverage = table.Column<double>(type: "float", nullable: true),
                     VoteCount = table.Column<long>(type: "bigint", nullable: true),
                     GenreIds = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CompanyIds = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CountryIds = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LanguageIds = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TvEpisodeRunTimes = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -447,75 +532,6 @@ namespace WatchListMovies.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductionCompanies",
-                schema: "movie",
-                columns: table => new
-                {
-                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ParrentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ApiModelId = table.Column<long>(type: "bigint", nullable: true),
-                    LogoPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OriginCountry = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductionCompanies", x => new { x.CreationDate, x.ParrentId, x.Name });
-                    table.ForeignKey(
-                        name: "FK_ProductionCompanies_MovieDetails_ParrentId",
-                        column: x => x.ParrentId,
-                        principalSchema: "movie",
-                        principalTable: "MovieDetails",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductionCountries",
-                schema: "movie",
-                columns: table => new
-                {
-                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ParrentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Iso31661 = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductionCountries", x => new { x.CreationDate, x.ParrentId, x.Name });
-                    table.ForeignKey(
-                        name: "FK_ProductionCountries_MovieDetails_ParrentId",
-                        column: x => x.ParrentId,
-                        principalSchema: "movie",
-                        principalTable: "MovieDetails",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SpokenLanguages",
-                schema: "movie",
-                columns: table => new
-                {
-                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ParrentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EnglishName = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Iso6391 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SpokenLanguages", x => new { x.CreationDate, x.ParrentId, x.EnglishName });
-                    table.ForeignKey(
-                        name: "FK_SpokenLanguages_MovieDetails_ParrentId",
-                        column: x => x.ParrentId,
-                        principalSchema: "movie",
-                        principalTable: "MovieDetails",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "CreatedBys",
                 schema: "tv",
                 columns: table => new
@@ -596,52 +612,6 @@ namespace WatchListMovies.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductionCompanies",
-                schema: "tv",
-                columns: table => new
-                {
-                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ParrentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    ApiModelId = table.Column<long>(type: "bigint", nullable: true),
-                    LogoPath = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    OriginCountry = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductionCompanies", x => new { x.CreationDate, x.ParrentId, x.Name });
-                    table.ForeignKey(
-                        name: "FK_ProductionCompanies_TvDetails_ParrentId",
-                        column: x => x.ParrentId,
-                        principalSchema: "tv",
-                        principalTable: "TvDetails",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ProductionCountries",
-                schema: "tv",
-                columns: table => new
-                {
-                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ParrentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Iso31661 = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ProductionCountries", x => new { x.CreationDate, x.ParrentId, x.Name });
-                    table.ForeignKey(
-                        name: "FK_ProductionCountries_TvDetails_ParrentId",
-                        column: x => x.ParrentId,
-                        principalSchema: "tv",
-                        principalTable: "TvDetails",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Seasons",
                 schema: "tv",
                 columns: table => new
@@ -662,29 +632,6 @@ namespace WatchListMovies.Infrastructure.Migrations
                     table.PrimaryKey("PK_Seasons", x => new { x.CreationDate, x.ParrentId, x.Name });
                     table.ForeignKey(
                         name: "FK_Seasons_TvDetails_ParrentId",
-                        column: x => x.ParrentId,
-                        principalSchema: "tv",
-                        principalTable: "TvDetails",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SpokenLanguages",
-                schema: "tv",
-                columns: table => new
-                {
-                    CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ParrentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EnglishName = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Iso6391 = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SpokenLanguages", x => new { x.CreationDate, x.ParrentId, x.EnglishName });
-                    table.ForeignKey(
-                        name: "FK_SpokenLanguages_TvDetails_ParrentId",
                         column: x => x.ParrentId,
                         principalSchema: "tv",
                         principalTable: "TvDetails",
@@ -754,6 +701,28 @@ namespace WatchListMovies.Infrastructure.Migrations
                 column: "OriginalName");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Companies_ApiModelId",
+                schema: "company",
+                table: "Companies",
+                column: "ApiModelId",
+                unique: true,
+                filter: "[ApiModelId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Companies_Name",
+                schema: "company",
+                table: "Companies",
+                column: "Name");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CompanyDetails_ApiModelId",
+                schema: "company",
+                table: "CompanyDetails",
+                column: "ApiModelId",
+                unique: true,
+                filter: "[ApiModelId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ContentCasts_CastApiModelId",
                 table: "ContentCasts",
                 column: "CastApiModelId");
@@ -774,13 +743,13 @@ namespace WatchListMovies.Infrastructure.Migrations
                 column: "CreditType");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ContentImage_ContentApiModelId",
-                table: "ContentImage",
+                name: "IX_ContentImages_ContentApiModelId",
+                table: "ContentImages",
                 column: "ContentApiModelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ContentImage_ContentImageType",
-                table: "ContentImage",
+                name: "IX_ContentImages_ContentImageType",
+                table: "ContentImages",
                 column: "ContentImageType");
 
             migrationBuilder.CreateIndex(
@@ -872,45 +841,9 @@ namespace WatchListMovies.Infrastructure.Migrations
                 column: "ParrentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductionCompanies_ParrentId",
-                schema: "movie",
-                table: "ProductionCompanies",
-                column: "ParrentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductionCompanies_ParrentId",
-                schema: "tv",
-                table: "ProductionCompanies",
-                column: "ParrentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductionCountries_ParrentId",
-                schema: "movie",
-                table: "ProductionCountries",
-                column: "ParrentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ProductionCountries_ParrentId",
-                schema: "tv",
-                table: "ProductionCountries",
-                column: "ParrentId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Seasons_ParrentId",
                 schema: "tv",
                 table: "Seasons",
-                column: "ParrentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SpokenLanguages_ParrentId",
-                schema: "movie",
-                table: "SpokenLanguages",
-                column: "ParrentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SpokenLanguages_ParrentId",
-                schema: "tv",
-                table: "SpokenLanguages",
                 column: "ParrentId");
 
             migrationBuilder.CreateIndex(
@@ -986,10 +919,17 @@ namespace WatchListMovies.Infrastructure.Migrations
                 schema: "cast");
 
             migrationBuilder.DropTable(
+                name: "CompanyDetails",
+                schema: "company");
+
+            migrationBuilder.DropTable(
                 name: "ContentCasts");
 
             migrationBuilder.DropTable(
-                name: "ContentImage");
+                name: "ContentImages");
+
+            migrationBuilder.DropTable(
+                name: "Countries");
 
             migrationBuilder.DropTable(
                 name: "CreatedBys",
@@ -1006,6 +946,9 @@ namespace WatchListMovies.Infrastructure.Migrations
                 name: "Genres");
 
             migrationBuilder.DropTable(
+                name: "Languages");
+
+            migrationBuilder.DropTable(
                 name: "Lists");
 
             migrationBuilder.DropTable(
@@ -1017,31 +960,7 @@ namespace WatchListMovies.Infrastructure.Migrations
                 schema: "tv");
 
             migrationBuilder.DropTable(
-                name: "ProductionCompanies",
-                schema: "movie");
-
-            migrationBuilder.DropTable(
-                name: "ProductionCompanies",
-                schema: "tv");
-
-            migrationBuilder.DropTable(
-                name: "ProductionCountries",
-                schema: "movie");
-
-            migrationBuilder.DropTable(
-                name: "ProductionCountries",
-                schema: "tv");
-
-            migrationBuilder.DropTable(
                 name: "Seasons",
-                schema: "tv");
-
-            migrationBuilder.DropTable(
-                name: "SpokenLanguages",
-                schema: "movie");
-
-            migrationBuilder.DropTable(
-                name: "SpokenLanguages",
                 schema: "tv");
 
             migrationBuilder.DropTable(
@@ -1051,6 +970,10 @@ namespace WatchListMovies.Infrastructure.Migrations
             migrationBuilder.DropTable(
                 name: "Casts",
                 schema: "cast");
+
+            migrationBuilder.DropTable(
+                name: "Companies",
+                schema: "company");
 
             migrationBuilder.DropTable(
                 name: "MovieDetails",

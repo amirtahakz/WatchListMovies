@@ -20,9 +20,6 @@ namespace WatchListMovies.Query.Movies.DTOs
         public string? ImdbId { get; set; }
         public List<long>? GenreIds { get; set; }
 
-        // MovieDetails.BelongsToCollectionValueObject
-        public string? CollectionName { get; set; }
-
 
 
     }

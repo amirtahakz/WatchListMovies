@@ -12,8 +12,8 @@ namespace WatchListMovies.Application.Configurations
         public string SyncMovieKeyYoutubeTrailers { get; set; }
         public string SyncPopularTvs { get; set; }
         public string SyncPopularCasts { get; set; }
-        public string SyncMovieDetailsAndCompanies { get; set; }
-        public string SyncTvDetailsAndCompanies { get; set; }
+        public string SyncMovieDetails { get; set; }
+        public string SyncTvDetails { get; set; }
         public string SyncCastDetails { get; set; }
         public string SyncCastExternalIds { get; set; }
         public string SyncGenres { get; set; }
@@ -21,5 +21,9 @@ namespace WatchListMovies.Application.Configurations
         public string SyncContentCasts { get; set; }
         public string SyncCountries { get; set; }
         public string SyncLanguages { get; set; }
+        public string SyncCompanyDetails { get; set; }
+        public string SyncCompanies { get; set; }
+        public string SyncCollections { get; set; }
+        public string SyncCollectionDetails { get; set; }
     }
 }

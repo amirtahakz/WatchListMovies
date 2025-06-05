@@ -32,5 +32,14 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef.CompanyAgg
             }
 
         }
+
+        public async Task<List<Company>> GetAllAsync()
+        {
+            var result = await Context.Companies
+                .AsTracking()
+                .ToListAsync();
+
+            return result;
+        }
     }
 }

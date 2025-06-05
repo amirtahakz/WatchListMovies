@@ -6,9 +6,9 @@ namespace WatchListMovies.Application.IExternalApiServices._Shared
     public static class SharedMapper
     {
 
-        public static List<Company> Map(this List<ProductionCompanyApiModelDto> requestModels)
+        public static List<Domain.CompanyAgg.Company> Map(this List<ProductionCompanyApiModelDto> requestModels)
         {
-            var result = new List<Company>();
+            var result = new List<Domain.CompanyAgg.Company>();
 
             foreach (var item in requestModels)
                 result.Add(item.Map());
@@ -16,9 +16,9 @@ namespace WatchListMovies.Application.IExternalApiServices._Shared
             return result;
         }
 
-        public static Company Map(this ProductionCompanyApiModelDto requestModel)
+        public static Domain.CompanyAgg.Company Map(this ProductionCompanyApiModelDto requestModel)
         {
-            var model = new Company()
+            var model = new Domain.CompanyAgg.Company()
             {
                 ApiModelId = requestModel.ApiModelId,
                 LogoPath = requestModel.LogoPath,

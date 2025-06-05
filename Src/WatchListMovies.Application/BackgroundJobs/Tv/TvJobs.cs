@@ -55,19 +55,19 @@ namespace WatchListMovies.Application.BackgroundJobs.Tv
             }
         }
 
-        public async Task SyncTvDetailsAndCompanies()
+        public async Task SyncTvDetails()
         {
 
             try
             {
                 var tvs = await _tvRepository.GetAllAsync();
-                if (tvs.Count() != 0)
+                if (tvs.Any())
                 {
                     foreach (var tv in tvs)
                     {
                         var apiTvDetails = await _tvApiService.GetTvDetails(tv.ApiModelId ?? default);
                         tv.TvDetail = apiTvDetails.Map(tv.Id);
-                        await _companyRepository.AddRangeIfNotExistAsync(apiTvDetails.ProductionCompanies.Map());
+                        //await _companyRepository.AddRangeIfNotExistAsync(apiTvDetails.ProductionCompanies.Map());
                         await _tvRepository.Save();
                     }
                 }

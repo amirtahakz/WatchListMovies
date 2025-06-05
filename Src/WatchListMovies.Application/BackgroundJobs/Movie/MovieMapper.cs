@@ -66,6 +66,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
                 VoteCount = movieDetails.VoteCount,
                 VoteAverage = movieDetails.VoteAverage,
                 MovieId = movieId,
+                CollectionApiId = movieDetails.BelongsToCollection == null ? default : movieDetails.BelongsToCollection.ApiModelId
             };
 
             if (movieDetails.Genres != null)
@@ -79,20 +80,6 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
 
             if (movieDetails.ProductionCountries != null)
                 result.CountryIds = movieDetails.ProductionCountries.Select(g => g.Iso31661).ToList().AsReadOnly();
-
-
-
-            if (movieDetails.BelongsToCollection != null)
-            {
-                result.BelongsToCollection = new Domain.MovieAgg.ValueObjects.BelongsToCollectionValueObject()
-                {
-                    BackdropPath = movieDetails.BelongsToCollection.BackdropPath,
-                    PosterPath = movieDetails.BelongsToCollection.PosterPath,
-                    ApiModelId = movieDetails.BelongsToCollection.ApiModelId,
-                    Name = movieDetails.BelongsToCollection.Name,
-                    ParrentId = result.Id,
-                };
-            }
 
             return result;
         }

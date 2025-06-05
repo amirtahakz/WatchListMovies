@@ -11,5 +11,7 @@ namespace WatchListMovies.Domain.CompanyAgg.Repository
     public interface ICompanyRepository : IBaseRepository<Company>
     {
         Task AddRangeIfNotExistAsync(List<Company> companies);
+
+        Task<List<Company>> GetAllAsync();
     }
 }

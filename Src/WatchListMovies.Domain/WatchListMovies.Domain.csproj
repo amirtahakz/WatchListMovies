@@ -18,6 +18,7 @@
   <ItemGroup>
     <Folder Include="CastAgg\Enums\" />
     <Folder Include="CastAgg\ValueObjects\" />
+    <Folder Include="CollectionAgg\Enums\" />
     <Folder Include="CompanyAgg\Enums\" />
     <Folder Include="CountryAgg\Enums\" />
     <Folder Include="_Shared\Enums\" />

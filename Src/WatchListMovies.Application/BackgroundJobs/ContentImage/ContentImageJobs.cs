@@ -51,7 +51,7 @@ namespace WatchListMovies.Application.BackgroundJobs.ContentImage
             try
             {
                 var casts = await _castRepository.GetAllAsync();
-                if (casts.Count() != 0)
+                if (casts.Any())
                 {
                     foreach (var cast in casts)
                     {
@@ -62,7 +62,7 @@ namespace WatchListMovies.Application.BackgroundJobs.ContentImage
                 }
 
                 var tvs = await _tvRepository.GetAllAsync();
-                if (tvs.Count() != 0)
+                if (tvs.Any())
                 {
                     foreach (var tv in tvs)
                     {
@@ -73,7 +73,7 @@ namespace WatchListMovies.Application.BackgroundJobs.ContentImage
                 }
 
                 var movies = await _movieRepository.GetAllAsync();
-                if (movies.Count() != 0)
+                if (movies.Any())
                 {
                     foreach (var movie in movies)
                     {

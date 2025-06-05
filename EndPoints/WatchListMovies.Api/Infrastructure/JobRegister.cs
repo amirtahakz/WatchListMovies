@@ -1,6 +1,8 @@
 ﻿using Hangfire;
 using Microsoft.Extensions.Options;
 using WatchListMovies.Application.BackgroundJobs.Cast;
+using WatchListMovies.Application.BackgroundJobs.Collection;
+using WatchListMovies.Application.BackgroundJobs.Company;
 using WatchListMovies.Application.BackgroundJobs.Configuration;
 using WatchListMovies.Application.BackgroundJobs.ContentCast;
 using WatchListMovies.Application.BackgroundJobs.ContentImage;
@@ -9,6 +11,7 @@ using WatchListMovies.Application.BackgroundJobs.Movie;
 using WatchListMovies.Application.BackgroundJobs.Tv;
 using WatchListMovies.Application.Configurations;
 using WatchListMovies.Common.AspNetCore.Middlewares;
+using WatchListMovies.Domain.CompanyAgg;
 using WatchListMovies.Domain.ContentCastAgg;
 using WatchListMovies.Domain.ContentImageAgg;
 
@@ -30,9 +33,9 @@ namespace WatchListMovies.Api.Infrastructure
                 cronExpression: jobSchedules.SyncPopularMovies);
 
             RecurringJob.AddOrUpdate<MovieJobs>(
-                recurringJobId: "SyncMovieDetailsAndCompanies",
-                methodCall: svc => svc.SyncMovieDetailsAndCompanies(),
-                cronExpression: jobSchedules.SyncMovieDetailsAndCompanies);
+                recurringJobId: "SyncMovieDetails",
+                methodCall: svc => svc.SyncMovieDetails(),
+                cronExpression: jobSchedules.SyncMovieDetails);
 
             RecurringJob.AddOrUpdate<MovieJobs>(
                 recurringJobId: "SyncMovieKeyYoutubeTrailers",
@@ -45,9 +48,9 @@ namespace WatchListMovies.Api.Infrastructure
                 cronExpression: jobSchedules.SyncPopularTvs);
 
             RecurringJob.AddOrUpdate<TvJobs>(
-                recurringJobId: "SyncTvDetailsAndCompanies",
-                methodCall: svc => svc.SyncTvDetailsAndCompanies(),
-                cronExpression: jobSchedules.SyncTvDetailsAndCompanies);
+                recurringJobId: "SyncTvDetails",
+                methodCall: svc => svc.SyncTvDetails(),
+                cronExpression: jobSchedules.SyncTvDetails);
 
             RecurringJob.AddOrUpdate<CastJobs>(
                 recurringJobId: "SyncPopularCasts",
@@ -88,6 +91,30 @@ namespace WatchListMovies.Api.Infrastructure
                 recurringJobId: "SyncLanguages",
                 methodCall: svc => svc.SyncLanguages(),
                 cronExpression: jobSchedules.SyncLanguages);
+
+
+            RecurringJob.AddOrUpdate<CompanyJobs>(
+                recurringJobId: "SyncCompanyDetails",
+                methodCall: svc => svc.SyncCompanyDetails(),
+                cronExpression: jobSchedules.SyncCompanyDetails);
+
+
+            RecurringJob.AddOrUpdate<CompanyJobs>(
+                recurringJobId: "SyncCompanies",
+                methodCall: svc => svc.SyncCompanies(),
+                cronExpression: jobSchedules.SyncCompanies);
+
+
+            RecurringJob.AddOrUpdate<CollectionJobs>(
+                recurringJobId: "SyncCollections",
+                methodCall: svc => svc.SyncCollections(),
+                cronExpression: jobSchedules.SyncCollections);
+
+
+            RecurringJob.AddOrUpdate<CollectionJobs>(
+                recurringJobId: "SyncCollectionDetails",
+                methodCall: svc => svc.SyncCollectionDetails(),
+                cronExpression: jobSchedules.SyncCollectionDetails);
 
 
             return builder;

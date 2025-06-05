@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WatchListMovies.Domain.CastAgg;
+using WatchListMovies.Domain.CollectionAgg;
 using WatchListMovies.Domain.CompanyAgg;
 using WatchListMovies.Domain.ContentCastAgg;
 using WatchListMovies.Domain.ContentImageAgg;
@@ -31,6 +32,7 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef
         public DbSet<Country> Countries { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<Company> Companies { get; set; }
+        public DbSet<Domain.CollectionAgg.Collection> Collections { get; set; }
 
 
         public DbSet<Movie> Movies { get; set; }

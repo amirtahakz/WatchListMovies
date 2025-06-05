@@ -57,9 +57,6 @@ namespace WatchListMovies.Query.Movies.GetByFilter
             if (!string.IsNullOrWhiteSpace(@params.ImdbId))
                 result = result.Where(r => r.MovieDetails.ImdbId.Contains(@params.ImdbId));
 
-            if (!string.IsNullOrWhiteSpace(@params.CollectionName))
-                result = result.Where(r => r.MovieDetails.BelongsToCollection.Name.Contains(@params.CollectionName));
-
 
             switch (@params.MovieOrderByEnum)
             {

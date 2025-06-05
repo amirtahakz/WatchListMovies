@@ -53,22 +53,6 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef.MovieAgg
                    .HasColumnName("CountryIds");
 
 
-
-
-                //BelongsToCollectionsVo Tbl Config
-                md.OwnsOne(m => m.BelongsToCollection, btc =>
-                {
-                    btc.ToTable("BelongsToCollections", "movie");
-                    btc.WithOwner().HasForeignKey("ParrentId");
-                    btc.HasKey("CreationDate" , "ParrentId" , "Name");
-                    btc.Property(x => x.BackdropPath);
-                    btc.Property(x => x.Name);
-                    btc.Property(x => x.BackdropPath);
-                    btc.Property(x => x.CreationDate);
-                    btc.Property(x => x.PosterPath);
-
-                });
-
                 //MovieKeyYoutubeTrailers Tbl Config
                 md.OwnsMany(m => m.MovieKeyYoutubeTrailers, btc =>
                 {
