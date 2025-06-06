@@ -43,6 +43,7 @@ namespace WatchListMovies.Query.Episodes.GetByFilter
             var model = new EpisodeFilterResult()
             {
                 Data = result
+                .OrderBy(item => item.EpisodeNumber)
                 .Skip(skip)
                 .Take(@params.Take)
                 .Select(country => country.Map())

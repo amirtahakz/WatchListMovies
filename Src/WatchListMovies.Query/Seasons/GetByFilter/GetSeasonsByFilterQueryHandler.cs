@@ -41,6 +41,7 @@ namespace WatchListMovies.Query.Seasons.GetByFilter
             var model = new SeasonFilterResult()
             {
                 Data = result
+                .OrderBy(item => item.SeasonNumber)
                 .Skip(skip)
                 .Take(@params.Take)
                 .Select(country => country.Map())
