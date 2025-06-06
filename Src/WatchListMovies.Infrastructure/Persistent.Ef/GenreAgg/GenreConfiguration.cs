@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 
-namespace WatchListMovies.Infrastructure.Persistent.Ef.Genre
+namespace WatchListMovies.Infrastructure.Persistent.Ef.GenreAgg
 {
     public class GenreConfiguration : IEntityTypeConfiguration<Domain.GenreAgg.Genre>
     {

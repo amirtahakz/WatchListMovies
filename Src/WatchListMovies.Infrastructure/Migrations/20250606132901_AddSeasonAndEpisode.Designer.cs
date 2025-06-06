@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WatchListMovies.Infrastructure.Persistent.Ef;
 
@@ -11,9 +12,11 @@ using WatchListMovies.Infrastructure.Persistent.Ef;
 namespace WatchListMovies.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250606132901_AddSeasonAndEpisode")]
+    partial class AddSeasonAndEpisode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1239,6 +1242,103 @@ namespace WatchListMovies.Infrastructure.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("TvId");
+
+                            b1.OwnsMany("WatchListMovies.Domain.TvAgg.ValueObjects.EpisodeValueObject", "EpisodeToAirs", b2 =>
+                                {
+                                    b2.Property<DateTime>("CreationDate")
+                                        .HasColumnType("datetime2");
+
+                                    b2.Property<Guid?>("ParrentId")
+                                        .HasColumnType("uniqueidentifier");
+
+                                    b2.Property<string>("Name")
+                                        .HasColumnType("nvarchar(450)");
+
+                                    b2.Property<DateTime?>("AirDate")
+                                        .HasColumnType("datetime2");
+
+                                    b2.Property<long?>("ApiModelId")
+                                        .HasColumnType("bigint");
+
+                                    b2.Property<int>("EpisodeAirType")
+                                        .HasColumnType("int");
+
+                                    b2.Property<long?>("EpisodeNumber")
+                                        .HasColumnType("bigint");
+
+                                    b2.Property<string>("EpisodeType")
+                                        .HasColumnType("nvarchar(max)");
+
+                                    b2.Property<string>("Overview")
+                                        .HasColumnType("nvarchar(max)");
+
+                                    b2.Property<long?>("SeasonNumber")
+                                        .HasColumnType("bigint");
+
+                                    b2.Property<string>("StillPath")
+                                        .HasColumnType("nvarchar(max)");
+
+                                    b2.Property<float?>("VoteAverage")
+                                        .HasColumnType("real");
+
+                                    b2.Property<long?>("VoteCount")
+                                        .HasColumnType("bigint");
+
+                                    b2.HasKey("CreationDate", "ParrentId", "Name");
+
+                                    b2.HasIndex("ParrentId");
+
+                                    b2.ToTable("EpisodeToAirs", "tv");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("ParrentId");
+                                });
+
+                            b1.OwnsMany("WatchListMovies.Domain.TvAgg.ValueObjects.SeasonValueObject", "Seasons", b2 =>
+                                {
+                                    b2.Property<DateTime>("CreationDate")
+                                        .HasColumnType("datetime2");
+
+                                    b2.Property<Guid?>("ParrentId")
+                                        .HasColumnType("uniqueidentifier");
+
+                                    b2.Property<string>("Name")
+                                        .HasColumnType("nvarchar(450)");
+
+                                    b2.Property<DateTime?>("AirDate")
+                                        .HasColumnType("datetime2");
+
+                                    b2.Property<long?>("ApiModelId")
+                                        .HasColumnType("bigint");
+
+                                    b2.Property<long?>("EpisodeCount")
+                                        .HasColumnType("bigint");
+
+                                    b2.Property<string>("Overview")
+                                        .HasColumnType("nvarchar(max)");
+
+                                    b2.Property<string>("PosterPath")
+                                        .HasColumnType("nvarchar(max)");
+
+                                    b2.Property<long?>("SeasonNumber")
+                                        .HasColumnType("bigint");
+
+                                    b2.Property<float?>("VoteAverage")
+                                        .HasColumnType("real");
+
+                                    b2.HasKey("CreationDate", "ParrentId", "Name");
+
+                                    b2.HasIndex("ParrentId");
+
+                                    b2.ToTable("Seasons", "tv");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("ParrentId");
+                                });
+
+                            b1.Navigation("EpisodeToAirs");
+
+                            b1.Navigation("Seasons");
                         });
 
                     b.Navigation("TvDetail");

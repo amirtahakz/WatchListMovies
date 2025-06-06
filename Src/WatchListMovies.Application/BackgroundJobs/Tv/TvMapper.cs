@@ -1,12 +1,6 @@
-﻿using WatchListMovies.Application.IExternalApiServices._Shared;
-using WatchListMovies.Application.IExternalApiServices._Shared.ApiModelDtos;
-using WatchListMovies.Application.IExternalApiServices.Movie.ApiModelDTOs;
-using WatchListMovies.Application.IExternalApiServices.Tv.ApiModelDTOs;
-
-using WatchListMovies.Domain.MovieAgg;
+﻿using WatchListMovies.Application.IExternalApiServices.Tv.ApiModelDTOs;
 using WatchListMovies.Domain.TvAgg;
-using WatchListMovies.Domain.TvAgg.Enums;
-using WatchListMovies.Domain.TvAgg.ValueObjects;
+
 
 namespace WatchListMovies.Application.BackgroundJobs.Tv
 {
@@ -84,81 +78,12 @@ namespace WatchListMovies.Application.BackgroundJobs.Tv
             if (tvDetails.ProductionCountries != null)
                 result.CountryIds = tvDetails.ProductionCountries.Select(g => g.Iso31661).ToList().AsReadOnly();
 
-            if (tvDetails.Seasons != null)
-                result.Seasons = tvDetails.Seasons.Map(result.Id);
-
             if (tvDetails.Networks != null)
                 result.NetworkIds = tvDetails.Networks.Where(g => g.Id.HasValue).Select(g => g.Id.Value.ToString()).ToList().AsReadOnly();
 
             if (tvDetails.CreatedBy != null)
                 result.CreatedByIds = tvDetails.CreatedBy.Where(g => g.Id.HasValue).Select(g => g.Id.Value.ToString()).ToList().AsReadOnly();
 
-            if (tvDetails.LastEpisodeToAir != null)
-                result.EpisodeToAirs = new List<EpisodeValueObject>() { tvDetails.LastEpisodeToAir.Map(result.Id, EpisodeAirType.LastEpisodeToAir) };
-
-            if (tvDetails.NextEpisodeToAir != null)
-                result.EpisodeToAirs = new List<EpisodeValueObject>() { tvDetails.NextEpisodeToAir.Map(result.Id, EpisodeAirType.NextEpisodeToAir) };
-
-
-            return result;
-        }
-
-
-        public static SeasonValueObject Map(this SeasonApiModelDto seasonApi, Guid tvDetailId)
-        {
-            var result = new SeasonValueObject()
-            {
-                PosterPath = seasonApi.PosterPath,
-                ApiModelId = seasonApi.Id,
-                Name = seasonApi.Name,
-                AirDate = seasonApi.AirDate,
-                EpisodeCount = seasonApi.EpisodeCount,
-                ParrentId = tvDetailId,
-                Overview = seasonApi.Overview,
-                SeasonNumber = seasonApi.SeasonNumber,
-                VoteAverage = seasonApi.VoteAverage,
-
-            };
-            return result;
-        }
-
-        public static List<SeasonValueObject> Map(this List<SeasonApiModelDto> seasonApis, Guid tvDetailId)
-        {
-            var result = new List<SeasonValueObject>();
-
-            foreach (var seasonApi in seasonApis)
-                result.Add(seasonApi.Map(tvDetailId));
-
-            return result;
-        }
-
-
-        public static EpisodeValueObject Map(this EpisodeApiModelDto episode, Guid tvDetailId, EpisodeAirType episodeAirType)
-        {
-            var result = new EpisodeValueObject()
-            {
-                EpisodeAirType = episodeAirType,
-                AirDate = episode.AirDate,
-                ApiModelId = episode.Id,
-                EpisodeNumber = episode.EpisodeNumber,
-                EpisodeType = episode.EpisodeType,
-                ParrentId = tvDetailId,
-                Name = episode.Name,
-                Overview = episode.Overview,
-                SeasonNumber = episode.SeasonNumber,
-                StillPath = episode.StillPath,
-                VoteAverage = episode.VoteAverage,
-                VoteCount = episode.VoteCount,
-            };
-            return result;
-        }
-
-        public static List<EpisodeValueObject> Map(this List<EpisodeApiModelDto> episodes, Guid tvDetailId, EpisodeAirType episodeAirType)
-        {
-            var result = new List<EpisodeValueObject>();
-
-            foreach (var episode in episodes)
-                result.Add(episode.Map(tvDetailId, episodeAirType));
 
             return result;
         }

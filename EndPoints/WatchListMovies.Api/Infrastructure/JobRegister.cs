@@ -6,9 +6,11 @@ using WatchListMovies.Application.BackgroundJobs.Company;
 using WatchListMovies.Application.BackgroundJobs.Configuration;
 using WatchListMovies.Application.BackgroundJobs.ContentCast;
 using WatchListMovies.Application.BackgroundJobs.ContentImage;
+using WatchListMovies.Application.BackgroundJobs.Episode;
 using WatchListMovies.Application.BackgroundJobs.Genre;
 using WatchListMovies.Application.BackgroundJobs.Movie;
 using WatchListMovies.Application.BackgroundJobs.Network;
+using WatchListMovies.Application.BackgroundJobs.Season;
 using WatchListMovies.Application.BackgroundJobs.Tv;
 using WatchListMovies.Application.Configurations;
 using WatchListMovies.Common.AspNetCore.Middlewares;
@@ -126,6 +128,18 @@ namespace WatchListMovies.Api.Infrastructure
                 recurringJobId: "SyncNetworkDetails",
                 methodCall: svc => svc.SyncNetworkDetails(),
                 cronExpression: jobSchedules.SyncNetworkDetails);
+
+
+            RecurringJob.AddOrUpdate<SeasonJobs>(
+                recurringJobId: "SyncSeasons",
+                methodCall: svc => svc.SyncSeasons(),
+                cronExpression: jobSchedules.SyncNetworkDetails);
+
+
+            RecurringJob.AddOrUpdate<EpisodeJobs>(
+                recurringJobId: "SyncEpisodes",
+                methodCall: svc => svc.SyncEpisodes(),
+                cronExpression: jobSchedules.SyncEpisodes);
 
 
             return builder;

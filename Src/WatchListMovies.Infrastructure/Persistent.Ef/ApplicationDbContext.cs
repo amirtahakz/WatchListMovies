@@ -34,6 +34,8 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef
         public DbSet<Company> Companies { get; set; }
         public DbSet<Domain.CollectionAgg.Collection> Collections { get; set; }
         public DbSet<Domain.NetworkAgg.Network> Networks { get; set; }
+        public DbSet<Domain.SeasonAgg.Season> Seasons { get; set; }
+        public DbSet<Domain.EpisodeAgg.Episode> Episodes { get; set; }
 
 
         public DbSet<Movie> Movies { get; set; }

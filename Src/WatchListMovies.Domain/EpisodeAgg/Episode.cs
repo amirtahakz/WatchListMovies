@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 using WatchListMovies.Common.Domain;
 using WatchListMovies.Domain.TvAgg.Enums;
 
-namespace WatchListMovies.Domain.TvAgg.ValueObjects
+namespace WatchListMovies.Domain.EpisodeAgg
 {
-    public class EpisodeValueObject : BaseValueObject
+    public class Episode : BaseEntity
     {
-        public EpisodeValueObject()
+        public Episode()
         {
             
         }
-
-        public EpisodeValueObject(
-            Guid? ParrentId , 
+        public Episode(
+            long? tvApiId,
+            long? seasonApiId,
             long? apiModelId,
             string? name,
             string? overview,
@@ -26,9 +26,10 @@ namespace WatchListMovies.Domain.TvAgg.ValueObjects
             long? episodeNumber,
             string? episodeType,
             long? seasonNumber,
-            string? stillPath,
-            EpisodeAirType episodeAirType)
+            string? stillPath)
         {
+            TvApiId = tvApiId;
+            SeasonApiId = seasonApiId;
             ApiModelId = apiModelId;
             Name = name;
             Overview = overview;
@@ -39,10 +40,10 @@ namespace WatchListMovies.Domain.TvAgg.ValueObjects
             EpisodeType = episodeType;
             SeasonNumber = seasonNumber;
             StillPath = stillPath;
-            EpisodeAirType = episodeAirType;
-            ParrentId = ParrentId;
         }
-        public Guid? ParrentId { get; set; }
+
+        public long? TvApiId { get; set; }
+        public long? SeasonApiId { get; set; }
         public long? ApiModelId { get; set; }
         public string? Name { get; set; }
         public string? Overview { get; set; }
@@ -53,8 +54,5 @@ namespace WatchListMovies.Domain.TvAgg.ValueObjects
         public string? EpisodeType { get; set; }
         public long? SeasonNumber { get; set; }
         public string? StillPath { get; set; }
-        public EpisodeAirType EpisodeAirType { get; set; }
-        
     }
-
 }

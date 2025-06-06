@@ -20,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="IExternalApiServices\Episode\ApiModelDto\" />
     <Folder Include="Services\Genre\" />
     <Folder Include="Services\ContentCast\" />
     <Folder Include="Services\Language\" />

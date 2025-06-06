@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace WatchListMovies.Infrastructure.Persistent.Ef.Collection
+namespace WatchListMovies.Infrastructure.Persistent.Ef.CollectionAgg
 {
     public class CollectionConfiguration : IEntityTypeConfiguration<Domain.CollectionAgg.Collection>
     {

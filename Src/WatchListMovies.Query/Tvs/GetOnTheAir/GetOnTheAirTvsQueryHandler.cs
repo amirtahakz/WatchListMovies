@@ -25,14 +25,18 @@ namespace WatchListMovies.Query.Tvs.GetOnTheAir
             var today = DateTime.Today;
             var nextWeek = today.AddDays(7);
 
+            //var result = _context.Tvs
+            //    .Include(c => c.TvDetail)
+            //    .AsQueryable()
+            //    .Where(tv => tv.TvDetail.EpisodeToAirs != null && tv.TvDetail.EpisodeToAirs
+            //    .Any(e => e.EpisodeAirType == EpisodeAirType.NextEpisodeToAir &&
+            //         e.AirDate.HasValue &&
+            //         e.AirDate.Value.Date >= today &&
+            //         e.AirDate.Value.Date <= nextWeek));
+
             var result = _context.Tvs
                 .Include(c => c.TvDetail)
-                .AsQueryable()
-                .Where(tv => tv.TvDetail.EpisodeToAirs != null && tv.TvDetail.EpisodeToAirs
-                .Any(e => e.EpisodeAirType == EpisodeAirType.NextEpisodeToAir &&
-                     e.AirDate.HasValue &&
-                     e.AirDate.Value.Date >= today &&
-                     e.AirDate.Value.Date <= nextWeek));
+                .AsQueryable();
 
 
             var skip = (@params.PageId - 1) * @params.Take;

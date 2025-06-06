@@ -23,6 +23,8 @@
     <Folder Include="CountryAgg\Enums\" />
     <Folder Include="MovieAgg\ValueObjects\" />
     <Folder Include="NetworkAgg\Enums\" />
+    <Folder Include="SeasonAgg\Enums\" />
+    <Folder Include="TvAgg\ValueObjects\" />
     <Folder Include="_Shared\Enums\" />
     <Folder Include="_Shared\ValueObjects\" />
   </ItemGroup>

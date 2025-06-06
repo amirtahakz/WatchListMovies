@@ -27,5 +27,7 @@ namespace WatchListMovies.Application.Configurations
         public string SyncCollectionDetails { get; set; }
         public string SyncNetworks { get; set; }
         public string SyncNetworkDetails { get; set; }
+        public string SyncSeasons { get; set; }
+        public string SyncEpisodes { get; set; }
     }
 }

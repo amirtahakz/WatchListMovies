@@ -9,7 +9,7 @@ using WatchListMovies.Domain.CompanyAgg;
 using WatchListMovies.Domain.MovieAgg;
 using WatchListMovies.Infrastructure._Utilities;
 
-namespace WatchListMovies.Infrastructure.Persistent.Ef.Collection
+namespace WatchListMovies.Infrastructure.Persistent.Ef.CollectionAgg
 {
     public class CollectionRepository : BaseRepository<Domain.CollectionAgg.Collection>, ICollectionRepository
     {

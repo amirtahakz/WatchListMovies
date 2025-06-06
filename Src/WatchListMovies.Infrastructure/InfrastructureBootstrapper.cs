@@ -10,6 +10,7 @@ using WatchListMovies.Application.IExternalApiServices.Configuration;
 using WatchListMovies.Application.IExternalApiServices.Genre;
 using WatchListMovies.Application.IExternalApiServices.Movie;
 using WatchListMovies.Application.IExternalApiServices.Network;
+using WatchListMovies.Application.IExternalApiServices.Season;
 using WatchListMovies.Application.IExternalApiServices.Tv;
 using WatchListMovies.Domain.CastAgg.Repository;
 using WatchListMovies.Domain.CollectionAgg.Repository;
@@ -17,12 +18,14 @@ using WatchListMovies.Domain.CompanyAgg.Repository;
 using WatchListMovies.Domain.ContentCastAgg.Repository;
 using WatchListMovies.Domain.ContentImageAgg.Repository;
 using WatchListMovies.Domain.CountryAgg.Repository;
+using WatchListMovies.Domain.EpisodeAgg.Repository;
 using WatchListMovies.Domain.FavoriteAgg.Repository;
 using WatchListMovies.Domain.GenreAgg.Repository;
 using WatchListMovies.Domain.LanguageAgg.Repository;
 using WatchListMovies.Domain.ListAgg.Repository;
 using WatchListMovies.Domain.MovieAgg.Repository;
 using WatchListMovies.Domain.NetworkAgg.Repository;
+using WatchListMovies.Domain.SeasonAgg.Repository;
 using WatchListMovies.Domain.TvAgg.Repository;
 using WatchListMovies.Domain.UserAgg.Repository;
 using WatchListMovies.Infrastructure.ExternalApiServices.Cast;
@@ -32,20 +35,23 @@ using WatchListMovies.Infrastructure.ExternalApiServices.Configuration;
 using WatchListMovies.Infrastructure.ExternalApiServices.Genre;
 using WatchListMovies.Infrastructure.ExternalApiServices.Movie;
 using WatchListMovies.Infrastructure.ExternalApiServices.Network;
+using WatchListMovies.Infrastructure.ExternalApiServices.Season;
 using WatchListMovies.Infrastructure.ExternalApiServices.Tv;
 using WatchListMovies.Infrastructure.Persistent.Ef;
 using WatchListMovies.Infrastructure.Persistent.Ef.CastAgg;
-using WatchListMovies.Infrastructure.Persistent.Ef.Collection;
+using WatchListMovies.Infrastructure.Persistent.Ef.CollectionAgg;
 using WatchListMovies.Infrastructure.Persistent.Ef.CompanyAgg;
 using WatchListMovies.Infrastructure.Persistent.Ef.ContentCastAgg;
 using WatchListMovies.Infrastructure.Persistent.Ef.ContentImageAgg;
 using WatchListMovies.Infrastructure.Persistent.Ef.CountryAgg;
+using WatchListMovies.Infrastructure.Persistent.Ef.EpisodeAgg;
 using WatchListMovies.Infrastructure.Persistent.Ef.FavoriteAgg;
-using WatchListMovies.Infrastructure.Persistent.Ef.Genre;
+using WatchListMovies.Infrastructure.Persistent.Ef.GenreAgg;
 using WatchListMovies.Infrastructure.Persistent.Ef.LanguageAgg;
 using WatchListMovies.Infrastructure.Persistent.Ef.ListAgg;
 using WatchListMovies.Infrastructure.Persistent.Ef.MovieAgg;
-using WatchListMovies.Infrastructure.Persistent.Ef.Network;
+using WatchListMovies.Infrastructure.Persistent.Ef.NetworkAgg;
+using WatchListMovies.Infrastructure.Persistent.Ef.SeasonAgg;
 using WatchListMovies.Infrastructure.Persistent.Ef.TvAgg;
 using WatchListMovies.Infrastructure.Persistent.Ef.UserAgg;
 
@@ -74,6 +80,8 @@ namespace WatchListMovies.Infrastructure
             services.AddTransient<ICompanyRepository, CompanyRepository>();
             services.AddTransient<ICollectionRepository, CollectionRepository>();
             services.AddTransient<INetworkRepository, NetworkRepository>();
+            services.AddTransient<ISeasonRepository, SeasonRepository>();
+            services.AddTransient<IEpisodeRepository, EpisodeRepository>();
 
             services.AddDbContext<ApplicationDbContext>(option =>
             {
@@ -110,14 +118,17 @@ namespace WatchListMovies.Infrastructure
                 client.BaseAddress = new Uri(configuration["TMDBConfig:BaseAddress"] ?? "");
             });
 
-
             services.AddHttpClient<ICollectionApiService, CollectionApiService>(client =>
             {
                 client.BaseAddress = new Uri(configuration["TMDBConfig:BaseAddress"] ?? "");
             });
 
-
             services.AddHttpClient<INetworkApiService, NetworkApiService>(client =>
+            {
+                client.BaseAddress = new Uri(configuration["TMDBConfig:BaseAddress"] ?? "");
+            });
+
+            services.AddHttpClient<ISeasonApiService, SeasonApiService>(client =>
             {
                 client.BaseAddress = new Uri(configuration["TMDBConfig:BaseAddress"] ?? "");
             });

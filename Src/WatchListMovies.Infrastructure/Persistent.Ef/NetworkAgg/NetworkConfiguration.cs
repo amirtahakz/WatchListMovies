@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace WatchListMovies.Infrastructure.Persistent.Ef.Network
+namespace WatchListMovies.Infrastructure.Persistent.Ef.NetworkAgg
 {
     public class NetworkConfiguration : IEntityTypeConfiguration<Domain.NetworkAgg.Network>
     {

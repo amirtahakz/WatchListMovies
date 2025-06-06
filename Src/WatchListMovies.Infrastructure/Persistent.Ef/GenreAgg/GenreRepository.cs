@@ -3,7 +3,7 @@ using WatchListMovies.Domain.CastAgg;
 using WatchListMovies.Domain.GenreAgg.Repository;
 using WatchListMovies.Infrastructure._Utilities;
 
-namespace WatchListMovies.Infrastructure.Persistent.Ef.Genre
+namespace WatchListMovies.Infrastructure.Persistent.Ef.GenreAgg
 {
     public class GenreRepository : BaseRepository<Domain.GenreAgg.Genre>, IGenreRepository
     {

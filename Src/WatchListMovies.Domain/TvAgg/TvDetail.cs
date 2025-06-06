@@ -1,8 +1,5 @@
 ﻿using WatchListMovies.Common.Domain;
 
-using WatchListMovies.Domain.MovieAgg;
-using WatchListMovies.Domain.TvAgg.ValueObjects;
-
 namespace WatchListMovies.Domain.TvAgg
 {
     public class TvDetail : BaseEntity
@@ -35,8 +32,6 @@ namespace WatchListMovies.Domain.TvAgg
             double? voteAverage,
             long? voteCount,
             IEnumerable<string>? genreIds,
-            List<SeasonValueObject>? seasons,
-            List<EpisodeValueObject>? episodeToAirs,
             IEnumerable<string>? tvEpisodeRunTimes,
             IReadOnlyCollection<string>? companyIds,
             IReadOnlyCollection<string>? countryIds,
@@ -66,8 +61,6 @@ namespace WatchListMovies.Domain.TvAgg
             VoteAverage = voteAverage;
             VoteCount = voteCount;
             GenreIds = genreIds.ToList();
-            Seasons = seasons;
-            EpisodeToAirs = episodeToAirs;
             TvEpisodeRunTimes = tvEpisodeRunTimes.ToList();
             CompanyIds = companyIds;
             CountryIds = countryIds;
@@ -96,8 +89,6 @@ namespace WatchListMovies.Domain.TvAgg
         public string? Type { get; set; }
         public double? VoteAverage { get; set; } // امتیاز سایت TMDB
         public long? VoteCount { get; set; }
-        public List<SeasonValueObject>? Seasons { get; set; }
-        public List<EpisodeValueObject>? EpisodeToAirs { get; set; }
         public IReadOnlyCollection<string>? NetworkIds { get; set; }
         public IReadOnlyCollection<string>? GenreIds { get; set; }
         public IReadOnlyCollection<string>? CreatedByIds { get; set; }

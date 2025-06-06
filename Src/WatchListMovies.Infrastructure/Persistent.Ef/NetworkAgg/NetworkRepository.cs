@@ -9,7 +9,7 @@ using WatchListMovies.Domain.MovieAgg;
 using WatchListMovies.Domain.NetworkAgg.Repository;
 using WatchListMovies.Infrastructure._Utilities;
 
-namespace WatchListMovies.Infrastructure.Persistent.Ef.Network
+namespace WatchListMovies.Infrastructure.Persistent.Ef.NetworkAgg
 {
     public class NetworkRepository : BaseRepository<Domain.NetworkAgg.Network>, INetworkRepository
     {

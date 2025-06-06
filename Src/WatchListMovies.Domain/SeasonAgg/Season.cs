@@ -5,18 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using WatchListMovies.Common.Domain;
 
-namespace WatchListMovies.Domain.TvAgg.ValueObjects
+namespace WatchListMovies.Domain.SeasonAgg
 {
-    public class SeasonValueObject : BaseValueObject
+    public class Season : BaseEntity
     {
-        public SeasonValueObject()
+        public Season()
         {
-
+            
         }
-
-        public SeasonValueObject(
-            Guid ParrentId,
+        public Season(
             long? apiModelId,
+            long? tvApiId,
             string? name,
             string? overview,
             long? episodeCount,
@@ -26,6 +25,7 @@ namespace WatchListMovies.Domain.TvAgg.ValueObjects
             float? voteAverage)
         {
             ApiModelId = apiModelId;
+            TvApiId = tvApiId;
             Name = name;
             Overview = overview;
             EpisodeCount = episodeCount;
@@ -33,10 +33,10 @@ namespace WatchListMovies.Domain.TvAgg.ValueObjects
             AirDate = airDate;
             PosterPath = posterPath;
             VoteAverage = voteAverage;
-            ParrentId = ParrentId;
         }
-        public Guid? ParrentId { get; set; }
+
         public long? ApiModelId { get; set; }
+        public long? TvApiId { get; set; }
         public string? Name { get; set; }
         public string? Overview { get; set; }
         public long? EpisodeCount { get; set; }
@@ -44,7 +44,5 @@ namespace WatchListMovies.Domain.TvAgg.ValueObjects
         public DateTime? AirDate { get; set; }
         public string? PosterPath { get; set; }
         public float? VoteAverage { get; set; }
-
     }
-
 }
