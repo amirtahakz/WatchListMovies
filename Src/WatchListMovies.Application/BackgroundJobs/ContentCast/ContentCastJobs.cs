@@ -24,7 +24,7 @@ namespace WatchListMovies.Application.BackgroundJobs.ContentCast
             try
             {
                 var casts = await _castRepository.GetAllAsNoTrackingAsync();
-                if (casts.Count() != 0)
+                if (casts.Any())
                 {
                     foreach (var cast in casts)
                     {

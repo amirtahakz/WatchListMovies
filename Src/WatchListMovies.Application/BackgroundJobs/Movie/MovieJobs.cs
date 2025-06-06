@@ -25,13 +25,8 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
             try
             {
                 var apiMovies = await _movieApiService.GetPopularMovies(1);
-                //for (var page = 1; page <= apiMovies.TotalPages; page++)
-                //{
-                //    var data = await _movieApiService.GetPopularMovies(page);
-                //    apiMovies.PopularTvsItemApiModelDto.AddRange(data.PopularTvsItemApiModelDto);
-                //}
 
-                for (var page = 2; page <= 3; page++)
+                for (var page = 2; page <= apiMovies.TotalPages; page++)
                 {
                     var data = await _movieApiService.GetPopularMovies(page);
 
@@ -64,7 +59,6 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
                     {
                         var apiMovieDetails = await _movieApiService.GetMovieDetails(movie.ApiModelId ?? default);
                         movie.MovieDetails = apiMovieDetails.Map(movie.Id);
-                        //await _companyRepository.AddRangeIfNotExistAsync(apiMovieDetails.ProductionCompanies.Map());
                         await _movieRepository.Save();
                     }
                 }

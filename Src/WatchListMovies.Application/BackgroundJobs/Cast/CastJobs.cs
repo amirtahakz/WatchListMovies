@@ -26,24 +26,19 @@ namespace WatchListMovies.Application.BackgroundJobs.Cast
         {
             try
             {
-                var apiMovies = await _castApiService.GetPopularCasts(1);
+                var apiCasts = await _castApiService.GetPopularCasts(1);
 
-                //for (var page = 1; page <= apiMovies.TotalPages; page++)
-                //{
-                //    var data = await _castApiService.GetPopularCasts(page);
-                //    apiMovies.PopularTvsItemApiModelDto.AddRange(data.PopularTvsItemApiModelDto);
-                //}
-                for (var page = 2; page <= 2; page++)
+                for (var page = 2; page <= apiCasts.TotalPages; page++)
                 {
                     var data = await _castApiService.GetPopularCasts(page);
                     foreach (var item in data.Casts)
                     {
-                        if (!apiMovies.Casts.Any(v => v.Id == item.Id))
-                            apiMovies.Casts.Add(item);
+                        if (!apiCasts.Casts.Any(v => v.Id == item.Id))
+                            apiCasts.Casts.Add(item);
                     }
                 }
 
-                await _castRepository.AddRangeIfNotExistAsync(apiMovies.Map());
+                await _castRepository.AddRangeIfNotExistAsync(apiCasts.Map());
                 await _castRepository.Save();
 
             }
@@ -59,7 +54,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Cast
             try
             {
                 var casts = await _castRepository.GetAllAsync();
-                if (casts.Count() != 0)
+                if (casts.Any())
                 {
                     foreach (var cast in casts)
                     {
@@ -82,7 +77,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Cast
             try
             {
                 var casts = await _castRepository.GetAllAsync();
-                if (casts.Count() != 0)
+                if (casts.Any())
                 {
                     foreach (var cast in casts)
                     {

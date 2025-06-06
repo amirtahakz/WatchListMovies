@@ -29,12 +29,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Tv
             {
                 var apiTvs = await _tvApiService.GetPopularTvs(1);
 
-                //for (var page = 1; page <= apiTvs.TotalPages; page++)
-                //{
-                //    var data = await _movieApiService.GetPopularMovies(page);
-                //    apiTvs.PopularTvsItemApiModelDto.AddRange(data.PopularTvsItemApiModelDto);
-                //}
-                for (var page = 2; page <= 2; page++)
+                for (var page = 2; page <= apiTvs.TotalPages; page++)
                 {
                     var data = await _tvApiService.GetPopularTvs(page);
                     foreach (var item in data.Tvs)
@@ -67,7 +62,6 @@ namespace WatchListMovies.Application.BackgroundJobs.Tv
                     {
                         var apiTvDetails = await _tvApiService.GetTvDetails(tv.ApiModelId ?? default);
                         tv.TvDetail = apiTvDetails.Map(tv.Id);
-                        //await _companyRepository.AddRangeIfNotExistAsync(apiTvDetails.ProductionCompanies.Map());
                         await _tvRepository.Save();
                     }
                 }
