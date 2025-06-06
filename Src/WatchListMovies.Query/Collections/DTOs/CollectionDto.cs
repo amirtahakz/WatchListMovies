@@ -7,7 +7,7 @@ using WatchListMovies.Common.Query;
 using WatchListMovies.Domain.CollectionAgg;
 using WatchListMovies.Query.Companies.DTOs;
 
-namespace WatchListMovies.Query.Collection.DTOs
+namespace WatchListMovies.Query.Collections.DTOs
 {
     public class CollectionDto : BaseDto
     {

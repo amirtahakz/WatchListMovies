@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WatchListMovies.Domain.CollectionAgg.Repository;
+using WatchListMovies.Domain.CompanyAgg;
 using WatchListMovies.Domain.MovieAgg;
 using WatchListMovies.Infrastructure._Utilities;
 
@@ -24,6 +25,15 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef.Collection
             if (!isExist)
                 await Context.Collections.AddAsync(collection);
 
+        }
+
+        public async Task<List<Domain.CollectionAgg.Collection>> GetAllAsync()
+        {
+            var result = await Context.Collections
+                .AsTracking()
+                .ToListAsync();
+
+            return result;
         }
     }
 }

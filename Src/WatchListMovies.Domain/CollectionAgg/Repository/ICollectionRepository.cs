@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WatchListMovies.Common.Domain.Repository;
+using WatchListMovies.Domain.CompanyAgg;
 using WatchListMovies.Domain.MovieAgg;
 
 namespace WatchListMovies.Domain.CollectionAgg.Repository
@@ -11,5 +12,6 @@ namespace WatchListMovies.Domain.CollectionAgg.Repository
     public interface ICollectionRepository : IBaseRepository<Collection>
     {
         Task AddIfNotExistAsync(Collection collection);
+        Task<List<Collection>> GetAllAsync();
     }
 }

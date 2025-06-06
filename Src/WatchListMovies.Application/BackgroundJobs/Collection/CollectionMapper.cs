@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WatchListMovies.Application.IExternalApiServices.Collection.ApiModelDTOs;
 using WatchListMovies.Application.IExternalApiServices.Movie.ApiModelDTOs;
 
 namespace WatchListMovies.Application.BackgroundJobs.Collection
@@ -20,6 +21,20 @@ namespace WatchListMovies.Application.BackgroundJobs.Collection
             };
             return model;
         }
-        
+
+        public static Domain.CollectionAgg.CollectionDetail Map(this GetCollectionDetailsApiModelDto requestModel , Guid parrentId)
+        {
+            var model = new Domain.CollectionAgg.CollectionDetail()
+            {
+                BackdropPath = requestModel.BackdropPath,
+                Name = requestModel.Name,
+                PosterPath = requestModel.PosterPath,
+                ApiModelId = requestModel.Id,
+                Overview = requestModel.Overview,
+                ParrentId = parrentId,
+            };
+            return model;
+        }
+
     }
 }

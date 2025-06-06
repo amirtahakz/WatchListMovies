@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WatchListMovies.Application.IExternalApiServices._Shared;
 using WatchListMovies.Application.IExternalApiServices.Collection;
+using WatchListMovies.Application.IExternalApiServices.Company;
 using WatchListMovies.Application.IExternalApiServices.Movie;
 using WatchListMovies.Application.IExternalApiServices.Tv;
 using WatchListMovies.Domain.CollectionAgg.Repository;
@@ -62,7 +63,18 @@ namespace WatchListMovies.Application.BackgroundJobs.Collection
         {
             try
             {
+                var collections = await _collectionRepository.GetAllAsync();
 
+                if (collections.Any())
+                {
+                    foreach (var item in collections)
+                    {
+                        var collectionApi = await _collectionApiService.GetCollectionDetails((long)item.ApiModelId);
+                        item.CollectionDetail = collectionApi.Map(item.Id);
+                        await _collectionRepository.Save();
+
+                    }
+                }
 
             }
             catch (Exception e)

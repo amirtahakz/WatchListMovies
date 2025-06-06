@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WatchListMovies.Infrastructure.Persistent.Ef;
 
@@ -11,9 +12,11 @@ using WatchListMovies.Infrastructure.Persistent.Ef;
 namespace WatchListMovies.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250606065559_AddCreatedByIdsIntoTvDetail")]
+    partial class AddCreatedByIdsIntoTvDetail
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -431,37 +434,6 @@ namespace WatchListMovies.Infrastructure.Migrations
                     b.HasIndex("Title");
 
                     b.ToTable("Movies", "movie");
-                });
-
-            modelBuilder.Entity("WatchListMovies.Domain.NetworkAgg.Network", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<long?>("ApiModelId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTime>("CreationDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("LogoPath")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("OriginCountry")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ApiModelId")
-                        .IsUnique()
-                        .HasFilter("[ApiModelId] IS NOT NULL");
-
-                    b.HasIndex("Name");
-
-                    b.ToTable("Networks", "network");
                 });
 
             modelBuilder.Entity("WatchListMovies.Domain.TvAgg.Tv", b =>
@@ -978,52 +950,6 @@ namespace WatchListMovies.Infrastructure.Migrations
                     b.Navigation("MovieDetails");
                 });
 
-            modelBuilder.Entity("WatchListMovies.Domain.NetworkAgg.Network", b =>
-                {
-                    b.OwnsOne("WatchListMovies.Domain.NetworkAgg.NetworkDetail", "NetworkDetail", b1 =>
-                        {
-                            b1.Property<Guid>("Id")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<long?>("ApiModelId")
-                                .HasColumnType("bigint");
-
-                            b1.Property<DateTime>("CreationDate")
-                                .HasColumnType("datetime2");
-
-                            b1.Property<string>("Headquarters")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("Homepage")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("LogoPath")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("Name")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("OriginCountry")
-                                .HasColumnType("nvarchar(max)");
-
-                            b1.Property<Guid?>("ParrentId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.HasKey("Id");
-
-                            b1.HasIndex("ApiModelId")
-                                .IsUnique()
-                                .HasFilter("[ApiModelId] IS NOT NULL");
-
-                            b1.ToTable("NetworkDetails", "network");
-
-                            b1.WithOwner()
-                                .HasForeignKey("Id");
-                        });
-
-                    b.Navigation("NetworkDetail");
-                });
-
             modelBuilder.Entity("WatchListMovies.Domain.TvAgg.Tv", b =>
                 {
                     b.OwnsOne("WatchListMovies.Domain.TvAgg.TvDetail", "TvDetail", b1 =>
@@ -1077,10 +1003,6 @@ namespace WatchListMovies.Infrastructure.Migrations
 
                             b1.Property<string>("Name")
                                 .HasColumnType("nvarchar(max)");
-
-                            b1.Property<string>("NetworkIds")
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("NetworkIds");
 
                             b1.Property<long?>("NumberOfEpisodes")
                                 .HasColumnType("bigint");
@@ -1190,6 +1112,36 @@ namespace WatchListMovies.Infrastructure.Migrations
                                         .HasForeignKey("ParrentId");
                                 });
 
+                            b1.OwnsMany("WatchListMovies.Domain.TvAgg.ValueObjects.NetworkValueObject", "Networks", b2 =>
+                                {
+                                    b2.Property<DateTime>("CreationDate")
+                                        .HasColumnType("datetime2");
+
+                                    b2.Property<Guid?>("ParrentId")
+                                        .HasColumnType("uniqueidentifier");
+
+                                    b2.Property<string>("Name")
+                                        .HasColumnType("nvarchar(450)");
+
+                                    b2.Property<long?>("ApiModelId")
+                                        .HasColumnType("bigint");
+
+                                    b2.Property<string>("LogoPath")
+                                        .HasColumnType("nvarchar(max)");
+
+                                    b2.Property<string>("OriginCountry")
+                                        .HasColumnType("nvarchar(max)");
+
+                                    b2.HasKey("CreationDate", "ParrentId", "Name");
+
+                                    b2.HasIndex("ParrentId");
+
+                                    b2.ToTable("Networks", "tv");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("ParrentId");
+                                });
+
                             b1.OwnsMany("WatchListMovies.Domain.TvAgg.ValueObjects.SeasonValueObject", "Seasons", b2 =>
                                 {
                                     b2.Property<DateTime>("CreationDate")
@@ -1233,6 +1185,8 @@ namespace WatchListMovies.Infrastructure.Migrations
                                 });
 
                             b1.Navigation("EpisodeToAirs");
+
+                            b1.Navigation("Networks");
 
                             b1.Navigation("Seasons");
                         });

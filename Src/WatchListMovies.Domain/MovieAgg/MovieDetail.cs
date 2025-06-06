@@ -1,6 +1,5 @@
 ﻿using WatchListMovies.Common.Domain;
 
-using WatchListMovies.Domain.MovieAgg.ValueObjects;
 
 namespace WatchListMovies.Domain.MovieAgg
 {

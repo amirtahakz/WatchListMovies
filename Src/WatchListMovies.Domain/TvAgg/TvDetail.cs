@@ -36,13 +36,13 @@ namespace WatchListMovies.Domain.TvAgg
             long? voteCount,
             IEnumerable<string>? genreIds,
             List<SeasonValueObject>? seasons,
-            List<NetworkValueObject>? networks,
-            List<CreatedByValueObject>? createdBys,
             List<EpisodeValueObject>? episodeToAirs,
             IEnumerable<string>? tvEpisodeRunTimes,
             IReadOnlyCollection<string>? companyIds,
             IReadOnlyCollection<string>? countryIds,
-            IReadOnlyCollection<string>? languageIds)
+            IReadOnlyCollection<string>? languageIds,
+            IReadOnlyCollection<string>? createdByApiIds,
+            IReadOnlyCollection<string>? networkds)
         {
             TvId = tvId;
             ApiModelId = apiModelId;
@@ -67,13 +67,13 @@ namespace WatchListMovies.Domain.TvAgg
             VoteCount = voteCount;
             GenreIds = genreIds.ToList();
             Seasons = seasons;
-            Networks = networks;
-            CreatedBys = createdBys;
             EpisodeToAirs = episodeToAirs;
             TvEpisodeRunTimes = tvEpisodeRunTimes.ToList();
             CompanyIds = companyIds;
             CountryIds = countryIds;
             LanguageIds = languageIds;
+            CreatedByIds = createdByApiIds;
+            NetworkIds = networkds;
         }
         public Guid TvId { get; set; }
         public long? ApiModelId { get; set; }
@@ -96,14 +96,14 @@ namespace WatchListMovies.Domain.TvAgg
         public string? Type { get; set; }
         public double? VoteAverage { get; set; } // امتیاز سایت TMDB
         public long? VoteCount { get; set; }
-        public IReadOnlyCollection<string>? GenreIds { get; set; }
         public List<SeasonValueObject>? Seasons { get; set; }
-        public List<NetworkValueObject>? Networks { get; set; }
-        public List<CreatedByValueObject>? CreatedBys { get; set; }
+        public List<EpisodeValueObject>? EpisodeToAirs { get; set; }
+        public IReadOnlyCollection<string>? NetworkIds { get; set; }
+        public IReadOnlyCollection<string>? GenreIds { get; set; }
+        public IReadOnlyCollection<string>? CreatedByIds { get; set; }
         public IReadOnlyCollection<string>? CompanyIds { get; set; }
         public IReadOnlyCollection<string>? CountryIds { get; set; }
         public IReadOnlyCollection<string>? LanguageIds { get; set; }
-        public List<EpisodeValueObject>? EpisodeToAirs { get; set; }
         public IReadOnlyCollection<string>? TvEpisodeRunTimes { get; set; }
 
     }

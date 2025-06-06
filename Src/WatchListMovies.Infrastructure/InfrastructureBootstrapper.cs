@@ -9,6 +9,7 @@ using WatchListMovies.Application.IExternalApiServices.Company;
 using WatchListMovies.Application.IExternalApiServices.Configuration;
 using WatchListMovies.Application.IExternalApiServices.Genre;
 using WatchListMovies.Application.IExternalApiServices.Movie;
+using WatchListMovies.Application.IExternalApiServices.Network;
 using WatchListMovies.Application.IExternalApiServices.Tv;
 using WatchListMovies.Domain.CastAgg.Repository;
 using WatchListMovies.Domain.CollectionAgg.Repository;
@@ -21,6 +22,7 @@ using WatchListMovies.Domain.GenreAgg.Repository;
 using WatchListMovies.Domain.LanguageAgg.Repository;
 using WatchListMovies.Domain.ListAgg.Repository;
 using WatchListMovies.Domain.MovieAgg.Repository;
+using WatchListMovies.Domain.NetworkAgg.Repository;
 using WatchListMovies.Domain.TvAgg.Repository;
 using WatchListMovies.Domain.UserAgg.Repository;
 using WatchListMovies.Infrastructure.ExternalApiServices.Cast;
@@ -29,6 +31,7 @@ using WatchListMovies.Infrastructure.ExternalApiServices.Company;
 using WatchListMovies.Infrastructure.ExternalApiServices.Configuration;
 using WatchListMovies.Infrastructure.ExternalApiServices.Genre;
 using WatchListMovies.Infrastructure.ExternalApiServices.Movie;
+using WatchListMovies.Infrastructure.ExternalApiServices.Network;
 using WatchListMovies.Infrastructure.ExternalApiServices.Tv;
 using WatchListMovies.Infrastructure.Persistent.Ef;
 using WatchListMovies.Infrastructure.Persistent.Ef.CastAgg;
@@ -42,6 +45,7 @@ using WatchListMovies.Infrastructure.Persistent.Ef.Genre;
 using WatchListMovies.Infrastructure.Persistent.Ef.LanguageAgg;
 using WatchListMovies.Infrastructure.Persistent.Ef.ListAgg;
 using WatchListMovies.Infrastructure.Persistent.Ef.MovieAgg;
+using WatchListMovies.Infrastructure.Persistent.Ef.Network;
 using WatchListMovies.Infrastructure.Persistent.Ef.TvAgg;
 using WatchListMovies.Infrastructure.Persistent.Ef.UserAgg;
 
@@ -69,6 +73,7 @@ namespace WatchListMovies.Infrastructure
             services.AddTransient<ILanguageRepository, LanguageRepository>();
             services.AddTransient<ICompanyRepository, CompanyRepository>();
             services.AddTransient<ICollectionRepository, CollectionRepository>();
+            services.AddTransient<INetworkRepository, NetworkRepository>();
 
             services.AddDbContext<ApplicationDbContext>(option =>
             {
@@ -107,6 +112,12 @@ namespace WatchListMovies.Infrastructure
 
 
             services.AddHttpClient<ICollectionApiService, CollectionApiService>(client =>
+            {
+                client.BaseAddress = new Uri(configuration["TMDBConfig:BaseAddress"] ?? "");
+            });
+
+
+            services.AddHttpClient<INetworkApiService, NetworkApiService>(client =>
             {
                 client.BaseAddress = new Uri(configuration["TMDBConfig:BaseAddress"] ?? "");
             });

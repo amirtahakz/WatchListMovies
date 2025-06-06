@@ -88,10 +88,10 @@ namespace WatchListMovies.Application.BackgroundJobs.Tv
                 result.Seasons = tvDetails.Seasons.Map(result.Id);
 
             if (tvDetails.Networks != null)
-                result.Networks = tvDetails.Networks.Map(result.Id);
+                result.NetworkIds = tvDetails.Networks.Where(g => g.Id.HasValue).Select(g => g.Id.Value.ToString()).ToList().AsReadOnly();
 
             if (tvDetails.CreatedBy != null)
-                result.CreatedBys = tvDetails.CreatedBy.Map(result.Id);
+                result.CreatedByIds = tvDetails.CreatedBy.Where(g => g.Id.HasValue).Select(g => g.Id.Value.ToString()).ToList().AsReadOnly();
 
             if (tvDetails.LastEpisodeToAir != null)
                 result.EpisodeToAirs = new List<EpisodeValueObject>() { tvDetails.LastEpisodeToAir.Map(result.Id, EpisodeAirType.LastEpisodeToAir) };
@@ -131,55 +131,6 @@ namespace WatchListMovies.Application.BackgroundJobs.Tv
 
             return result;
         }
-
-        public static NetworkValueObject Map(this NetworkApiModelDto networkApi, Guid tvDetailId)
-        {
-            var result = new NetworkValueObject()
-            {
-                ApiModelId = networkApi.Id,
-                Name = networkApi.Name,
-                ParrentId = tvDetailId,
-                LogoPath = networkApi.LogoPath,
-                OriginCountry = networkApi.OriginCountry,
-            };
-            return result;
-        }
-
-        public static List<NetworkValueObject> Map(this List<NetworkApiModelDto> networkApis, Guid tvDetailId)
-        {
-            var result = new List<NetworkValueObject>();
-
-            foreach (var networkApi in networkApis)
-                result.Add(networkApi.Map(tvDetailId));
-
-            return result;
-        }
-
-        public static CreatedByValueObject Map(this CreatedByApiModelDto createdBy, Guid tvDetailId)
-        {
-            var result = new CreatedByValueObject()
-            {
-                ApiModelId = createdBy.Id,
-                Name = createdBy.Name,
-                ParrentId = tvDetailId,
-                Gender = createdBy.Gender,
-                OriginalName = createdBy.OriginalName,
-                ProfilePath = createdBy.ProfilePath
-            };
-            return result;
-        }
-
-        public static List<CreatedByValueObject> Map(this List<CreatedByApiModelDto> createdBys, Guid tvDetailId)
-        {
-            var result = new List<CreatedByValueObject>();
-
-            foreach (var createdBy in createdBys)
-                result.Add(createdBy.Map(tvDetailId));
-
-            return result;
-        }
-
-
 
 
         public static EpisodeValueObject Map(this EpisodeApiModelDto episode, Guid tvDetailId, EpisodeAirType episodeAirType)

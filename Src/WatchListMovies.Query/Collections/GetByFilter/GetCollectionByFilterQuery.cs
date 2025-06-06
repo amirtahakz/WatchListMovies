@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WatchListMovies.Common.Query;
-using WatchListMovies.Query.Collection.DTOs;
+using WatchListMovies.Query.Collections.DTOs;
 using WatchListMovies.Query.Companies.DTOs;
 using WatchListMovies.Query.Companies.GerByFilter;
 
-namespace WatchListMovies.Query.Collection.GetByFilter
+namespace WatchListMovies.Query.Collections.GetByFilter
 {
     public class GetCollectionByFilterQuery : QueryFilter<CollectionFilterResult, CollectionFilterParams>
     {

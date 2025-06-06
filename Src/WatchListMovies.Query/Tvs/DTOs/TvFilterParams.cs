@@ -25,10 +25,6 @@ namespace WatchListMovies.Query.Tvs.DTOs
         public List<long>? GenreIds { get; set; }
         public List<string>? GenreNames { get; set; }
 
-        // TvDetails.CreatedBys
-        public string? CreatedByName { get; set; }
-        public string? CreatedByOriginalName { get; set; }
-        public int? CreatedByGender { get; set; }
 
     }
 }

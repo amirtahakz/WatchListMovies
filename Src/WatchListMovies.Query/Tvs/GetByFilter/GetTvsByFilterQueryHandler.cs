@@ -60,15 +60,6 @@ namespace WatchListMovies.Query.Tvs.GetByFilter
             if (!string.IsNullOrWhiteSpace(@params.Name))
                 result = result.Where(r => r.Name.Contains(@params.Name));
 
-            if (!string.IsNullOrWhiteSpace(@params.CreatedByName))
-                result = result.Where(r => r.TvDetail.CreatedBys.Any(cr => @params.CreatedByName.Contains(cr.Name)));
-
-            if (!string.IsNullOrWhiteSpace(@params.CreatedByOriginalName))
-                result = result.Where(r => r.TvDetail.CreatedBys.Any(cr => @params.OriginalName.Contains(cr.OriginalName)));
-
-            if (@params.CreatedByGender != null)
-                result = result.Where(r => r.TvDetail.CreatedBys.Any(cr => @params.CreatedByGender.Value == cr.Gender));
-
 
             switch (@params.TvOrderByEnum)
             {

@@ -1,8 +1,9 @@
 ﻿using WatchListMovies.Common.Query;
 using WatchListMovies.Infrastructure.Persistent.Ef;
-using WatchListMovies.Query.Collection.DTOs;
+using WatchListMovies.Query.Collections;
+using WatchListMovies.Query.Collections.DTOs;
 
-namespace WatchListMovies.Query.Collection.GetByFilter
+namespace WatchListMovies.Query.Collections.GetByFilter
 {
     public class GetCollectionByFilterQueryHandler : IQueryHandler<GetCollectionByFilterQuery, CollectionFilterResult>
     {

@@ -57,36 +57,19 @@ public class TvConfiguration : IEntityTypeConfiguration<Tv>
                    v => v.Split(',', StringSplitOptions.RemoveEmptyEntries))
                .HasColumnName("CountryIds");
 
+            td.Property(m => m.CreatedByIds)
+                   .HasConversion(
+                       v => string.Join(",", v),
+                       v => v.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                   .HasColumnName("CreatedByIds");
 
-            //NetworksVo Tbl Config
-            td.OwnsMany(t => t.Networks, n =>
-            {
-                n.WithOwner().HasForeignKey("ParrentId");
-                n.ToTable("Networks", "tv");
-                n.HasKey("CreationDate" , "ParrentId" , "Name");
-                n.Property(x => x.ApiModelId);
-                n.Property(x => x.ParrentId);
-                n.Property(x => x.CreationDate);
-                n.Property(x => x.Name);
-                n.Property(x => x.OriginCountry);
-                n.Property(x => x.LogoPath);
-            });
+            td.Property(m => m.NetworkIds)
+                   .HasConversion(
+                       v => string.Join(",", v),
+                       v => v.Split(',', StringSplitOptions.RemoveEmptyEntries))
+                   .HasColumnName("NetworkIds");
 
 
-            //CreatedBysVo Tbl Config
-            td.OwnsMany(t => t.CreatedBys, cb =>
-            {
-                cb.ToTable("CreatedBys", "tv");
-                cb.WithOwner().HasForeignKey("ParrentId");
-                cb.HasKey("CreationDate", "ParrentId", "Name");
-                cb.Property(x => x.ParrentId);
-                cb.Property(x => x.CreationDate);
-                cb.Property(x => x.Name);
-                cb.Property(x => x.Gender);
-                cb.Property(x => x.ApiModelId);
-                cb.Property(x => x.OriginalName);
-                cb.Property(x => x.ProfilePath);
-            });
 
             //EpisodeToAirsVo Tbl Config
             td.OwnsMany(t => t.EpisodeToAirs, le =>

@@ -33,6 +33,7 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef
         public DbSet<Language> Languages { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<Domain.CollectionAgg.Collection> Collections { get; set; }
+        public DbSet<Domain.NetworkAgg.Network> Networks { get; set; }
 
 
         public DbSet<Movie> Movies { get; set; }

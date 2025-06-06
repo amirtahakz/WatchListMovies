@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WatchListMovies.Domain.CompanyAgg;
-using WatchListMovies.Query.Collection.DTOs;
+using WatchListMovies.Query.Collections.DTOs;
 using WatchListMovies.Query.Companies.DTOs;
 
-namespace WatchListMovies.Query.Collection
+namespace WatchListMovies.Query.Collections
 {
     public static class CollectionMapper
     {
@@ -21,6 +21,7 @@ namespace WatchListMovies.Query.Collection
                 Id = collection.Id,
                 Name = collection.Name,
                 PosterPath = collection.PosterPath,
+                CollectionDetail = collection.CollectionDetail,
             };
         }
 
