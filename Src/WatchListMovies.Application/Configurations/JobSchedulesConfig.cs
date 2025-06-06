@@ -9,7 +9,6 @@ namespace WatchListMovies.Application.Configurations
     public class JobSchedulesConfig
     {
         public string SyncPopularMovies { get; set; }
-        public string SyncMovieKeyYoutubeTrailers { get; set; }
         public string SyncPopularTvs { get; set; }
         public string SyncPopularCasts { get; set; }
         public string SyncMovieDetails { get; set; }
@@ -29,5 +28,8 @@ namespace WatchListMovies.Application.Configurations
         public string SyncNetworkDetails { get; set; }
         public string SyncSeasons { get; set; }
         public string SyncEpisodes { get; set; }
+        public string SyncMovieVideos { get; set; }
+        public string SyncTvVideos { get; set; }
+
     }
 }

@@ -52,16 +52,6 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef.MovieAgg
                        v => v.Split(',', StringSplitOptions.RemoveEmptyEntries))
                    .HasColumnName("CountryIds");
 
-
-                //MovieKeyYoutubeTrailers Tbl Config
-                md.OwnsMany(m => m.MovieKeyYoutubeTrailers, btc =>
-                {
-                    btc.ToTable("MovieKeyYoutubeTrailers", "movie");
-                    btc.HasKey(b => b.Id);
-                    btc.HasIndex(b => b.ApiModelId).IsUnique();
-
-                });
-
             });
         }
     }

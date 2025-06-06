@@ -41,17 +41,6 @@ namespace WatchListMovies.Infrastructure.ExternalApiServices.Movie
             return deserializedData;
         }
 
-        public async Task<MovieKeyYoutubeTrailersApiModelDto> GetMovieYoutubeTrailerKeys(long? movieApiId)
-        {
-            var response = await _httpClient.GetAsync($"movie/{movieApiId}/videos?api_key={_tMDBConfig.ApiKey}&language={_tMDBConfig.language}");
-            response.EnsureSuccessStatusCode();
-
-            var data = await response.Content.ReadAsStringAsync();
-            var deserializedData = JsonConvert.DeserializeObject<MovieKeyYoutubeTrailersApiModelDto>(data);
-
-            return deserializedData;
-        }
-
         public async Task<ImagesApiModelDto> GetMovieImages(long? movieApiId)
         {
             var response = await _httpClient.GetAsync($"movie/{movieApiId}/images?api_key={_tMDBConfig.ApiKey}&language={_tMDBConfig.language}");

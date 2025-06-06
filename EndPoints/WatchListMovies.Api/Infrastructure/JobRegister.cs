@@ -12,6 +12,7 @@ using WatchListMovies.Application.BackgroundJobs.Movie;
 using WatchListMovies.Application.BackgroundJobs.Network;
 using WatchListMovies.Application.BackgroundJobs.Season;
 using WatchListMovies.Application.BackgroundJobs.Tv;
+using WatchListMovies.Application.BackgroundJobs.Video;
 using WatchListMovies.Application.Configurations;
 using WatchListMovies.Common.AspNetCore.Middlewares;
 using WatchListMovies.Domain.CompanyAgg;
@@ -39,11 +40,6 @@ namespace WatchListMovies.Api.Infrastructure
                 recurringJobId: "SyncMovieDetails",
                 methodCall: svc => svc.SyncMovieDetails(),
                 cronExpression: jobSchedules.SyncMovieDetails);
-
-            RecurringJob.AddOrUpdate<MovieJobs>(
-                recurringJobId: "SyncMovieKeyYoutubeTrailers",
-                methodCall: svc => svc.SyncMovieKeyYoutubeTrailers(),
-                cronExpression: jobSchedules.SyncMovieKeyYoutubeTrailers);
 
             RecurringJob.AddOrUpdate<TvJobs>(
                 recurringJobId: "SyncPopularTvs",
@@ -140,6 +136,16 @@ namespace WatchListMovies.Api.Infrastructure
                 recurringJobId: "SyncEpisodes",
                 methodCall: svc => svc.SyncEpisodes(),
                 cronExpression: jobSchedules.SyncEpisodes);
+
+            RecurringJob.AddOrUpdate<VideoJobs>(
+                recurringJobId: "SyncMovieVideos",
+                methodCall: svc => svc.SyncMovieVideos(),
+                cronExpression: jobSchedules.SyncEpisodes);
+
+            RecurringJob.AddOrUpdate<VideoJobs>(
+                recurringJobId: "SyncTvVideos",
+                methodCall: svc => svc.SyncTvVideos(),
+                cronExpression: jobSchedules.SyncTvVideos);
 
 
             return builder;

@@ -4,19 +4,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WatchListMovies.Application.IExternalApiServices.Movie.ApiModelDTOs;
 
-namespace WatchListMovies.Application.IExternalApiServices.Movie.ApiModelDTOs
+namespace WatchListMovies.Application.IExternalApiServices.Video.ApiModelDTOs
 {
-    public class MovieKeyYoutubeTrailersApiModelDto
+    public class GetVideosApiModelDto
     {
         [JsonProperty("id")]
         public long? Id { get; set; }
 
         [JsonProperty("results")]
-        public List<MovieKeyYoutubeTrailersItem>? Results { get; set; }
+        public List<GetVideosItemApiModelDto>? Videos { get; set; }
     }
 
-    public class MovieKeyYoutubeTrailersItem
+    public class GetVideosItemApiModelDto
     {
         [JsonProperty("iso_639_1")]
         public string? Iso6391 { get; set; }

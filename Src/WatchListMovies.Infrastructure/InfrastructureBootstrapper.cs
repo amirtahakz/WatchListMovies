@@ -12,6 +12,7 @@ using WatchListMovies.Application.IExternalApiServices.Movie;
 using WatchListMovies.Application.IExternalApiServices.Network;
 using WatchListMovies.Application.IExternalApiServices.Season;
 using WatchListMovies.Application.IExternalApiServices.Tv;
+using WatchListMovies.Application.IExternalApiServices.Video;
 using WatchListMovies.Domain.CastAgg.Repository;
 using WatchListMovies.Domain.CollectionAgg.Repository;
 using WatchListMovies.Domain.CompanyAgg.Repository;
@@ -28,6 +29,7 @@ using WatchListMovies.Domain.NetworkAgg.Repository;
 using WatchListMovies.Domain.SeasonAgg.Repository;
 using WatchListMovies.Domain.TvAgg.Repository;
 using WatchListMovies.Domain.UserAgg.Repository;
+using WatchListMovies.Domain.VideoAgg.Repository;
 using WatchListMovies.Infrastructure.ExternalApiServices.Cast;
 using WatchListMovies.Infrastructure.ExternalApiServices.Collection;
 using WatchListMovies.Infrastructure.ExternalApiServices.Company;
@@ -37,6 +39,7 @@ using WatchListMovies.Infrastructure.ExternalApiServices.Movie;
 using WatchListMovies.Infrastructure.ExternalApiServices.Network;
 using WatchListMovies.Infrastructure.ExternalApiServices.Season;
 using WatchListMovies.Infrastructure.ExternalApiServices.Tv;
+using WatchListMovies.Infrastructure.ExternalApiServices.Video;
 using WatchListMovies.Infrastructure.Persistent.Ef;
 using WatchListMovies.Infrastructure.Persistent.Ef.CastAgg;
 using WatchListMovies.Infrastructure.Persistent.Ef.CollectionAgg;
@@ -54,6 +57,7 @@ using WatchListMovies.Infrastructure.Persistent.Ef.NetworkAgg;
 using WatchListMovies.Infrastructure.Persistent.Ef.SeasonAgg;
 using WatchListMovies.Infrastructure.Persistent.Ef.TvAgg;
 using WatchListMovies.Infrastructure.Persistent.Ef.UserAgg;
+using WatchListMovies.Infrastructure.Persistent.Ef.VideoAgg;
 
 namespace WatchListMovies.Infrastructure
 {
@@ -82,6 +86,7 @@ namespace WatchListMovies.Infrastructure
             services.AddTransient<INetworkRepository, NetworkRepository>();
             services.AddTransient<ISeasonRepository, SeasonRepository>();
             services.AddTransient<IEpisodeRepository, EpisodeRepository>();
+            services.AddTransient<IVideoRepository, VideoRepository>();
 
             services.AddDbContext<ApplicationDbContext>(option =>
             {
@@ -129,6 +134,11 @@ namespace WatchListMovies.Infrastructure
             });
 
             services.AddHttpClient<ISeasonApiService, SeasonApiService>(client =>
+            {
+                client.BaseAddress = new Uri(configuration["TMDBConfig:BaseAddress"] ?? "");
+            });
+
+            services.AddHttpClient<IVideoApiService, VideoApiService>(client =>
             {
                 client.BaseAddress = new Uri(configuration["TMDBConfig:BaseAddress"] ?? "");
             });

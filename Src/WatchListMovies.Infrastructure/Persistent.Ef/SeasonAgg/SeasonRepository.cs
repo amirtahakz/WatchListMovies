@@ -45,8 +45,6 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef.SeasonAgg
 
                 if (!isExist)
                     await Context.Seasons.AddAsync(item);
-
-
             }
         }
     }

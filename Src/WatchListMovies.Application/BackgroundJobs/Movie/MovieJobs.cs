@@ -1,10 +1,5 @@
-﻿using AutoMapper;
-using WatchListMovies.Application.IExternalApiServices._Shared;
-using WatchListMovies.Application.IExternalApiServices.Movie;
+﻿using WatchListMovies.Application.IExternalApiServices.Movie;
 using WatchListMovies.Domain.CompanyAgg.Repository;
-using WatchListMovies.Domain.ContentCastAgg;
-using WatchListMovies.Domain.ContentCastAgg.Enums;
-using WatchListMovies.Domain.ContentCastAgg.Repository;
 using WatchListMovies.Domain.MovieAgg.Repository;
 
 namespace WatchListMovies.Application.BackgroundJobs.Movie
@@ -70,32 +65,6 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
                         var apiMovieDetails = await _movieApiService.GetMovieDetails(movie.ApiModelId ?? default);
                         movie.MovieDetails = apiMovieDetails.Map(movie.Id);
                         //await _companyRepository.AddRangeIfNotExistAsync(apiMovieDetails.ProductionCompanies.Map());
-                        await _movieRepository.Save();
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
-        }
-
-        public async Task SyncMovieKeyYoutubeTrailers()
-        {
-
-            try
-            {
-                var movies = await _movieRepository.GetAllAsync();
-                if (movies.Any())
-                {
-                    foreach (var movie in movies)
-                    {
-                        var apiMovieYoutubeTrailers = await _movieApiService.GetMovieYoutubeTrailerKeys(movie.ApiModelId ?? default);
-
-                        foreach (var item in apiMovieYoutubeTrailers.Results)
-                            movie.MovieDetails.MovieKeyYoutubeTrailers = item.Map(movie.MovieDetails.Id);
-
                         await _movieRepository.Save();
                     }
                 }

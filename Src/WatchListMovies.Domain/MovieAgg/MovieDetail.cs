@@ -32,7 +32,6 @@ namespace WatchListMovies.Domain.MovieAgg
             bool? video,
             double? voteAverage,
             long? voteCount,
-            List<MovieKeyYoutubeTrailer>? movieKeyYoutubeTrailers,
             IEnumerable<string>? genreIds,
             IReadOnlyCollection<string>? companyIds,
             IReadOnlyCollection<string>? countryIds,
@@ -60,7 +59,6 @@ namespace WatchListMovies.Domain.MovieAgg
             Video = video;
             VoteAverage = voteAverage;
             VoteCount = voteCount;
-            MovieKeyYoutubeTrailers = movieKeyYoutubeTrailers;
             GenreIds = genreIds.ToList();
             CompanyIds = companyIds;
             CountryIds = countryIds;
@@ -90,7 +88,6 @@ namespace WatchListMovies.Domain.MovieAgg
         public double? VoteAverage { get; set; }
         public long? VoteCount { get; set; }
         public long? CollectionApiId { get; set; }
-        public List<MovieKeyYoutubeTrailer>? MovieKeyYoutubeTrailers { get; set; }
         public IReadOnlyCollection<string>? GenreIds { get; set; }
         public IReadOnlyCollection<string>? CompanyIds { get; set; }
         public IReadOnlyCollection<string>? CountryIds { get; set; }

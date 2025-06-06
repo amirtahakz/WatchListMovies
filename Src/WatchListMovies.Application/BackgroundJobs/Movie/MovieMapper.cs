@@ -84,27 +84,5 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
             return result;
         }
 
-        public static List<MovieKeyYoutubeTrailer> Map(this MovieKeyYoutubeTrailersItem movieKeyYoutubeTrailers, Guid movieDetailId)
-        {
-            var result = new List<MovieKeyYoutubeTrailer>();
-            var model = new MovieKeyYoutubeTrailer()
-            {
-                Name = movieKeyYoutubeTrailers.Name,
-                ApiModelId = movieKeyYoutubeTrailers.Id,
-                Iso31661 = movieKeyYoutubeTrailers.Iso31661,
-                Iso6391 = movieKeyYoutubeTrailers.Iso6391,
-                Key = movieKeyYoutubeTrailers.Key,
-                ParrentId = movieDetailId,
-                Official = movieKeyYoutubeTrailers.Official,
-                PublishedAt = movieKeyYoutubeTrailers.PublishedAt,
-                Site = movieKeyYoutubeTrailers.Site,
-                Size = movieKeyYoutubeTrailers.Size,
-                Type = movieKeyYoutubeTrailers.Type,
-            };
-            result.Add(model);
-
-            return result;
-        }
-
     }
 }
