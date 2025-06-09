@@ -1,6 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq.Expressions;
+using System.Reflection;
 using WatchListMovies.Common.Domain;
 using WatchListMovies.Common.Domain.Repository;
 using WatchListMovies.Domain.MovieAgg;
@@ -59,6 +62,56 @@ namespace WatchListMovies.Infrastructure._Utilities
         public TEntity? Get(Guid id)
         {
             return Context.Set<TEntity>().FirstOrDefault(t => t.Id.Equals(id)); ;
+        }
+
+        public async Task BulkInsertAsync(
+        IEnumerable<TEntity> data,
+        string tableName,
+        string connectionString,
+        Dictionary<string, string>? columnMappings = null)
+        {
+            var dataTable = ToDataTable(data);
+
+            using var connection = new SqlConnection(connectionString);
+            await connection.OpenAsync();
+
+            using var bulkCopy = new SqlBulkCopy(connection)
+            {
+                DestinationTableName = tableName
+            };
+
+            // Add column mappings (if provided)
+            foreach (DataColumn column in dataTable.Columns)
+            {
+                var sourceColumn = column.ColumnName;
+                var destinationColumn = columnMappings != null && columnMappings.ContainsKey(sourceColumn)
+                    ? columnMappings[sourceColumn]
+                    : sourceColumn;
+
+                bulkCopy.ColumnMappings.Add(sourceColumn, destinationColumn);
+            }
+
+            await bulkCopy.WriteToServerAsync(dataTable);
+        }
+
+        private DataTable ToDataTable(IEnumerable<TEntity> data)
+        {
+            var dataTable = new DataTable();
+            var properties = typeof(TEntity).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (var prop in properties)
+            {
+                var type = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
+                dataTable.Columns.Add(prop.Name, type);
+            }
+
+            foreach (var item in data)
+            {
+                var values = properties.Select(p => p.GetValue(item) ?? DBNull.Value).ToArray();
+                dataTable.Rows.Add(values);
+            }
+
+            return dataTable;
         }
 
     }

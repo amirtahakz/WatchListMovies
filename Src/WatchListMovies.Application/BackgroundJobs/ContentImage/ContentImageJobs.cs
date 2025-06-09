@@ -8,6 +8,7 @@ using WatchListMovies.Application.IExternalApiServices.Movie;
 using WatchListMovies.Application.IExternalApiServices.Tv;
 using WatchListMovies.Domain.CastAgg;
 using WatchListMovies.Domain.CastAgg.Repository;
+using WatchListMovies.Domain.ContentCastAgg.Enums;
 using WatchListMovies.Domain.ContentCastAgg.Repository;
 using WatchListMovies.Domain.ContentImageAgg;
 using WatchListMovies.Domain.ContentImageAgg.Enums;
@@ -45,47 +46,143 @@ namespace WatchListMovies.Application.BackgroundJobs.ContentImage
             _castApiService = castApiService;
         }
 
-        public async Task SyncContentImages()
+        public async Task SyncCastImages()
         {
 
             try
             {
-                var casts = await _castRepository.GetAllAsync();
-                if (casts.Any())
-                {
-                    foreach (var cast in casts)
-                    {
-                        var castImages = await _castApiService.GetCastImages(cast.ApiModelId);
-                        await _contentImageRepository.AddRangeIfNotExistAsync(castImages.Map(cast.ApiModelId, ContentImageTypeEnum.Cast));
-                        await _contentImageRepository.Save();
-                    }
-                }
+                const int batchSize = 100;
+                long totalCount = await _castRepository.GetCountAsync();
 
-                var tvs = await _tvRepository.GetAllAsync();
-                if (tvs.Any())
+                for (int skip = 0; skip < totalCount; skip += batchSize)
                 {
-                    foreach (var tv in tvs)
-                    {
-                        var tvImages = await _tvApiService.GetTvImages(tv.ApiModelId);
-                        await _contentImageRepository.AddRangeIfNotExistAsync(tvImages.Map(tv.ApiModelId, ContentImageTypeEnum.Tv));
-                        await _contentImageRepository.Save();
-                    }
-                }
+                    var casts = await _castRepository.GetBatchAsync(skip, batchSize);
 
-                var movies = await _movieRepository.GetAllAsync();
-                if (movies.Any())
-                {
-                    foreach (var movie in movies)
+                    var semaphore = new SemaphoreSlim(5);
+
+                    // موازی‌سازی دریافت اطلاعات از API با محدودیت همزمانی
+                    var castTask = casts.Select(async cast =>
                     {
-                        var movieImages = await _movieApiService.GetMovieImages(movie.ApiModelId);
-                        await _contentImageRepository.AddRangeIfNotExistAsync(movieImages.Map(movie.ApiModelId, ContentImageTypeEnum.Movie));
-                        await _contentImageRepository.Save();
-                    }
+                        await semaphore.WaitAsync();
+                        try
+                        {
+                            var castImages = await _castApiService.GetCastImages(cast.ApiModelId);
+                            return castImages.Map(cast.ApiModelId, ContentImageTypeEnum.Cast);
+                        }
+                        finally
+                        {
+                            semaphore.Release();
+                        }
+                    });
+
+                    var updatedCastImages = await Task.WhenAll(castTask);
+
+
+                    // ذخیره دسته‌ای
+                    await _contentImageRepository.BulkInsertIfNotExistAsync(
+                        updatedCastImages
+                        .SelectMany(m => m) // flatten
+                        .Select(cast => cast) // تبدیل به domain model یا entity
+                        .ToList());
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
+            }
+
+        }
+
+        public async Task SyncTvImages()
+        {
+
+            try
+            {
+                const int batchSize = 100;
+                long totalCount = await _tvRepository.GetCountAsync();
+
+                for (int skip = 0; skip < totalCount; skip += batchSize)
+                {
+                    var tvs = await _tvRepository.GetBatchAsync(skip, batchSize);
+
+                    var semaphore = new SemaphoreSlim(5);
+
+                    // موازی‌سازی دریافت اطلاعات از API با محدودیت همزمانی
+                    var castTask = tvs.Select(async tv =>
+                    {
+                        await semaphore.WaitAsync();
+                        try
+                        {
+                            var tvImages = await _tvApiService.GetTvImages(tv.ApiModelId);
+                            return tvImages.Map(tv.ApiModelId, ContentImageTypeEnum.Tv);
+                        }
+                        finally
+                        {
+                            semaphore.Release();
+                        }
+                    });
+
+                    var updatedTvImages = await Task.WhenAll(castTask);
+
+
+                    // ذخیره دسته‌ای
+                    await _contentImageRepository.BulkInsertIfNotExistAsync(
+                        updatedTvImages
+                        .SelectMany(m => m) // flatten
+                        .Select(cast => cast) // تبدیل به domain model یا entity
+                        .ToList());
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+
+        public async Task SyncMovieImages()
+        {
+
+            try
+            {
+                const int batchSize = 100;
+                long totalCount = await _movieRepository.GetCountAsync();
+
+                for (int skip = 0; skip < totalCount; skip += batchSize)
+                {
+                    var movies = await _movieRepository.GetBatchAsync(skip, batchSize);
+
+                    var semaphore = new SemaphoreSlim(5);
+
+                    // موازی‌سازی دریافت اطلاعات از API با محدودیت همزمانی
+                    var castTask = movies.Select(async movie =>
+                    {
+                        await semaphore.WaitAsync();
+                        try
+                        {
+                            var movieImages = await _movieApiService.GetMovieImages(movie.ApiModelId);
+                            return movieImages.Map(movie.ApiModelId, ContentImageTypeEnum.Tv);
+                        }
+                        finally
+                        {
+                            semaphore.Release();
+                        }
+                    });
+
+                    var updatedTvImages = await Task.WhenAll(castTask);
+
+
+                    // ذخیره دسته‌ای
+                    await _contentImageRepository.BulkInsertIfNotExistAsync(
+                        updatedTvImages
+                        .SelectMany(m => m) // flatten
+                        .Select(cast => cast) // تبدیل به domain model یا entity
+                        .ToList());
+                }
+            }
+            catch (Exception)
+            {
+                throw;
             }
 
         }

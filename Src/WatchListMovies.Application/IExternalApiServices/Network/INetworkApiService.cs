@@ -9,6 +9,6 @@ namespace WatchListMovies.Application.IExternalApiServices.Network
 {
     public interface INetworkApiService
     {
-        Task<GetNetworkDetailsApiModelDto> GetNetworkDetails(long networkApiId);
+        Task<GetNetworkDetailsApiModelDto> GetNetworkDetails(long? networkApiId);
     }
 }

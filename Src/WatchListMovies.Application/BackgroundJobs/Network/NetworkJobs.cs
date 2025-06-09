@@ -1,5 +1,9 @@
-﻿using WatchListMovies.Application.IExternalApiServices.Network;
+﻿using WatchListMovies.Application.IExternalApiServices.Movie;
+using WatchListMovies.Application.IExternalApiServices.Network;
 using WatchListMovies.Application.IExternalApiServices.Tv;
+using WatchListMovies.Domain.ContentImageAgg.Enums;
+using WatchListMovies.Domain.ContentImageAgg.Repository;
+using WatchListMovies.Domain.MovieAgg.Repository;
 using WatchListMovies.Domain.NetworkAgg.Repository;
 using WatchListMovies.Domain.TvAgg.Repository;
 
@@ -28,48 +32,87 @@ namespace WatchListMovies.Application.BackgroundJobs.Network
         {
             try
             {
-                var tvs = await _tvRepository.GetAllAsync();
-                if (tvs.Any())
+                const int batchSize = 100;
+                long totalCount = await _tvRepository.GetCountAsync();
+
+                for (int skip = 0; skip < totalCount; skip += batchSize)
                 {
-                    foreach (var item in tvs)
+                    var tvs = await _tvRepository.GetBatchAsync(skip, batchSize);
+
+                    var semaphore = new SemaphoreSlim(5);
+
+                    // موازی‌سازی دریافت اطلاعات از API با محدودیت همزمانی
+                    var castTask = tvs.Select(async tv =>
                     {
-                        var apiNetworkDetails = await _tvApiService.GetTvDetails(item.ApiModelId ?? default);
-                        await _networkRepository.AddRangeIfNotExistAsync(apiNetworkDetails.Networks.Map());
-                        await _networkRepository.Save();
-                    }
+                        await semaphore.WaitAsync();
+                        try
+                        {
+                            var apiTvDetails = await _tvApiService.GetTvDetails(tv.ApiModelId);
+                            return apiTvDetails.Networks.Map();
+                        }
+                        finally
+                        {
+                            semaphore.Release();
+                        }
+                    });
+
+                    var updatedTvNetworks = await Task.WhenAll(castTask);
+
+
+                    // ذخیره دسته‌ای
+                    await _networkRepository.BulkInsertIfNotExistAsync(
+                        updatedTvNetworks
+                        .SelectMany(m => m) // flatten
+                        .Select(cast => cast) // تبدیل به domain model یا entity
+                        .ToList());
                 }
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
-            }
-
+                throw;
+            }        
         }
 
         public async Task SyncNetworkDetails()
         {
             try
             {
-                var networks = await _networkRepository.GetAllAsync();
+                const int batchSize = 200;
+                long totalCount = await _networkRepository.GetCountAsync();
 
-                if (networks.Any())
+                for (int skip = 0; skip < totalCount; skip += batchSize)
                 {
-                    foreach (var item in networks)
-                    {
-                        var networkApi = await _networkApiService.GetNetworkDetails((long)item.ApiModelId);
-                        item.NetworkDetail = networkApi.Map(item.Id);
-                        await _networkRepository.Save();
+                    var networks = await _networkRepository.GetBatchAsync(skip, batchSize);
 
-                    }
+                    var semaphore = new SemaphoreSlim(5);
+
+                    // موازی‌سازی دریافت اطلاعات از API با محدودیت همزمانی
+                    var tasks = networks.Select(async network =>
+                    {
+                        await semaphore.WaitAsync();
+                        try
+                        {
+                            var networkApi = await _networkApiService.GetNetworkDetails(network.ApiModelId);
+                            network.NetworkDetail = networkApi.Map(network.Id);
+                            return network;
+                        }
+                        finally
+                        {
+                            semaphore.Release();
+                        }
+                    });
+
+                    var updatedNetworks = await Task.WhenAll(tasks);
+
+                    // ذخیره دسته‌ای
+                    await _networkRepository.BulkInsertOrUpdateAsync(updatedNetworks.ToList());
                 }
 
-
-
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
         }

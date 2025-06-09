@@ -26,5 +26,7 @@ namespace WatchListMovies.Common.Domain.Repository
 
         T? Get(Guid id);
 
+        Task BulkInsertAsync(IEnumerable<T> data, string tableName, string connectionString, Dictionary<string, string>? columnMappings = null);
+
     }
 }

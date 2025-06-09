@@ -11,5 +11,11 @@ namespace WatchListMovies.Domain.TvAgg.Repository
         Task AddRangeIfNotExistAsync(List<Tv> tvs);
         Task<Tv> GetTrackingByImdbIdAsync(long apiModelId);
 
+        Task BulkInsertIfNotExistAsync(List<Tv> movies);
+        Task BulkInsertOrUpdateAsync(List<Tv> movies);
+        Task<long> GetCountAsync();
+
+        Task<List<Tv>> GetBatchAsync(int skip, int take);
+
     }
 }

@@ -1,6 +1,8 @@
 ﻿using WatchListMovies.Application.IExternalApiServices.Movie;
+using WatchListMovies.Application.IExternalApiServices.Tv;
 using WatchListMovies.Application.IExternalApiServices.Video;
 using WatchListMovies.Domain.MovieAgg.Repository;
+using WatchListMovies.Domain.NetworkAgg.Repository;
 using WatchListMovies.Domain.TvAgg.Repository;
 using WatchListMovies.Domain.VideoAgg.Enums;
 using WatchListMovies.Domain.VideoAgg.Repository;
@@ -43,9 +45,9 @@ namespace WatchListMovies.Application.BackgroundJobs.Video
                 }
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
         }
@@ -54,21 +56,44 @@ namespace WatchListMovies.Application.BackgroundJobs.Video
         {
             try
             {
-                var tvs = await _tvRepository.GetAllAsync();
-                if (tvs.Any())
-                {
-                    foreach (var tv in tvs)
-                    {
-                        var apiMovieVideos = await _videoApiService.GetTvVideos(tv.ApiModelId);
+                const int batchSize = 100;
+                long totalCount = await _tvRepository.GetCountAsync();
 
-                        await _videoRepository.AddRangeIfNotExistAsync(apiMovieVideos.Videos.Map(tv.ApiModelId, VideoMediaType.Tv));
-                        await _videoRepository.Save();
-                    }
+                for (int skip = 0; skip < totalCount; skip += batchSize)
+                {
+                    var tvs = await _tvRepository.GetBatchAsync(skip, batchSize);
+
+                    var semaphore = new SemaphoreSlim(5);
+
+                    // موازی‌سازی دریافت اطلاعات از API با محدودیت همزمانی
+                    var castTask = tvs.Select(async tv =>
+                    {
+                        await semaphore.WaitAsync();
+                        try
+                        {
+                            var apiMovieVideos = await _videoApiService.GetTvVideos(tv.ApiModelId);
+                            return apiMovieVideos.Videos.Map(tv.ApiModelId, VideoMediaType.Tv);
+                        }
+                        finally
+                        {
+                            semaphore.Release();
+                        }
+                    });
+
+                    var updatedTvNetworks = await Task.WhenAll(castTask);
+
+
+                    // ذخیره دسته‌ای
+                    await _videoRepository.BulkInsertIfNotExistAsync(
+                        updatedTvNetworks
+                        .SelectMany(m => m) // flatten
+                        .Select(cast => cast) // تبدیل به domain model یا entity
+                        .ToList());
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
         }

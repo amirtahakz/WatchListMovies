@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WatchListMovies.Application.IExternalApiServices._Shared;
-using WatchListMovies.Application.IExternalApiServices.Collection;
-using WatchListMovies.Application.IExternalApiServices.Company;
+﻿using WatchListMovies.Application.IExternalApiServices.Collection;
 using WatchListMovies.Application.IExternalApiServices.Movie;
-using WatchListMovies.Application.IExternalApiServices.Tv;
 using WatchListMovies.Domain.CollectionAgg.Repository;
-using WatchListMovies.Domain.CompanyAgg.Repository;
 using WatchListMovies.Domain.MovieAgg.Repository;
-using WatchListMovies.Domain.TvAgg.Repository;
 
 namespace WatchListMovies.Application.BackgroundJobs.Collection
 {
@@ -38,23 +28,44 @@ namespace WatchListMovies.Application.BackgroundJobs.Collection
         {
             try
             {
-                var movies = await _movieRepository.GetAllAsync();
-                if (movies.Any())
+                const int batchSize = 200;
+                long totalCount = await _movieRepository.GetCountAsync();
+
+                for (int skip = 0; skip < totalCount; skip += batchSize)
                 {
-                    foreach (var movie in movies)
+                    var movies = await _movieRepository.GetBatchAsync(skip, batchSize);
+
+                    var semaphore = new SemaphoreSlim(5);
+
+                    // موازی‌سازی دریافت اطلاعات از API با محدودیت همزمانی
+                    var tasks = movies.Select(async movie =>
                     {
-                        var apiMovieDetails = await _movieApiService.GetMovieDetails(movie.ApiModelId ?? default);
-                        if (apiMovieDetails.BelongsToCollection != null) 
+                        await semaphore.WaitAsync();
+                        try
                         {
-                            await _collectionRepository.AddIfNotExistAsync(apiMovieDetails.BelongsToCollection.Map());
-                            await _collectionRepository.Save();
+                            var apiDetails = await _movieApiService.GetMovieDetails(movie.ApiModelId ?? default);
+                            return apiDetails;
                         }
-                    }
+                        finally
+                        {
+                            semaphore.Release();
+                        }
+                    });
+
+                    var updatedMovies = await Task.WhenAll(tasks);
+
+                    // ذخیره دسته‌ای
+                    await _collectionRepository.BulkInsertIfNotExistAsync(
+                        updatedMovies
+                        .Where(item=>item.BelongsToCollection != null)
+                        .Select(item=>item.BelongsToCollection.Map())
+                        .ToList());
                 }
+
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
         }
@@ -63,23 +74,41 @@ namespace WatchListMovies.Application.BackgroundJobs.Collection
         {
             try
             {
-                var collections = await _collectionRepository.GetAllAsync();
+                const int batchSize = 200;
+                long totalCount = await _collectionRepository.GetCountAsync();
 
-                if (collections.Any())
+                for (int skip = 0; skip < totalCount; skip += batchSize)
                 {
-                    foreach (var item in collections)
-                    {
-                        var collectionApi = await _collectionApiService.GetCollectionDetails((long)item.ApiModelId);
-                        item.CollectionDetail = collectionApi.Map(item.Id);
-                        await _collectionRepository.Save();
+                    var collections = await _collectionRepository.GetBatchAsync(skip, batchSize);
 
-                    }
+                    var semaphore = new SemaphoreSlim(5);
+
+                    // موازی‌سازی دریافت اطلاعات از API با محدودیت همزمانی
+                    var tasks = collections.Select(async collection =>
+                    {
+                        await semaphore.WaitAsync();
+                        try
+                        {
+                            var apiDetails = await _collectionApiService.GetCollectionDetails(collection.ApiModelId ?? default);
+                            collection.CollectionDetail = apiDetails.Map(collection.Id);
+                            return collection;
+                        }
+                        finally
+                        {
+                            semaphore.Release();
+                        }
+                    });
+
+                    var updatedCollections = await Task.WhenAll(tasks);
+
+                    // ذخیره دسته‌ای
+                    await _collectionRepository.BulkInsertOrUpdateAsync(updatedCollections.ToList());
                 }
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
         }

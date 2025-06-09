@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,52 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef.CollectionAgg
                 .ToListAsync();
 
             return result;
+        }
+
+        public async Task BulkInsertIfNotExistAsync(List<Domain.CollectionAgg.Collection> collections)
+        {
+            var uniqueCollections = collections.GroupBy(p => p.ApiModelId).Where(g => g.Count() == 1).Select(g => g.First()).ToList();
+
+            var apiModelIds = uniqueCollections.Select(d => d.ApiModelId).ToList();
+
+            // گرفتن ApiModelIdهایی که در دیتابیس موجود هستند
+            var existingApiIds = await Context.Collections
+                .Where(m => apiModelIds.Contains(m.ApiModelId))
+                .Select(m => m.ApiModelId)
+                .ToListAsync();
+
+            // فیلتر کردن فقط داده‌هایی که وجود ندارند
+            var newCollections = uniqueCollections.Where(dto => !existingApiIds.Contains(dto.ApiModelId)).ToList();
+
+            // درج جدیدها
+            if (newCollections.Any())
+                await Context.BulkInsertAsync(newCollections);
+
+        }
+
+        public async Task BulkInsertOrUpdateAsync(List<Domain.CollectionAgg.Collection> collections)
+        {
+            await Context.BulkInsertOrUpdateAsync(collections, new BulkConfig
+            {
+                IncludeGraph = true, // فقط اگر MovieDetails داخل خود Movie قرار دارن
+                PreserveInsertOrder = true,
+                SetOutputIdentity = true
+            });
+        }
+
+        public async Task<long> GetCountAsync()
+        {
+            return await Context.Collections.CountAsync();
+        }
+
+        public async Task<List<Domain.CollectionAgg.Collection>> GetBatchAsync(int skip, int take)
+        {
+            return await Context.Collections
+                        .AsNoTracking()
+                        .OrderBy(m => m.Id)
+                        .Skip(skip)
+                        .Take(take)
+                        .ToListAsync();
         }
     }
 }

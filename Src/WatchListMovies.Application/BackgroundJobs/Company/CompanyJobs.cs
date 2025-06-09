@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using WatchListMovies.Application.BackgroundJobs.Collection;
 using WatchListMovies.Application.BackgroundJobs.Tv;
 using WatchListMovies.Application.IExternalApiServices._Shared;
+using WatchListMovies.Application.IExternalApiServices.Collection;
 using WatchListMovies.Application.IExternalApiServices.Company;
-using WatchListMovies.Application.IExternalApiServices.Configuration;
-using WatchListMovies.Application.IExternalApiServices.Configuration.ApiModelDTOs;
 using WatchListMovies.Application.IExternalApiServices.Movie;
 using WatchListMovies.Application.IExternalApiServices.Tv;
+using WatchListMovies.Domain.CollectionAgg.Repository;
 using WatchListMovies.Domain.CompanyAgg.Repository;
-using WatchListMovies.Domain.CountryAgg;
-using WatchListMovies.Domain.LanguageAgg.Repository;
 using WatchListMovies.Domain.MovieAgg.Repository;
 using WatchListMovies.Domain.TvAgg.Repository;
 
@@ -44,38 +38,98 @@ namespace WatchListMovies.Application.BackgroundJobs.Company
             _tvApiService = tvApiService;
         }
 
-        public async Task SyncCompanies()
+        public async Task SyncMovieCompanies()
         {
             try
             {
-                //Movie Companies
-                var movies = await _movieRepository.GetAllAsync();
-                if (movies.Any())
-                {
-                    foreach (var movie in movies)
-                    {
-                        var apiMovieDetails = await _movieApiService.GetMovieDetails(movie.ApiModelId ?? default);
-                        await _companyRepository.AddRangeIfNotExistAsync(apiMovieDetails.ProductionCompanies.Map());
-                        await _companyRepository.Save();
-                    }
-                }
+                const int batchSize = 200;
+                long totalCount = await _movieRepository.GetCountAsync();
 
-                //Tv Companies
-                var tvs = await _tvRepository.GetAllAsync();
-                if (tvs.Any())
+                for (int skip = 0; skip < totalCount; skip += batchSize)
                 {
-                    foreach (var tv in tvs)
+                    var movies = await _movieRepository.GetBatchAsync(skip, batchSize);
+
+                    var semaphore = new SemaphoreSlim(5);
+
+                    // موازی‌سازی دریافت اطلاعات از API با محدودیت همزمانی
+                    var tasks = movies.Select(async movie =>
                     {
-                        var apiTvDetails = await _tvApiService.GetTvDetails(tv.ApiModelId ?? default);
-                        await _companyRepository.AddRangeIfNotExistAsync(apiTvDetails.ProductionCompanies.Map());
-                        await _companyRepository.Save();
-                    }
+                        await semaphore.WaitAsync();
+                        try
+                        {
+                            var apiDetails = await _movieApiService.GetMovieDetails(movie.ApiModelId ?? default);
+                            return apiDetails;
+                        }
+                        finally
+                        {
+                            semaphore.Release();
+                        }
+                    });
+
+                    var updatedMovies = await Task.WhenAll(tasks);
+
+
+                    // ذخیره دسته‌ای
+                    await _companyRepository.BulkInsertIfNotExistAsync(
+                        updatedMovies
+                        .Where(item => item.ProductionCompanies != null)
+                        .SelectMany(m => m.ProductionCompanies) // flatten
+                        .Select(c => c.Map()) // تبدیل به domain model یا entity
+                        .ToList());
                 }
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
+            }
+
+        }
+
+        public async Task SyncTvCompanies()
+        {
+            try
+            {
+                const int batchSize = 200;
+                long totalCount = await _tvRepository.GetCountAsync();
+
+                for (int skip = 0; skip < totalCount; skip += batchSize)
+                {
+                    var tvs = await _tvRepository.GetBatchAsync(skip, batchSize);
+
+                    var semaphore = new SemaphoreSlim(5);
+
+                    // موازی‌سازی دریافت اطلاعات از API با محدودیت همزمانی
+                    var tasks = tvs.Select(async tv =>
+                    {
+                        await semaphore.WaitAsync();
+                        try
+                        {
+                            var apiDetails = await _tvApiService.GetTvDetails(tv.ApiModelId ?? default);
+                            return apiDetails;
+                        }
+                        finally
+                        {
+                            semaphore.Release();
+                        }
+                    });
+
+                    var updatedTvs = await Task.WhenAll(tasks);
+
+
+                    // ذخیره دسته‌ای
+                    await _companyRepository.BulkInsertIfNotExistAsync(
+                        updatedTvs
+                        .Where(item => item.ProductionCompanies != null)
+                        .SelectMany(m => m.ProductionCompanies) // flatten
+                        .Select(c => c.Map()) // تبدیل به domain model یا entity
+                        .ToList());
+                }
+
+            }
+            catch (Exception)
+            {
+                throw;
             }
 
         }
@@ -84,25 +138,41 @@ namespace WatchListMovies.Application.BackgroundJobs.Company
         {
             try
             {
-                var companies = await _companyRepository.GetAllAsync();
+                const int batchSize = 200;
+                long totalCount = await _companyRepository.GetCountAsync();
 
-                if (companies.Any())
+                for (int skip = 0; skip < totalCount; skip += batchSize)
                 {
-                    foreach (var item in companies)
-                    {
-                        var companyApi = await _companyApiService.GetCompanyDetails((long)item.ApiModelId);
-                        item.CompanyDetail = companyApi.Map(item.Id);
-                        await _companyRepository.Save();
+                    var companies = await _companyRepository.GetBatchAsync(skip, batchSize);
 
-                    }
+                    var semaphore = new SemaphoreSlim(5);
+
+                    // موازی‌سازی دریافت اطلاعات از API با محدودیت همزمانی
+                    var tasks = companies.Select(async company =>
+                    {
+                        await semaphore.WaitAsync();
+                        try
+                        {
+                            var apiDetails = await _companyApiService.GetCompanyDetails(company.ApiModelId ?? default);
+                            company.CompanyDetail = apiDetails.Map(company.Id);
+                            return company;
+                        }
+                        finally
+                        {
+                            semaphore.Release();
+                        }
+                    });
+
+                    var updatedCollections = await Task.WhenAll(tasks);
+
+                    // ذخیره دسته‌ای
+                    await _companyRepository.BulkInsertOrUpdateAsync(updatedCollections.ToList());
                 }
 
-
-
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
         }

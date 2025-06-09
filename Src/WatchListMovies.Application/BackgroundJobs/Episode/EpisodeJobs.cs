@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WatchListMovies.Application.BackgroundJobs.ContentImage;
 using WatchListMovies.Application.IExternalApiServices.Season;
 using WatchListMovies.Application.IExternalApiServices.Tv;
+using WatchListMovies.Domain.ContentImageAgg.Enums;
+using WatchListMovies.Domain.ContentImageAgg.Repository;
 using WatchListMovies.Domain.EpisodeAgg.Repository;
 using WatchListMovies.Domain.SeasonAgg.Repository;
 using WatchListMovies.Domain.TvAgg.Repository;
@@ -37,31 +41,48 @@ namespace WatchListMovies.Application.BackgroundJobs.Episode
         {
             try
             {
-                var tvs = await _tvRepository.GetAllAsync();
-                if (tvs.Any())
+                const int batchSize = 100;
+                long totalCount = await _tvRepository.GetCountAsync();
+
+                for (int skip = 0; skip < totalCount; skip += batchSize)
                 {
-                    foreach (var tv in tvs)
-                    {
-                        var tvSeasons = await _seasonRepository.GetSeasonsByTvApiIdAsync((long)tv.ApiModelId);
-                        foreach (var tvSeason in tvSeasons)
-                        {
-                            var apiSeasonDetails = await _seasonApiService.GetSeasonDetails((long)tv.ApiModelId, (int)tvSeason.SeasonNumber);
-                            if (apiSeasonDetails != null)
-                            {
-                                await _episodeRepository.AddRangeIfNotExistAsync(apiSeasonDetails.Episodes.Map((long)tvSeason.SeasonNumber ,(long)tv.ApiModelId));
-                                await _episodeRepository.Save();
-                            }
-                        }
-                        
-                    }
+                    var tvs = await _tvRepository.GetBatchAsync(skip, batchSize);
+                    var tvSemaphore = new SemaphoreSlim(5);
+
+                    var tvTasks = tvs.Select(tv => ProcessTvAsync(tv, tvSemaphore));
+                    await Task.WhenAll(tvTasks);
                 }
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
+        }
+        async Task ProcessTvAsync(Domain.TvAgg.Tv tv, SemaphoreSlim tvSemaphore)
+        {
+            await tvSemaphore.WaitAsync();
+            try
+            {
+                var tvSeasons = await _seasonRepository.GetSeasonsByTvApiIdAsync(tv.ApiModelId);
+                var allEpisodes = new ConcurrentBag<Domain.EpisodeAgg.Episode>();
+
+                await Parallel.ForEachAsync(tvSeasons,
+                    new ParallelOptions { MaxDegreeOfParallelism = 5 },
+                    async (tvSeason, ct) =>
+                    {
+                        var apiSeasonDetails = await _seasonApiService.GetSeasonDetails(tv.ApiModelId, tvSeason.SeasonNumber);
+                        foreach (var ep in apiSeasonDetails.Episodes.Map(tvSeason.SeasonNumber, tv.ApiModelId))
+                            allEpisodes.Add(ep);
+                    });
+
+                await _episodeRepository.BulkInsertIfNotExistAsync(allEpisodes.ToList());
+            }
+            finally
+            {
+                tvSemaphore.Release();
+            }
         }
     }
 }

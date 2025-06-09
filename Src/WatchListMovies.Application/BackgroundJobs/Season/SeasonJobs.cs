@@ -1,6 +1,8 @@
 ﻿using System.Linq;
+using WatchListMovies.Application.BackgroundJobs.Network;
 using WatchListMovies.Application.BackgroundJobs.Tv;
 using WatchListMovies.Application.IExternalApiServices.Tv;
+using WatchListMovies.Domain.NetworkAgg.Repository;
 using WatchListMovies.Domain.SeasonAgg.Repository;
 using WatchListMovies.Domain.TvAgg.Repository;
 
@@ -26,24 +28,45 @@ namespace WatchListMovies.Application.BackgroundJobs.Season
         {
             try
             {
-                var tvs = await _tvRepository.GetAllAsync();
-                if (tvs.Any())
+                const int batchSize = 100;
+                long totalCount = await _tvRepository.GetCountAsync();
+
+                for (int skip = 0; skip < totalCount; skip += batchSize)
                 {
-                    foreach (var item in tvs)
+                    var tvs = await _tvRepository.GetBatchAsync(skip, batchSize);
+
+                    var semaphore = new SemaphoreSlim(5);
+
+                    // موازی‌سازی دریافت اطلاعات از API با محدودیت همزمانی
+                    var castTask = tvs.Select(async tv =>
                     {
-                        var apiTvDetails = await _tvApiService.GetTvDetails(item.ApiModelId);
-                        if (apiTvDetails.Seasons != null)
+                        await semaphore.WaitAsync();
+                        try
                         {
-                            await _seasonRepository.AddRangeIfNotExistAsync(apiTvDetails.Seasons.Map(item.ApiModelId));
-                            await _seasonRepository.Save();
+                            var apiTvDetails = await _tvApiService.GetTvDetails(tv.ApiModelId);
+                            return apiTvDetails.Seasons.Map(tv.ApiModelId);
                         }
-                    }
+                        finally
+                        {
+                            semaphore.Release();
+                        }
+                    });
+
+                    var updatedTvSeasons = await Task.WhenAll(castTask);
+
+
+                    // ذخیره دسته‌ای
+                    await _seasonRepository.BulkInsertIfNotExistAsync(
+                        updatedTvSeasons
+                        .SelectMany(m => m) // flatten
+                        .Select(cast => cast) // تبدیل به domain model یا entity
+                        .ToList());
                 }
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
         }

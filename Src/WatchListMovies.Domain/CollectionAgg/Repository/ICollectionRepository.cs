@@ -13,5 +13,11 @@ namespace WatchListMovies.Domain.CollectionAgg.Repository
     {
         Task AddIfNotExistAsync(Collection collection);
         Task<List<Collection>> GetAllAsync();
+
+        Task BulkInsertIfNotExistAsync(List<Collection> movies);
+        Task BulkInsertOrUpdateAsync(List<Collection> movies);
+        Task<long> GetCountAsync();
+
+        Task<List<Collection>> GetBatchAsync(int skip, int take);
     }
 }

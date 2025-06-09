@@ -33,9 +33,9 @@ namespace WatchListMovies.Application.BackgroundJobs.Genre
                 await _genreRepository.Save();
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
     }

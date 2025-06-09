@@ -26,25 +26,18 @@ namespace WatchListMovies.Application.BackgroundJobs.Cast
         {
             try
             {
-                var apiCasts = await _castApiService.GetPopularCasts(1);
-
-                for (var page = 2; page <= apiCasts.TotalPages; page++)
+                for (var page = 1; ; page++)
                 {
                     var data = await _castApiService.GetPopularCasts(page);
-                    foreach (var item in data.Casts)
-                    {
-                        if (!apiCasts.Casts.Any(v => v.Id == item.Id))
-                            apiCasts.Casts.Add(item);
-                    }
+                    if (data == null || data.Casts == null || !data.Casts.Any()) break;
+
+                    await _castRepository.BulkInsertIfNotExistAsync(data.Casts.Map());
+
                 }
-
-                await _castRepository.AddRangeIfNotExistAsync(apiCasts.Map());
-                await _castRepository.Save();
-
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -53,20 +46,40 @@ namespace WatchListMovies.Application.BackgroundJobs.Cast
 
             try
             {
-                var casts = await _castRepository.GetAllAsync();
-                if (casts.Any())
+                const int batchSize = 200;
+                long totalCount = await _castRepository.GetCountAsync();
+
+                for (int skip = 0; skip < totalCount; skip += batchSize)
                 {
-                    foreach (var cast in casts)
+                    var casts = await _castRepository.GetBatchAsync(skip, batchSize);
+
+                    var semaphore = new SemaphoreSlim(5);
+
+                    // موازی‌سازی دریافت اطلاعات از API با محدودیت همزمانی
+                    var tasks = casts.Select(async cast =>
                     {
-                        var apiCastDetails = await _castApiService.GetCastDetails(cast.ApiModelId ?? default);
-                        cast.CastDetails = apiCastDetails.Map(cast.Id);
-                        await _castRepository.Save();
-                    }
+                        await semaphore.WaitAsync();
+                        try
+                        {
+                            var apiDetails = await _castApiService.GetCastDetails(cast.ApiModelId ?? default);
+                            cast.CastDetails = apiDetails.Map(cast.Id);
+                            return cast;
+                        }
+                        finally
+                        {
+                            semaphore.Release();
+                        }
+                    });
+
+                    var updatedCasts = await Task.WhenAll(tasks);
+
+                    // ذخیره دسته‌ای
+                    await _castRepository.BulkInsertOrUpdateAsync(updatedCasts.ToList());
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
         }
@@ -76,27 +89,43 @@ namespace WatchListMovies.Application.BackgroundJobs.Cast
 
             try
             {
-                var casts = await _castRepository.GetAllAsync();
-                if (casts.Any())
+                const int batchSize = 200;
+                long totalCount = await _castRepository.GetCountAsync();
+
+                for (int skip = 0; skip < totalCount; skip += batchSize)
                 {
-                    foreach (var cast in casts)
+                    var casts = await _castRepository.GetBatchAsync(skip, batchSize);
+
+                    var semaphore = new SemaphoreSlim(5);
+
+                    // موازی‌سازی دریافت اطلاعات از API با محدودیت همزمانی
+                    var tasks = casts.Select(async cast =>
                     {
-                        var apiCastDetails = await _castApiService.GetCastExternalIds(cast.ApiModelId ?? default);
-                        cast.CastExternalId = apiCastDetails.Map(cast.Id);
-                        await _castRepository.Save();
-                    }
+                        await semaphore.WaitAsync();
+                        try
+                        {
+                            var apiDetails = await _castApiService.GetCastExternalIds(cast.ApiModelId);
+                            cast.CastExternalId = apiDetails.Map(cast.Id);
+                            return cast;
+                        }
+                        finally
+                        {
+                            semaphore.Release();
+                        }
+                    });
+
+                    var updatedCasts = await Task.WhenAll(tasks);
+
+                    // ذخیره دسته‌ای
+                    await _castRepository.BulkInsertOrUpdateAsync(updatedCasts.ToList());
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
         }
-
-        
-
-
         
     }
 }

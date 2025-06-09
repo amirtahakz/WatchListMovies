@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 using WatchListMovies.Domain.MovieAgg;
 using WatchListMovies.Domain.SeasonAgg;
 using WatchListMovies.Domain.SeasonAgg.Repository;
+using WatchListMovies.Domain.TvAgg;
 using WatchListMovies.Infrastructure._Utilities;
 
 namespace WatchListMovies.Infrastructure.Persistent.Ef.SeasonAgg
@@ -26,7 +28,7 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef.SeasonAgg
             return result;
         }
 
-        public async Task<List<Domain.SeasonAgg.Season>> GetSeasonsByTvApiIdAsync(long tvApiId)
+        public async Task<List<Domain.SeasonAgg.Season>> GetSeasonsByTvApiIdAsync(long? tvApiId)
         {
             var result = await Context.Seasons
                 .AsNoTracking()
@@ -47,5 +49,52 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef.SeasonAgg
                     await Context.Seasons.AddAsync(item);
             }
         }
+
+        public async Task BulkInsertIfNotExistAsync(List<Season> seasons)
+        {
+            var uniqueSeasons = seasons.GroupBy(p => p.ApiModelId).Where(g => g.Count() == 1).Select(g => g.First()).ToList();
+
+            var apiModelIds = uniqueSeasons.Select(d => d.ApiModelId).ToList();
+
+            // گرفتن ApiModelIdهایی که در دیتابیس موجود هستند
+            var existingApiIds = await Context.Seasons
+                .Where(m => apiModelIds.Contains(m.ApiModelId))
+                .Select(m => m.ApiModelId)
+                .ToListAsync();
+
+            // فیلتر کردن فقط داده‌هایی که وجود ندارند
+            var newSeasons = uniqueSeasons.Where(dto => !existingApiIds.Contains(dto.ApiModelId)).ToList();
+
+            // درج جدیدها
+            if (newSeasons.Any())
+                await Context.BulkInsertAsync(newSeasons);
+
+        }
+
+        public async Task BulkInsertOrUpdateAsync(List<Season> seasons)
+        {
+            await Context.BulkInsertOrUpdateAsync(seasons, new BulkConfig
+            {
+                IncludeGraph = true, // فقط اگر MovieDetails داخل خود Movie قرار دارن
+                PreserveInsertOrder = true,
+                SetOutputIdentity = true
+            });
+        }
+
+        public async Task<long> GetCountAsync()
+        {
+            return await Context.Seasons.CountAsync();
+        }
+
+        public async Task<List<Season>> GetBatchAsync(int skip, int take)
+        {
+            return await Context.Seasons
+                        .AsNoTracking()
+                        .OrderBy(m => m.Id)
+                        .Skip(skip)
+                        .Take(take)
+                        .ToListAsync();
+        }
+
     }
 }

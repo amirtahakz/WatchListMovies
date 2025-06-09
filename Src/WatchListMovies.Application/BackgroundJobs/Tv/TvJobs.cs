@@ -14,39 +14,30 @@ namespace WatchListMovies.Application.BackgroundJobs.Tv
     {
         private readonly ITvRepository _tvRepository;
         private readonly ITvApiService _tvApiService;
-        private readonly ICompanyRepository _companyRepository;
 
-        public TvJobs(ITvRepository tvRepository, ITvApiService tvApiService, ICompanyRepository companyRepository)
+        public TvJobs(ITvRepository tvRepository, ITvApiService tvApiService)
         {
             _tvRepository = tvRepository;
             _tvApiService = tvApiService;
-            _companyRepository = companyRepository;
         }
 
         public async Task SyncPopularTvs()
         {
             try
             {
-                var apiTvs = await _tvApiService.GetPopularTvs(1);
-
-                for (var page = 2; page <= apiTvs.TotalPages; page++)
+                for (var page = 1; ; page++)
                 {
                     var data = await _tvApiService.GetPopularTvs(page);
-                    foreach (var item in data.Tvs)
-                    {
-                        if (!apiTvs.Tvs.Any(v => v.Id == item.Id))
-                            apiTvs.Tvs.Add(item);
-                    }
-                    
+                    if (data == null || data.Tvs == null || !data.Tvs.Any()) break;
+
+                    await _tvRepository.BulkInsertIfNotExistAsync(data.Tvs.Map());
+
                 }
 
-                await _tvRepository.AddRangeIfNotExistAsync(apiTvs.Map());
-                await _tvRepository.Save();
-                
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw ;
             }
         }
 
@@ -55,20 +46,40 @@ namespace WatchListMovies.Application.BackgroundJobs.Tv
 
             try
             {
-                var tvs = await _tvRepository.GetAllAsync();
-                if (tvs.Any())
+                const int batchSize = 200;
+                long totalCount = await _tvRepository.GetCountAsync();
+
+                for (int skip = 0; skip < totalCount; skip += batchSize)
                 {
-                    foreach (var tv in tvs)
+                    var tvs = await _tvRepository.GetBatchAsync(skip, batchSize);
+
+                    var semaphore = new SemaphoreSlim(5);
+
+                    // موازی‌سازی دریافت اطلاعات از API با محدودیت همزمانی
+                    var tasks = tvs.Select(async tv =>
                     {
-                        var apiTvDetails = await _tvApiService.GetTvDetails(tv.ApiModelId ?? default);
-                        tv.TvDetail = apiTvDetails.Map(tv.Id);
-                        await _tvRepository.Save();
-                    }
+                        await semaphore.WaitAsync();
+                        try
+                        {
+                            var apiDetails = await _tvApiService.GetTvDetails(tv.ApiModelId);
+                            tv.TvDetail = apiDetails.Map(tv.Id);
+                            return tv;
+                        }
+                        finally
+                        {
+                            semaphore.Release();
+                        }
+                    });
+
+                    var updatedTvs = await Task.WhenAll(tasks);
+
+                    // ذخیره دسته‌ای
+                    await _tvRepository.BulkInsertOrUpdateAsync(updatedTvs.ToList());
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
         }

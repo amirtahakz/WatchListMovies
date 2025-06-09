@@ -9,7 +9,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Episode
 {
     public static class EpisodeMapper
     {
-        public static Domain.EpisodeAgg.Episode Map(this GetSeasonDetailsEpisodeApiModelDto requestModel , long seasonApiId , long tvApiId)
+        public static Domain.EpisodeAgg.Episode Map(this GetSeasonDetailsEpisodeApiModelDto requestModel , long? seasonApiId , long? tvApiId)
         {
             var model = new Domain.EpisodeAgg.Episode() 
             {
@@ -29,7 +29,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Episode
             return model;
         }
 
-        public static List<Domain.EpisodeAgg.Episode> Map(this List<GetSeasonDetailsEpisodeApiModelDto> requestModels, long seasonApiId, long tvApiId)
+        public static List<Domain.EpisodeAgg.Episode> Map(this List<GetSeasonDetailsEpisodeApiModelDto> requestModels, long? seasonApiId, long? tvApiId)
         {
             var result = new List<Domain.EpisodeAgg.Episode>();
 

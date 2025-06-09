@@ -13,5 +13,11 @@ namespace WatchListMovies.Domain.CompanyAgg.Repository
         Task AddRangeIfNotExistAsync(List<Company> companies);
 
         Task<List<Company>> GetAllAsync();
+
+        Task BulkInsertIfNotExistAsync(List<Company> companies);
+        Task BulkInsertOrUpdateAsync(List<Company> companies);
+        Task<long> GetCountAsync();
+
+        Task<List<Company>> GetBatchAsync(int skip, int take);
     }
 }

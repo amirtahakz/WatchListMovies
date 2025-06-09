@@ -41,7 +41,6 @@ namespace WatchListMovies.Infrastructure.Persistent.Ef
 
         public DbSet<Movie> Movies { get; set; }
         public DbSet<MovieDetail> MovieDetails { get; set; }
-        public DbSet<MovieKeyYoutubeTrailer> MovieKeyYoutubeTrailers { get; set; }
 
 
         public DbSet<Tv> Tvs { get; set; }

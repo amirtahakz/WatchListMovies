@@ -13,7 +13,7 @@ namespace WatchListMovies.Application.IExternalApiServices.Movie.ApiModelDTOs
         public int? Page { get; set; }
 
         [JsonProperty("results")]
-        public List<PopularMoviesItemApiModelDto>? movies { get; set; }
+        public List<PopularMoviesItemApiModelDto>? Movies { get; set; }
 
         [JsonProperty("total_pages")]
         public long? TotalPages { get; set; }

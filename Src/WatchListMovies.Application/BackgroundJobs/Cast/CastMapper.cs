@@ -5,29 +5,34 @@ namespace WatchListMovies.Application.BackgroundJobs.Cast
 {
     public static class CastMapper
     {
-        public static List<Domain.CastAgg.Cast> Map(this PopularCastsApiModelDto cast)
+        public static List<Domain.CastAgg.Cast> Map(this List<PopularCastDetailsItemApiModelDto> casts)
         {
             var result = new List<Domain.CastAgg.Cast>();
-            foreach (var castItem in cast.Casts)
-            {
-                var model = new Domain.CastAgg.Cast()
-                {
-                    Adult = castItem.Adult,
-                    ApiModelId = castItem.Id,
-                    Popularity = castItem.Popularity,
-                    Gender = castItem.Gender,
-                    KnownForDepartment = castItem.KnownForDepartment,
-                    Name = castItem.Name,
-                    OriginalName = castItem.OriginalName,
-                    ProfilePath = castItem.ProfilePath,
-                };
 
-                if (castItem.KnownFor != null)
-                    model.MovieKnownForIds = castItem.Id.HasValue? new List<string> { castItem.Id.Value.ToString() } : null;
+            foreach (var cast in casts)
+                result.Add(cast.Map());
 
-                result.Add(model);
-            }
             return result;
+        }
+
+        public static Domain.CastAgg.Cast Map(this PopularCastDetailsItemApiModelDto cast)
+        {
+            var model = new Domain.CastAgg.Cast()
+            {
+                Adult = cast.Adult,
+                ApiModelId = cast.Id,
+                Popularity = cast.Popularity,
+                Gender = cast.Gender,
+                KnownForDepartment = cast.KnownForDepartment,
+                Name = cast.Name,
+                OriginalName = cast.OriginalName,
+                ProfilePath = cast.ProfilePath,
+            };
+
+            if (cast.KnownFor != null)
+                model.MovieKnownForIds = cast.Id.HasValue ? new List<string> { cast.Id.Value.ToString() } : null;
+
+            return model;
         }
 
         public static CastDetail Map(this CastDetailsApiModelDto castDetails, Guid castId)

@@ -72,9 +72,19 @@ namespace WatchListMovies.Api.Infrastructure
                 cronExpression: jobSchedules.SyncGenres);
 
             RecurringJob.AddOrUpdate<ContentImageJobs>(
-                recurringJobId: "SyncContentImages",
-                methodCall: svc => svc.SyncContentImages(),
-                cronExpression: jobSchedules.SyncContentImages);
+                recurringJobId: "SyncCastImages",
+                methodCall: svc => svc.SyncCastImages(),
+                cronExpression: jobSchedules.SyncCastImages);
+
+            RecurringJob.AddOrUpdate<ContentImageJobs>(
+                recurringJobId: "SyncTvImages",
+                methodCall: svc => svc.SyncTvImages(),
+                cronExpression: jobSchedules.SyncTvImages);
+
+            RecurringJob.AddOrUpdate<ContentImageJobs>(
+                recurringJobId: "SyncMovieImages",
+                methodCall: svc => svc.SyncMovieImages(),
+                cronExpression: jobSchedules.SyncMovieImages);
 
             RecurringJob.AddOrUpdate<ContentCastJobs>(
                 recurringJobId: "SyncContentCasts",
@@ -99,9 +109,14 @@ namespace WatchListMovies.Api.Infrastructure
 
 
             RecurringJob.AddOrUpdate<CompanyJobs>(
-                recurringJobId: "SyncCompanies",
-                methodCall: svc => svc.SyncCompanies(),
-                cronExpression: jobSchedules.SyncCompanies);
+                recurringJobId: "SyncMovieCompanies",
+                methodCall: svc => svc.SyncMovieCompanies(),
+                cronExpression: jobSchedules.SyncMovieCompanies);
+
+            RecurringJob.AddOrUpdate<CompanyJobs>(
+                recurringJobId: "SyncTvCompanies",
+                methodCall: svc => svc.SyncTvCompanies(),
+                cronExpression: jobSchedules.SyncTvCompanies);
 
 
             RecurringJob.AddOrUpdate<CollectionJobs>(

@@ -1,6 +1,10 @@
-﻿using WatchListMovies.Application.IExternalApiServices.Movie;
-using WatchListMovies.Domain.CompanyAgg.Repository;
+﻿using System.Threading;
+using WatchListMovies.Application.BackgroundJobs.Collection;
+using WatchListMovies.Application.IExternalApiServices.Movie;
+using WatchListMovies.Domain.CollectionAgg.Repository;
+using WatchListMovies.Domain.MovieAgg;
 using WatchListMovies.Domain.MovieAgg.Repository;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WatchListMovies.Application.BackgroundJobs.Movie
 {
@@ -8,42 +12,34 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
     {
         private readonly IMovieApiService _movieApiService;
         private readonly IMovieRepository _movieRepository;
-        private readonly ICompanyRepository _companyRepository;
+        private readonly ICollectionRepository _collectionRepository;
 
         public MovieJobs(
             IMovieApiService movieApiService,
             IMovieRepository movieRepository,
-            ICompanyRepository companyRepository)
+            ICollectionRepository collectionRepository)
         {
             _movieApiService = movieApiService;
             _movieRepository = movieRepository;
-            _companyRepository = companyRepository;
+            _collectionRepository = collectionRepository;
         }
 
         public async Task SyncPopularMovies()
         {
             try
             {
-                var apiMovies = await _movieApiService.GetPopularMovies(1);
-
-                for (var page = 2; page <= apiMovies.TotalPages; page++)
+                for (var page = 1; ; page++)
                 {
                     var data = await _movieApiService.GetPopularMovies(page);
+                    if (data == null || data.Movies == null || !data.Movies.Any()) break;
 
-                    foreach (var item in data.movies)
-                    {
-                        if (!apiMovies.movies.Any(v=>v.ApiModelId == item.ApiModelId))
-                            apiMovies.movies.Add(item);
-                    }
+                    await _movieRepository.BulkInsertIfNotExistAsync(data.Movies.Map());
+
                 }
-
-                await _movieRepository.AddRangeIfNotExistAsync(apiMovies.Map());
-                await _movieRepository.Save();
-
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
         }
 
@@ -52,20 +48,40 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
 
             try
             {
-                var movies = await _movieRepository.GetAllAsync();
-                if (movies.Any())
+                const int batchSize = 200;
+                long totalCount = await _movieRepository.GetCountAsync();
+
+                for (int skip = 0; skip < totalCount; skip += batchSize)
                 {
-                    foreach (var movie in movies)
+                    var movies = await _movieRepository.GetBatchAsync(skip, batchSize);
+
+                    var semaphore = new SemaphoreSlim(5);
+
+                    // موازی‌سازی دریافت اطلاعات از API با محدودیت همزمانی
+                    var tasks = movies.Select(async movie =>
                     {
-                        var apiMovieDetails = await _movieApiService.GetMovieDetails(movie.ApiModelId ?? default);
-                        movie.MovieDetails = apiMovieDetails.Map(movie.Id);
-                        await _movieRepository.Save();
-                    }
+                        await semaphore.WaitAsync();
+                        try
+                        {
+                            var apiDetails = await _movieApiService.GetMovieDetails(movie.ApiModelId ?? default);
+                            movie.MovieDetails = apiDetails.Map(movie.Id);
+                            return movie;
+                        }
+                        finally
+                        {
+                            semaphore.Release();
+                        }
+                    });
+
+                    var updatedMovies = await Task.WhenAll(tasks);
+
+                    // ذخیره دسته‌ای
+                    await _movieRepository.BulkInsertOrUpdateAsync(updatedMovies.ToList());
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
         }

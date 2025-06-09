@@ -9,6 +9,6 @@ namespace WatchListMovies.Application.IExternalApiServices.Season
 {
     public interface ISeasonApiService
     {
-        Task<GetSeasonDetailsApiModelDto> GetSeasonDetails(long tvApiId, int seasonNumber);
+        Task<GetSeasonDetailsApiModelDto> GetSeasonDetails(long? tvApiId, long? seasonNumber);
     }
 }

@@ -22,7 +22,7 @@ namespace WatchListMovies.Application.BackgroundJobs.Collection
             return model;
         }
 
-        public static Domain.CollectionAgg.CollectionDetail Map(this GetCollectionDetailsApiModelDto requestModel , Guid parrentId)
+        public static Domain.CollectionAgg.CollectionDetail Map(this GetCollectionDetailsApiModelDto requestModel, Guid parrentId)
         {
             var model = new Domain.CollectionAgg.CollectionDetail()
             {

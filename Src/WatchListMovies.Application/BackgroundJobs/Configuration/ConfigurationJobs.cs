@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using WatchListMovies.Application.IExternalApiServices.Cast;
-using WatchListMovies.Application.IExternalApiServices.Configuration;
-using WatchListMovies.Domain.CastAgg;
-using WatchListMovies.Domain.CastAgg.Repository;
-using WatchListMovies.Domain.ContentCastAgg.Enums;
-using WatchListMovies.Domain.ContentCastAgg.Repository;
+﻿using WatchListMovies.Application.IExternalApiServices.Configuration;
 using WatchListMovies.Domain.CountryAgg.Repository;
 using WatchListMovies.Domain.LanguageAgg.Repository;
 
@@ -42,9 +32,9 @@ namespace WatchListMovies.Application.BackgroundJobs.Configuration
 
 
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
         }
@@ -59,9 +49,9 @@ namespace WatchListMovies.Application.BackgroundJobs.Configuration
                     await _countryRepository.AddRangeIfNotExistAsync(countriesApi.Map());
                     await _countryRepository.Save();
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
         }

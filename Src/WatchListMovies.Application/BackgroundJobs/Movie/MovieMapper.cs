@@ -1,42 +1,38 @@
-﻿using WatchListMovies.Application.BackgroundJobs.Tv;
-using WatchListMovies.Application.IExternalApiServices._Shared;
-using WatchListMovies.Application.IExternalApiServices._Shared.ApiModelDtos;
-using WatchListMovies.Application.IExternalApiServices.Movie.ApiModelDTOs;
-using WatchListMovies.Domain.CompanyAgg;
+﻿using WatchListMovies.Application.IExternalApiServices.Movie.ApiModelDTOs;
 using WatchListMovies.Domain.MovieAgg;
 
 namespace WatchListMovies.Application.BackgroundJobs.Movie
 {
     public static class MovieMapper
     {
-        public static List<Domain.MovieAgg.Movie> Map(this PopularMoviesApiModelDto popularMoviesApiModelDto)
+        public static List<Domain.MovieAgg.Movie> Map(this List<PopularMoviesItemApiModelDto> popularMovies)
         {
             var result = new List<Domain.MovieAgg.Movie>();
 
-            foreach (var item in popularMoviesApiModelDto.movies)
+            foreach (var item in popularMovies)
                 result.Add(item.Map());
 
             return result;
         }
 
-        public static Domain.MovieAgg.Movie Map(this PopularMoviesItemApiModelDto popularMoviesItemApiModelDto)
+        public static Domain.MovieAgg.Movie Map(this PopularMoviesItemApiModelDto popularMovie)
         {
             var result = new Domain.MovieAgg.Movie()
             {
-                Adult = popularMoviesItemApiModelDto.Adult,
-                ApiModelId = popularMoviesItemApiModelDto.ApiModelId,
-                BackdropPath = popularMoviesItemApiModelDto.BackdropPath,
-                OriginalLanguage = popularMoviesItemApiModelDto.OriginalLanguage,
-                OriginalTitle = popularMoviesItemApiModelDto.Title,
-                Overview = popularMoviesItemApiModelDto.Overview,
-                Popularity = popularMoviesItemApiModelDto.Popularity,
-                PosterPath = popularMoviesItemApiModelDto.PosterPath,
-                ReleaseDate = popularMoviesItemApiModelDto.ReleaseDate,
-                Title = popularMoviesItemApiModelDto.Title,
-                Video = popularMoviesItemApiModelDto.Video,
-                VoteAverage = popularMoviesItemApiModelDto.VoteAverage,
-                VoteCount = popularMoviesItemApiModelDto.VoteCount,
-                GenreIds = popularMoviesItemApiModelDto.GenreIds,
+                Adult = popularMovie.Adult,
+                ApiModelId = popularMovie.ApiModelId,
+                BackdropPath = popularMovie.BackdropPath,
+                OriginalLanguage = popularMovie.OriginalLanguage,
+                OriginalTitle = popularMovie.Title,
+                Overview = popularMovie.Overview,
+                Popularity = popularMovie.Popularity,
+                PosterPath = popularMovie.PosterPath,
+                ReleaseDate = popularMovie.ReleaseDate,
+                Title = popularMovie.Title,
+                Video = popularMovie.Video,
+                VoteAverage = popularMovie.VoteAverage,
+                VoteCount = popularMovie.VoteCount,
+                GenreIds = popularMovie.GenreIds,
             };
             return result;
         }

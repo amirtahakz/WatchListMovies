@@ -22,7 +22,7 @@ namespace WatchListMovies.Infrastructure.ExternalApiServices.Network
             _httpClient = httpClient;
             _tMDBConfig = tMDBConfig.Value;
         }
-        public async Task<GetNetworkDetailsApiModelDto> GetNetworkDetails(long networkApiId)
+        public async Task<GetNetworkDetailsApiModelDto> GetNetworkDetails(long? networkApiId)
         {
             var response = await _httpClient.GetAsync($"network/{networkApiId}?api_key={_tMDBConfig.ApiKey}&language={_tMDBConfig.language}");
             response.EnsureSuccessStatusCode();

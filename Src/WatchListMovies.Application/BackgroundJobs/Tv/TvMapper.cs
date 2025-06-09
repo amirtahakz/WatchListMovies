@@ -6,33 +6,33 @@ namespace WatchListMovies.Application.BackgroundJobs.Tv
 {
     public static class TvMapper
     {
-        public static List<Domain.TvAgg.Tv> Map(this PopularTvsApiModelDto popularTvsApiModelDto)
+        public static List<Domain.TvAgg.Tv> Map(this List<PopularTvsItemApiModelDto> tvsApi)
         {
             var result = new List<Domain.TvAgg.Tv>();
 
-            foreach (var item in popularTvsApiModelDto.Tvs)
+            foreach (var item in tvsApi)
                 result.Add(item.Map());
 
             return result;
         }
 
-        public static Domain.TvAgg.Tv Map(this PopularTvsItemApiModelDto popularTvsItemApiModelDto)
+        public static Domain.TvAgg.Tv Map(this PopularTvsItemApiModelDto tvApi)
         {
             var result = new Domain.TvAgg.Tv()
             {
-                Adult = popularTvsItemApiModelDto.Adult,
-                ApiModelId = popularTvsItemApiModelDto.Id,
-                BackdropPath = popularTvsItemApiModelDto.BackdropPath,
-                OriginalLanguage = popularTvsItemApiModelDto.OriginalLanguage,
-                Overview = popularTvsItemApiModelDto.Overview,
-                Popularity = popularTvsItemApiModelDto.Popularity,
-                PosterPath = popularTvsItemApiModelDto.PosterPath,
-                VoteAverage = popularTvsItemApiModelDto.VoteAverage,
-                VoteCount = popularTvsItemApiModelDto.VoteCount,
-                Name = popularTvsItemApiModelDto.Name,
-                FirstAirDate = popularTvsItemApiModelDto.FirstAirDate,
-                OriginalName = popularTvsItemApiModelDto.OriginalName,
-                GenreIds = popularTvsItemApiModelDto.GenreIds,
+                Adult = tvApi.Adult,
+                ApiModelId = tvApi.Id,
+                BackdropPath = tvApi.BackdropPath,
+                OriginalLanguage = tvApi.OriginalLanguage,
+                Overview = tvApi.Overview,
+                Popularity = tvApi.Popularity,
+                PosterPath = tvApi.PosterPath,
+                VoteAverage = tvApi.VoteAverage,
+                VoteCount = tvApi.VoteCount,
+                Name = tvApi.Name,
+                FirstAirDate = tvApi.FirstAirDate,
+                OriginalName = tvApi.OriginalName,
+                GenreIds = tvApi.GenreIds,
             };
             return result;
         }

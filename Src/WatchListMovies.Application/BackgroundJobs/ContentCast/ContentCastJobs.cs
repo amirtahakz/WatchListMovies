@@ -1,7 +1,11 @@
 ﻿using WatchListMovies.Application.IExternalApiServices.Cast;
+using WatchListMovies.Application.IExternalApiServices.Movie;
+using WatchListMovies.Domain.CastAgg;
 using WatchListMovies.Domain.CastAgg.Repository;
+using WatchListMovies.Domain.CompanyAgg.Repository;
 using WatchListMovies.Domain.ContentCastAgg.Enums;
 using WatchListMovies.Domain.ContentCastAgg.Repository;
+using WatchListMovies.Domain.MovieAgg.Repository;
 
 namespace WatchListMovies.Application.BackgroundJobs.ContentCast
 {
@@ -23,98 +27,60 @@ namespace WatchListMovies.Application.BackgroundJobs.ContentCast
 
             try
             {
-                var casts = await _castRepository.GetAllAsNoTrackingAsync();
-                if (casts.Any())
+                const int batchSize = 100;
+                long totalCount = await _castRepository.GetCountAsync();
+
+                for (int skip = 0; skip < totalCount; skip += batchSize)
                 {
-                    foreach (var cast in casts)
+                    var casts = await _castRepository.GetBatchAsync(skip, batchSize);
+
+                    var semaphore = new SemaphoreSlim(5);
+
+                    // موازی‌سازی دریافت اطلاعات از API با محدودیت همزمانی
+                    var tasks = casts.Select(async cast =>
                     {
-                        var tvCredits = await _castApiService.GetTvCreditsOfCast(cast.ApiModelId);
-                        var movieCredits = await _castApiService.GetMovieCreditsOfCast(cast.ApiModelId);
-
-                        //Tv Cast
-                        if (tvCredits.Casts != null)
+                        await semaphore.WaitAsync();
+                        try
                         {
-                            foreach (var castTvCreditsItem in tvCredits.Casts)
-                            {
-                                await _contentCastRepository.AddIfNotExistAsync(new Domain.ContentCastAgg.ContentCast()
-                                {
-                                    CastApiModelId = cast.ApiModelId,
-                                    ContentType = ContentTypeEnum.Tv,
-                                    CreditType = CreditTypeEnum.Cast,
-                                    ContentApiModelId = cast.ApiModelId,
-                                    Character = castTvCreditsItem?.Character ?? default,
-                                    Department = castTvCreditsItem?.Department ?? default,
-                                    Job = castTvCreditsItem?.Job ?? default,
-                                    CreditId = castTvCreditsItem.CreditId,
-                                });
-                            }
-                        }
+                            var tvApiTask = _castApiService.GetTvCreditsOfCast(cast.ApiModelId);
+                            var movieApiTask = _castApiService.GetMovieCreditsOfCast(cast.ApiModelId);
 
-                        //Tv Crew
-                        if (tvCredits.Crews != null)
+                            await Task.WhenAll(tvApiTask, movieApiTask);
+
+                            var tvCredits = tvApiTask.Result;
+                            var movieCredits = movieApiTask.Result;
+
+                            return new[]
+                            {
+                                movieCredits.Casts?.Map(cast.ApiModelId, movieCredits.Id, ContentTypeEnum.Movie, CreditTypeEnum.Cast),
+                                movieCredits.Crews?.Map(cast.ApiModelId, movieCredits.Id, ContentTypeEnum.Movie, CreditTypeEnum.Crew),
+                                tvCredits.Casts?.Map(cast.ApiModelId, tvCredits.Id, ContentTypeEnum.Tv, CreditTypeEnum.Cast),
+                                tvCredits.Crews?.Map(cast.ApiModelId, tvCredits.Id, ContentTypeEnum.Tv, CreditTypeEnum.Crew)
+                            }
+                            .Where(list => list != null)
+                            .SelectMany(list => list!)
+                            .ToList();
+                        }
+                        finally
                         {
-                            foreach (var crewTvCreditsItem in tvCredits.Crews)
-                            {
-                                await _contentCastRepository.AddIfNotExistAsync(new Domain.ContentCastAgg.ContentCast()
-                                {
-                                    CastApiModelId = cast.ApiModelId,
-                                    ContentType = ContentTypeEnum.Tv,
-                                    CreditType = CreditTypeEnum.Crew,
-                                    ContentApiModelId = cast.ApiModelId,
-                                    Character = crewTvCreditsItem?.Character ?? default,
-                                    Department = crewTvCreditsItem?.Department ?? default,
-                                    Job = crewTvCreditsItem?.Job ?? default,
-                                    CreditId = crewTvCreditsItem.CreditId,
-                                });
-                            }
+                            semaphore.Release();
                         }
+                    });
 
-                        //Movie Cast
-                        if (movieCredits.Casts != null)
-                        {
-                            foreach (var castMovieCreditsItem in movieCredits.Casts)
-                            {
-                                await _contentCastRepository.AddIfNotExistAsync(new Domain.ContentCastAgg.ContentCast()
-                                {
-                                    CastApiModelId = cast.ApiModelId,
-                                    ContentType = ContentTypeEnum.Movie,
-                                    CreditType = CreditTypeEnum.Cast,
-                                    ContentApiModelId = cast.ApiModelId,
-                                    Character = castMovieCreditsItem?.Character ?? default,
-                                    Department = castMovieCreditsItem?.Department ?? default,
-                                    Job = castMovieCreditsItem?.Job ?? default,
-                                    CreditId = castMovieCreditsItem.CreditId,
-                                });
-                            }
-                        }
+                    var updatedContentCasts = await Task.WhenAll(tasks);
 
-                        //Movie Crew
-                        if (movieCredits.Crews != null)
-                        {
-                            foreach (var crewMovieCreditsItem in movieCredits.Crews)
-                            {
-                                await _contentCastRepository.AddIfNotExistAsync(new Domain.ContentCastAgg.ContentCast()
-                                {
-                                    CastApiModelId = cast.ApiModelId,
-                                    ContentType = ContentTypeEnum.Movie,
-                                    CreditType = CreditTypeEnum.Crew,
-                                    ContentApiModelId = cast.ApiModelId,
-                                    Character = crewMovieCreditsItem?.Character ?? default,
-                                    Department = crewMovieCreditsItem?.Department ?? default,
-                                    Job = crewMovieCreditsItem?.Job ?? default,
-                                    CreditId = crewMovieCreditsItem.CreditId,
-                                });
-                            }
-                        }
 
-                        await _castRepository.Save();
-
-                    }
+                    // ذخیره دسته‌ای
+                    await _contentCastRepository.BulkInsertIfNotExistAsync(
+                        updatedContentCasts
+                        .SelectMany(m => m) // flatten
+                        .Select(cast => cast) // تبدیل به domain model یا entity
+                        .ToList());
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                throw e;
+                throw;
             }
 
         }

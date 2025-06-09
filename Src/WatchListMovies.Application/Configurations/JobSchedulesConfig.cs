@@ -16,12 +16,15 @@ namespace WatchListMovies.Application.Configurations
         public string SyncCastDetails { get; set; }
         public string SyncCastExternalIds { get; set; }
         public string SyncGenres { get; set; }
-        public string SyncContentImages { get; set; }
+        public string SyncCastImages { get; set; }
+        public string SyncTvImages { get; set; }
+        public string SyncMovieImages { get; set; }
         public string SyncContentCasts { get; set; }
         public string SyncCountries { get; set; }
         public string SyncLanguages { get; set; }
         public string SyncCompanyDetails { get; set; }
-        public string SyncCompanies { get; set; }
+        public string SyncMovieCompanies { get; set; }
+        public string SyncTvCompanies { get; set; }
         public string SyncCollections { get; set; }
         public string SyncCollectionDetails { get; set; }
         public string SyncNetworks { get; set; }

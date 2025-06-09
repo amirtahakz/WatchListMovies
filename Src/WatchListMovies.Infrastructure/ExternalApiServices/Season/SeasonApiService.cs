@@ -23,7 +23,7 @@ namespace WatchListMovies.Infrastructure.ExternalApiServices.Season
             _tMDBConfig = tMDBConfig.Value;
         }
 
-        public async Task<GetSeasonDetailsApiModelDto> GetSeasonDetails(long tvApiId , int seasonNumber)
+        public async Task<GetSeasonDetailsApiModelDto> GetSeasonDetails(long? tvApiId , long? seasonNumber)
         {
             var response = await _httpClient.GetAsync($"tv/{tvApiId}/season/{seasonNumber}?api_key={_tMDBConfig.ApiKey}&language={_tMDBConfig.language}");
             response.EnsureSuccessStatusCode();
