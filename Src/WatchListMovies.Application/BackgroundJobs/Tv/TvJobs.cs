@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using MediatR;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
+using WatchListMovies.Application.Configurations;
 using WatchListMovies.Application.IExternalApiServices._Shared;
 using WatchListMovies.Application.IExternalApiServices.Movie;
 using WatchListMovies.Application.IExternalApiServices.Tv;
@@ -14,11 +16,13 @@ namespace WatchListMovies.Application.BackgroundJobs.Tv
     {
         private readonly ITvRepository _tvRepository;
         private readonly ITvApiService _tvApiService;
+        private readonly PagesCountForGettingDataTest _pagesCountForGettingDataTest;
 
-        public TvJobs(ITvRepository tvRepository, ITvApiService tvApiService)
+        public TvJobs(ITvRepository tvRepository, ITvApiService tvApiService , IOptions<PagesCountForGettingDataTest> pagesCountForGettingDataTest)
         {
             _tvRepository = tvRepository;
             _tvApiService = tvApiService;
+            _pagesCountForGettingDataTest = pagesCountForGettingDataTest.Value;
         }
 
         public async Task SyncPopularTvs()
@@ -27,6 +31,9 @@ namespace WatchListMovies.Application.BackgroundJobs.Tv
             {
                 for (var page = 1; ; page++)
                 {
+                    if (_pagesCountForGettingDataTest.TvPageCount != 0 && page == _pagesCountForGettingDataTest.TvPageCount)
+                        break;
+
                     var data = await _tvApiService.GetPopularTvs(page);
                     if (data == null || data.Tvs == null || !data.Tvs.Any()) break;
 

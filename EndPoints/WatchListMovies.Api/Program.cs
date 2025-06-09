@@ -66,6 +66,7 @@ services.AddSwaggerGen(option =>
 });
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 services.Configure<JobSchedulesConfig>(builder.Configuration.GetSection("JobSchedulesConfig"));
+services.Configure<PagesCountForGettingDataTest>(builder.Configuration.GetSection("PagesCountForGettingDataTest"));
 
 services.RegisterApiDependency(builder.Configuration);
 

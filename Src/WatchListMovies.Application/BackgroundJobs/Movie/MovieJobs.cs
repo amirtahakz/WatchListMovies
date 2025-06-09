@@ -1,5 +1,7 @@
-﻿using System.Threading;
+﻿using Microsoft.Extensions.Options;
+using System.Threading;
 using WatchListMovies.Application.BackgroundJobs.Collection;
+using WatchListMovies.Application.Configurations;
 using WatchListMovies.Application.IExternalApiServices.Movie;
 using WatchListMovies.Domain.CollectionAgg.Repository;
 using WatchListMovies.Domain.MovieAgg;
@@ -12,16 +14,16 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
     {
         private readonly IMovieApiService _movieApiService;
         private readonly IMovieRepository _movieRepository;
-        private readonly ICollectionRepository _collectionRepository;
+        private readonly PagesCountForGettingDataTest _pagesCountForGettingDataTest;
 
         public MovieJobs(
             IMovieApiService movieApiService,
             IMovieRepository movieRepository,
-            ICollectionRepository collectionRepository)
+            IOptions<PagesCountForGettingDataTest> pagesCountForGettingDataTest)
         {
             _movieApiService = movieApiService;
             _movieRepository = movieRepository;
-            _collectionRepository = collectionRepository;
+            _pagesCountForGettingDataTest = pagesCountForGettingDataTest.Value;
         }
 
         public async Task SyncPopularMovies()
@@ -30,6 +32,9 @@ namespace WatchListMovies.Application.BackgroundJobs.Movie
             {
                 for (var page = 1; ; page++)
                 {
+                    if (_pagesCountForGettingDataTest.MoviePageCount != 0 && page == _pagesCountForGettingDataTest.MoviePageCount)
+                        break;
+
                     var data = await _movieApiService.GetPopularMovies(page);
                     if (data == null || data.Movies == null || !data.Movies.Any()) break;
 

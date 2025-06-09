@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Options;
+using WatchListMovies.Application.Configurations;
 using WatchListMovies.Application.IExternalApiServices.Cast;
 using WatchListMovies.Application.IExternalApiServices.Movie;
 using WatchListMovies.Domain.CastAgg.Repository;
@@ -10,16 +12,16 @@ namespace WatchListMovies.Application.BackgroundJobs.Cast
     {
         private readonly ICastApiService _castApiService;
         private readonly ICastRepository _castRepository;
-        private readonly IMapper _mapper;
+        private readonly PagesCountForGettingDataTest _pagesCountForGettingDataTest;
 
         public CastJobs(
             ICastApiService castApiService,
             ICastRepository castRepository,
-            IMapper mapper)
+            IOptions<PagesCountForGettingDataTest> pagesCountForGettingDataTest)
         {
             _castApiService = castApiService;
             _castRepository = castRepository;
-            _mapper = mapper;
+            _pagesCountForGettingDataTest = pagesCountForGettingDataTest.Value;
         }
 
         public async Task SyncPopularCasts()
@@ -28,6 +30,9 @@ namespace WatchListMovies.Application.BackgroundJobs.Cast
             {
                 for (var page = 1; ; page++)
                 {
+                    if (_pagesCountForGettingDataTest.CastPageCount != 0 && page == _pagesCountForGettingDataTest.CastPageCount)
+                        break;
+
                     var data = await _castApiService.GetPopularCasts(page);
                     if (data == null || data.Casts == null || !data.Casts.Any()) break;
 
